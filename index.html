@@ -62,7 +62,7 @@
     .d3 { transition-delay: .24s; } .d4 { transition-delay: .32s; }
 
     /* ─── LAYOUT ─────────────────────────────────────────── */
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 60px; }
+    .wrap { max-width: 1360px; margin: 0 auto; padding: 0 60px; }
 
     /* ─── NAV ────────────────────────────────────────────── */
     nav {
@@ -101,17 +101,17 @@
       min-height: 84vh;
       display: flex; align-items: center;
       padding: 120px 60px 44px;
-      max-width: 1120px; margin: 0 auto;
-      gap: 48px;
+      max-width: 1360px; margin: 0 auto;
+      gap: clamp(64px, 9vw, 148px);
     }
-    .hero-left { flex: 1.1; min-width: 0; }
+    .hero-left { flex: 1; min-width: 0; }
     .hero-right {
-      flex: 0.75;
+      flex: 0 0 340px;
       display: flex; justify-content: flex-end; align-items: center;
       flex-shrink: 0;
     }
     .hero-photo-wrap {
-      width: 280px; height: 340px;
+      width: 340px; height: 420px;
       border: 1px solid var(--border);
       border-radius: 18px;
       position: relative; overflow: hidden;
@@ -563,7 +563,12 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 30px;
+        max-width: 100%;
         min-height: auto;
+      }
+      .hero-left,
+      .hero-right {
+        flex: none;
       }
       .hero-right { justify-content: flex-start; }
       .hero-photo-wrap { width: 200px; height: 240px; }
