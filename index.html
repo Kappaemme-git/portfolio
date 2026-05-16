@@ -109,12 +109,12 @@
       display: flex; align-items: center;
       padding: 120px 60px 44px;
       max-width: 1360px; margin: 0 auto;
-      gap: clamp(64px, 9vw, 148px);
+      gap: clamp(34px, 5vw, 82px);
     }
     .hero-left { flex: 1; min-width: 0; }
     .hero-right {
       flex: 0 0 340px;
-      display: flex; justify-content: flex-end; align-items: center;
+      display: flex; justify-content: flex-start; align-items: center;
       flex-shrink: 0;
     }
     .hero-photo-wrap {
@@ -177,6 +177,15 @@
       margin-bottom: 26px;
       display: flex; align-items: center; gap: 12px;
       opacity: 0; animation: fadeup .6s ease .1s forwards;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4ade80;
+      box-shadow: 0 0 14px rgba(74,222,128,.42);
+      flex: 0 0 auto;
     }
     .hero-name {
       font-family: 'Outfit', sans-serif; font-weight: 900;
