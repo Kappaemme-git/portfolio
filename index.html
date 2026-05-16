@@ -244,7 +244,7 @@
     }
 
     /* ─── SECTION CHROME ─────────────────────────────────── */
-    section { position: relative; z-index: 2; }
+    section { position: relative; z-index: 2; scroll-margin-top: 96px; }
     .sec-head { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
     .sec-label {
       font-family: 'Space Mono', monospace; font-size: 10px;
@@ -346,6 +346,68 @@
     .ci-stripe {
       background: #130f27;
       border: 1px solid #2e2460;
+    }
+
+    /* ─── CODEX SKILLS ──────────────────────────────────── */
+    #skills { padding: 0 0 80px; }
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .skill-card {
+      min-height: 154px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+      color: inherit;
+      text-decoration: none;
+      transition: border-color .2s, background .2s, transform .25s;
+    }
+    .skill-card:hover {
+      border-color: rgba(255,255,255,0.16);
+      background: #161614;
+      transform: translateY(-4px);
+    }
+    .skill-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .skill-arrow {
+      color: var(--dim);
+      font-size: 16px;
+      transition: color .2s, transform .2s;
+    }
+    .skill-card:hover .skill-arrow {
+      color: var(--text);
+      transform: translate(2px,-2px);
+    }
+    .skill-title {
+      margin-top: 26px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.08;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+    .skill-desc {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 300;
     }
 
     /* ─── PROJECTS ───────────────────────────────────────── */
@@ -584,6 +646,7 @@
       .hero-mark { font-size: 56px; }
       .wrap { padding: 0 24px; }
       .about-traits { grid-template-columns: 1fr 1fr; }
+      .skill-grid { grid-template-columns: 1fr; }
       .proj-grid { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 18px; text-align: center; }
     }
@@ -597,6 +660,7 @@
     <ul class="nav-links">
       <li class="section-link"><a href="#about">About</a></li>
       <li class="section-link"><a href="#stack">Stack</a></li>
+      <li class="section-link"><a href="#skills">Skills</a></li>
       <li class="section-link"><a href="#projects">Projects</a></li>
       <li class="section-link"><a href="#experience">Experience</a></li>
       <li class="page-link"><a href="blog/">Blog</a></li>
@@ -751,11 +815,80 @@
     </div>
   </section>
 
+  <!-- ═══════ CODEX SKILLS ═══════ -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-label">03 — Codex Skills</span>
+        <div class="sec-line"></div>
+      </div>
+      <h2 class="sec-title reveal">Skill library</h2>
+      <div class="skill-grid">
+        <a class="skill-card reveal d1" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Codex Complexity Optimizer</h3>
+            <p class="skill-desc">Codebase complexity analysis and optimization reports.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d2" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Local Client Prospector</h3>
+            <p class="skill-desc">A local prospecting workflow for finding client opportunities.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d3" href="https://github.com/Kappaemme-git/codex-simple-flight-search-skill" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Simple Flight Search</h3>
+            <p class="skill-desc">Assisted flight search without APIs, scraping, or booking actions.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d4" href="https://github.com/Kappaemme-git/codex-pomodoro-arena" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Codex Pomodoro Arena</h3>
+            <p class="skill-desc">A focus timer experience built around a boss-fight workflow.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d1" href="https://github.com/Kappaemme-git/codex-fm" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Codex FM</h3>
+            <p class="skill-desc">A Codex lo-fi radio launcher for focused work sessions.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d2" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Startup Pressure Test</h3>
+            <p class="skill-desc">Practical pressure-testing for startup ideas and early MVPs.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d3" href="https://github.com/Kappaemme-git/codex-video-short-maker-skill" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Video Short Maker</h3>
+            <p class="skill-desc">Turn local videos into trimmed shorts with ffmpeg workflows.</p>
+          </div>
+        </a>
+        <a class="skill-card reveal d4" href="https://github.com/Kappaemme-git/codex-design-audit-skill" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="skill-kicker"><span>Codex Skill</span><span class="skill-arrow">↗</span></div>
+            <h3 class="skill-title">Design Audit</h3>
+            <p class="skill-desc">Structured design reviews for frontend polish and UX quality.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════ PROJECTS ═══════ -->
   <section id="projects">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="sec-label">03 — Projects</span>
+        <span class="sec-label">04 — Projects</span>
         <div class="sec-line"></div>
       </div>
       <h2 class="sec-title reveal">Things I've built</h2>
@@ -829,7 +962,7 @@
   <section id="experience">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="sec-label">04 — Experience</span>
+        <span class="sec-label">05 — Experience</span>
         <div class="sec-line"></div>
       </div>
       <h2 class="sec-title reveal">My journey</h2>
@@ -867,7 +1000,7 @@
   <section id="contact">
     <div class="wrap">
       <div class="contact-inner">
-        <div class="contact-label reveal">05 — Contact</div>
+        <div class="contact-label reveal">06 — Contact</div>
         <h2 class="contact-h reveal d1">Let's talk.</h2>
         <p class="contact-sub reveal d2">
           Got a project in mind, want to collaborate,<br>or just want to say hi?
