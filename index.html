@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kappaemme — Francesco Mistero · CS student & indie hacker</title>
-<meta name="description" content="Francesco Mistero (Kappaemme) — Computer Science student and indie hacker building in public. Shipped products: VibeDesk, slashcmd, PocketFlow.">
+<meta name="description" content="Francesco Mistero, aka Kappaemme. CS student at Federico II, building VibeDesk, slashcmd, PocketFlow and Codex skills.">
 <meta name="author" content="Francesco Mistero">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://kappaemme.dev/">
@@ -12,12 +12,19 @@
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kappaemme — Francesco Mistero">
-<meta property="og:description" content="CS student. Indie hacker. Builds in public. Shipped VibeDesk, slashcmd, PocketFlow.">
+<meta property="og:description" content="CS student at Federico II. Building VibeDesk, slashcmd, PocketFlow and Codex skills.">
 <meta property="og:url" content="https://kappaemme.dev/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://kappaemme.dev/images/og-preview.png">
+<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@Kappaemme1926">
 <meta name="twitter:title" content="Kappaemme — Francesco Mistero">
-<meta name="twitter:description" content="CS student. Indie hacker. Builds in public.">
+<meta name="twitter:description" content="CS student at Federico II. Building VibeDesk, slashcmd, PocketFlow and Codex skills.">
+<meta name="twitter:image" content="https://kappaemme.dev/images/og-preview.png">
+<meta name="twitter:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
 
 <!-- Favicon: KM monogram, no extra file needed -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Ctext x='16' y='22' font-family='ui-monospace,Menlo,monospace' font-size='15' font-weight='700' fill='%23fff' text-anchor='middle'%3EKM%3C/text%3E%3C/svg%3E">
@@ -151,6 +158,16 @@
     align-items: center;
     text-align: center;
     gap: 0;
+  }
+  .hero-photo {
+    width: 108px;
+    height: 108px;
+    object-fit: cover;
+    border-radius: 24px;
+    border: 1px solid var(--border-strong);
+    margin-bottom: 24px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
+    filter: saturate(0.96) contrast(1.04);
   }
   .hero-name {
     font-size: 1.6rem;
@@ -350,11 +367,12 @@
   }
 
   .topbar { animation: fade-down 0.6s var(--ease-out) both; }
-  .hero-name, .hero-tagline, .hero-lede, .hero .icon-row {
+  .hero-photo, .hero-name, .hero-tagline, .hero-lede, .hero .icon-row {
     opacity: 0;
     animation: fade-up 0.7s var(--ease-out) forwards;
   }
-  .hero-name      { animation-delay: 0.08s; }
+  .hero-photo     { animation-delay: 0.04s; }
+  .hero-name      { animation-delay: 0.12s; }
   .hero-tagline   { animation-delay: 0.42s; }
   .hero-lede      { animation-delay: 0.54s; }
   .hero .icon-row { animation-delay: 0.66s; }
@@ -381,7 +399,7 @@
   .reveal.in { opacity: 1; transform: none; }
 
   @media (prefers-reduced-motion: reduce) {
-    .topbar, .hero-name, .hero-tagline, .hero-lede, .hero .icon-row, .ascii-banner {
+    .topbar, .hero-photo, .hero-name, .hero-tagline, .hero-lede, .hero .icon-row, .ascii-banner {
       animation: none !important; opacity: 1 !important; transform: none !important;
     }
     .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
@@ -580,6 +598,7 @@
     .activity { display: none; }
     .stack-grid { grid-template-columns: repeat(2, 1fr); }
     .tl-entry { grid-template-columns: 1fr; gap: 8px; }
+    .hero-photo { width: 92px; height: 92px; border-radius: 20px; }
     .ascii-banner { font-size: 1.55vw; }
   }
 </style>
@@ -607,6 +626,7 @@
 
     <!-- ═══════════ Hero ═══════════ -->
     <section class="shell hero">
+      <img class="hero-photo" src="images/me.jpg" alt="Francesco Mistero at his desk with a laptop">
       <h1 class="hero-name">Francesco Mistero</h1>
       <pre class="ascii-banner" aria-hidden="true">
 ██╗  ██╗  █████╗  ██████╗  ██████╗   █████╗  ███████╗ ███╗   ███╗ ███╗   ███╗ ███████╗
@@ -615,8 +635,8 @@
 ██╔═██╗  ██╔══██║ ██╔═══╝  ██╔═══╝  ██╔══██║ ██╔══╝   ██║╚██╔╝██║ ██║╚██╔╝██║ ██╔══╝
 ██║  ██╗ ██║  ██║ ██║      ██║      ██║  ██║ ███████╗ ██║ ╚═╝ ██║ ██║ ╚═╝ ██║ ███████╗
 ╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝      ╚═╝      ╚═╝  ╚═╝ ╚══════╝ ╚═╝     ╚═╝ ╚═╝     ╚═╝ ╚══════╝</pre>
-      <p class="hero-tagline">CS student. Indie hacker. Builds in public.</p>
-      <p class="hero-lede">I design and ship digital products with a simple loop: build, test, improve, repeat.<br>AI tools fill the gaps so nothing stays stuck.</p>
+      <p class="hero-tagline">CS student at Federico II. Building on the side.</p>
+      <p class="hero-lede">I am Francesco, aka Kappaemme. I study computer science in Naples and ship small products like VibeDesk, slashcmd and PocketFlow.</p>
 
       <div class="icon-row">
         <a class="icon-btn" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
