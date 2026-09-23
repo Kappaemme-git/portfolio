@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kappaemme — Francesco Mistero · CS student & indie hacker</title>
-<meta name="description" content="Francesco Mistero, aka Kappaemme. CS student at Federico II in Naples. Projects, code and Codex skills.">
+<meta name="description" content="Francesco Mistero, aka Kappaemme. CS student and indie developer building iPhone apps, websites, open-source tools and Codex skills.">
 <meta name="author" content="Francesco Mistero">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://kappaemme.dev/">
@@ -12,7 +12,7 @@
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kappaemme — Francesco Mistero">
-<meta property="og:description" content="CS student at Federico II in Naples. Projects, code and Codex skills.">
+<meta property="og:description" content="iPhone apps, websites, open-source tools and Codex skills by Francesco Mistero.">
 <meta property="og:url" content="https://kappaemme.dev/">
 <meta property="og:image" content="https://kappaemme.dev/images/og-preview.png">
 <meta property="og:image:secure_url" content="https://kappaemme.dev/images/og-preview.png">
@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@Kappaemme1926">
 <meta name="twitter:title" content="Kappaemme — Francesco Mistero">
-<meta name="twitter:description" content="CS student at Federico II in Naples. Projects, code and Codex skills.">
+<meta name="twitter:description" content="iPhone apps, websites, open-source tools and Codex skills by Francesco Mistero.">
 <meta name="twitter:image" content="https://kappaemme.dev/images/og-preview.png">
 <meta name="twitter:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
 
@@ -53,7 +53,6 @@
 
     /* Status accents */
     --live: #10a37f;                    /* live dot — green, “everything is shipping” */
-    --bar:  rgba(16, 163, 127, 0.85);   /* activity bars */
 
     /* Radius */
     --radius-sm:   5px;
@@ -269,6 +268,11 @@
     font-size: var(--t-caption);
     color: var(--text-tertiary);
   }
+  .skill-lede {
+    margin: -12px 0 22px;
+    color: var(--text-secondary);
+    font-size: var(--t-body-sm);
+  }
 
   /* ───────── Leaderboard table ───────── */
   .board {
@@ -322,16 +326,12 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .activity {
-    display: flex;
-    align-items: flex-end;
-    gap: 3px;
-    height: 22px;
-  }
-  .activity i {
-    width: 6px;
-    background: var(--bar);
-    border-radius: 1px;
+  .row-kind {
+    font-family: var(--font-mono);
+    font-size: var(--t-caption);
+    color: var(--text-tertiary);
+    text-align: right;
+    white-space: nowrap;
   }
   .row-status {
     display: flex;
@@ -428,6 +428,109 @@
     top: 0;
     z-index: 1;
     background: #060606;
+  }
+
+  /* ───────── Shared on X ───────── */
+  .proof-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: end;
+    margin: -8px 0 28px;
+  }
+  .proof-intro {
+    max-width: 570px;
+    margin: 0;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+  .proof-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .proof-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 12px;
+    border-right: 1px solid var(--border);
+  }
+  .proof-stat:last-child { border-right: 0; }
+  .proof-stat strong { font-family: var(--font-mono); font-size: 1.08rem; line-height: 1.2; }
+  .proof-stat span {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .proof-card {
+    grid-column: span 2;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: #10100f;
+    transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease, transform var(--dur-fast) ease;
+  }
+  .proof-card:nth-child(4) { grid-column: 2 / span 2; }
+  .proof-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.42); background: #161615; }
+  .proof-card:focus-visible { outline: 2px solid #75baff; outline-offset: 3px; }
+  .proof-author, .proof-quote-author { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .proof-avatar { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 50%; object-fit: cover; background: #2a2a2a; }
+  .proof-author-name, .proof-quote-name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+  .proof-author-name strong, .proof-quote-name strong { font-size: 0.81rem; font-weight: 600; white-space: nowrap; }
+  .proof-author-name small, .proof-quote-name small { margin-top: 3px; color: var(--text-tertiary); font-size: 0.73rem; }
+  .proof-verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 13px;
+    height: 13px;
+    margin-left: 2px;
+    border-radius: 50%;
+    background: #1d9bf0;
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    vertical-align: 1px;
+  }
+  .proof-x { margin-left: auto; align-self: flex-start; color: var(--text-tertiary); font-size: 1.05rem; line-height: 1; }
+  .proof-post { margin: 18px 0 14px; font-size: var(--t-body-sm); line-height: 1.55; min-height: 44px; }
+  .proof-quote { padding: 12px; margin-top: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: rgba(255,255,255,0.025); }
+  .proof-quote .proof-avatar { width: 27px; height: 27px; flex-basis: 27px; }
+  .proof-quote-name strong { font-size: 0.73rem; }
+  .proof-quote-name small { font-size: 0.67rem; }
+  .proof-quote p { margin: 12px 0 7px; font-size: 0.76rem; font-weight: 500; line-height: 1.5; }
+  .proof-tag { color: var(--text-tertiary); font-family: var(--font-mono); font-size: 0.61rem; letter-spacing: 0.07em; text-transform: uppercase; }
+  .proof-meta { display: flex; align-items: center; gap: 9px; margin-top: 14px; color: var(--text-tertiary); font-family: var(--font-mono); font-size: 0.67rem; }
+  .proof-meta .proof-open { margin-left: auto; color: var(--text-secondary); white-space: nowrap; }
+  .proof-card:hover .proof-open { color: var(--text); }
+  .proof-note { margin: 16px 0 0; color: var(--text-tertiary); font-family: var(--font-mono); font-size: 0.67rem; }
+
+  @media (max-width: 850px) {
+    .proof-top { grid-template-columns: 1fr; gap: 20px; }
+    .proof-card, .proof-card:nth-child(4) { grid-column: span 3; }
+  }
+  @media (max-width: 570px) {
+    .proof-card, .proof-card:nth-child(4) { grid-column: 1 / -1; }
+    .proof-stat { padding: 12px 8px; }
+    .proof-stat span { font-size: 0.51rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .proof-card { transition: none; }
+    .proof-card:hover { transform: none; }
   }
 
   /* ───────── Stack ───────── */
@@ -593,9 +696,10 @@
     .topnav::-webkit-scrollbar { display: none; }
     .topnav a { padding: 6px 8px; white-space: nowrap; }
     .board-head { grid-template-columns: 32px 1fr 90px; }
-    .board-head .col-activity { display: none; }
-    .row { grid-template-columns: 32px 1fr 90px; }
-    .activity { display: none; }
+    .board-head { grid-template-columns: 32px minmax(0, 1fr) 90px; }
+    .row { grid-template-columns: 32px minmax(0, 1fr) 90px; }
+    #products .col-kind, #products .row-kind { display: none; }
+    #skills .col-right, #skills .row-status { display: none; }
     .stack-grid { grid-template-columns: repeat(2, 1fr); }
     .tl-entry { grid-template-columns: 1fr; gap: 8px; }
     .hero-photo { width: 92px; height: 92px; border-radius: 20px; }
@@ -612,8 +716,9 @@
         <span>Kappaemme</span>
       </a>
       <nav class="topnav">
-        <a href="#products">Products</a>
+        <a href="#products">Projects</a>
         <a href="#skills">Skills</a>
+        <a href="#shared">On X</a>
         <a href="#stack">Stack</a>
         <a href="#journey">Journey</a>
         <a href="#coffee">Coffee</a>
@@ -635,8 +740,8 @@
 ██╔═██╗  ██╔══██║ ██╔═══╝  ██╔═══╝  ██╔══██║ ██╔══╝   ██║╚██╔╝██║ ██║╚██╔╝██║ ██╔══╝
 ██║  ██╗ ██║  ██║ ██║      ██║      ██║  ██║ ███████╗ ██║ ╚═╝ ██║ ██║ ╚═╝ ██║ ███████╗
 ╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝      ╚═╝      ╚═╝  ╚═╝ ╚══════╝ ╚═╝     ╚═╝ ╚═╝     ╚═╝ ╚══════╝</pre>
-      <p class="hero-tagline">CS student at Federico II. Building on the side.</p>
-      <p class="hero-lede">I am Francesco, aka Kappaemme. I study computer science in Naples and turn what I learn into small, useful tools.</p>
+      <p class="hero-tagline">CS student at Federico II. Building apps and tools.</p>
+      <p class="hero-lede">I am Francesco, aka Kappaemme. I build iPhone apps, websites and open-source tools, and share what I learn through Codex skills.</p>
 
       <div class="icon-row">
         <a class="icon-btn" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
@@ -656,50 +761,77 @@
       <div class="shell">
         <div class="block-head">
           <span class="block-eyebrow">01</span>
-          <h2 class="block-title">Products</h2>
-          <span class="block-count">4 shipped</span>
+          <h2 class="block-title">Projects</h2>
+          <span class="block-count">7 projects</span>
         </div>
         <div class="board">
           <div class="board-head">
             <span>#</span>
-            <span>Product</span>
-            <span class="col-activity">Activity</span>
-            <span class="col-right">Status</span>
+            <span>Project</span>
+            <span class="col-kind" style="text-align:right">Type</span>
+            <span class="col-right">Link</span>
           </div>
-          <a class="row" href="https://www.vibedesk.online/" target="_blank" rel="noopener">
+          <a class="row" href="https://apps.apple.com/it/app/metodo-zac/id6800744272" target="_blank" rel="noopener">
             <span class="rank">1</span>
             <span class="row-main">
-              <span class="row-name">vibedesk</span>
-              <span class="row-desc">Study and work companion — music, tasks, notes, calendar, focus timer.</span>
+              <span class="row-name">metodo ZAC · iPhone app</span>
+              <span class="row-desc">Training plans, exercise videos, workout logs and progress tracking with a coach.</span>
             </span>
-            <span class="activity" aria-hidden="true"><i style="height: 30%;"></i><i style="height: 45%;"></i><i style="height: 40%;"></i><i style="height: 65%;"></i><i style="height: 55%;"></i><i style="height: 80%;"></i><i style="height: 70%;"></i><i style="height: 100%;"></i></span>
+            <span class="row-kind">iOS app</span>
             <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://www.slashcmd.dev/" target="_blank" rel="noopener">
+          <a class="row" href="https://www.metodozac.com/" target="_blank" rel="noopener">
             <span class="rank">2</span>
             <span class="row-main">
-              <span class="row-name">slashcmd</span>
-              <span class="row-desc">The marketplace for AI agent skills — discover, install and publish skills for Codex and Claude.</span>
+              <span class="row-name">metodo ZAC · website</span>
+              <span class="row-desc">A complete website for structured bodybuilding coaching, programs and client journeys.</span>
             </span>
-            <span class="activity" aria-hidden="true"><i style="height: 50%;"></i><i style="height: 35%;"></i><i style="height: 70%;"></i><i style="height: 45%;"></i><i style="height: 85%;"></i><i style="height: 60%;"></i><i style="height: 75%;"></i><i style="height: 90%;"></i></span>
+            <span class="row-kind">Website</span>
+            <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
+          </a>
+          <a class="row" href="https://github.com/Kappaemme-git/microdex" target="_blank" rel="noopener">
+            <span class="rank">3</span>
+            <span class="row-main">
+              <span class="row-name">microdex</span>
+              <span class="row-desc">An open-source iPhone companion for controlling your local Codex runtime remotely.</span>
+            </span>
+            <span class="row-kind">Open source</span>
+            <span class="row-status"><span>GitHub</span><span class="arrow">↗</span></span>
+          </a>
+          <a class="row" href="https://github.com/Kappaemme-git/breathe-3d" target="_blank" rel="noopener">
+            <span class="rank">4</span>
+            <span class="row-main">
+              <span class="row-name">breathe 3D</span>
+              <span class="row-desc">An interactive Three.js experience exploring what smoking leaves behind.</span>
+            </span>
+            <span class="row-kind">Web experience</span>
+            <span class="row-status"><span>GitHub</span><span class="arrow">↗</span></span>
+          </a>
+          <a class="row" href="https://www.vibedesk.online/" target="_blank" rel="noopener">
+            <span class="rank">5</span>
+            <span class="row-main">
+              <span class="row-name">vibedesk</span>
+              <span class="row-desc">Study and work companion — music, tasks, notes, calendar and focus timer.</span>
+            </span>
+            <span class="row-kind">Web app</span>
             <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
           </a>
           <a class="row" href="https://www.pocketflow.online/" target="_blank" rel="noopener">
-            <span class="rank">3</span>
+            <span class="rank">6</span>
             <span class="row-main">
               <span class="row-name">pocketflow</span>
               <span class="row-desc">Minimal widget app for deep focus — tasks, timer and music from your home screen.</span>
             </span>
-            <span class="activity" aria-hidden="true"><i style="height: 25%;"></i><i style="height: 55%;"></i><i style="height: 40%;"></i><i style="height: 75%;"></i><i style="height: 50%;"></i><i style="height: 65%;"></i><i style="height: 95%;"></i><i style="height: 80%;"></i></span>
+            <span class="row-kind">App</span>
             <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
           </a>
           <a class="row" href="https://www.glorydraw.online/" target="_blank" rel="noopener">
-            <span class="rank">4</span>
+            <span class="rank">7</span>
             <span class="row-main">
               <span class="row-name">glorydraw</span>
               <span class="row-desc">Fantasy football app — draft and build your dream team from World Cup players.</span>
             </span>
-            <span class="activity" aria-hidden="true"><i style="height: 40%;"></i><i style="height: 30%;"></i><i style="height: 60%;"></i><i style="height: 50%;"></i><i style="height: 70%;"></i><i style="height: 55%;"></i><i style="height: 85%;"></i><i style="height: 95%;"></i></span>
+            <span class="row-kind">Web app</span>
             <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
           </a>
         </div>
@@ -712,88 +844,214 @@
         <div class="block-head">
           <span class="block-eyebrow">02</span>
           <h2 class="block-title">Skill library</h2>
-          <span class="block-count" id="repo-count">8 skills</span>
+          <span class="block-count">10 featured</span>
         </div>
+        <p class="skill-lede">Recent releases and the open-source skills developers have starred most.</p>
         <div class="board board-scroll" id="repo-board">
           <div class="board-head">
             <span>#</span>
-            <span>Repo</span>
-            <span class="col-activity"></span>
-            <span class="col-right">Lang</span>
+            <span>Skill</span>
+            <span style="text-align:right">Highlight</span>
+            <span class="col-right">Link</span>
           </div>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener">
+          <a class="row" data-stars-repo="codex-first-customer-finder-skill" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener">
             <span class="rank">1</span>
             <span class="row-main">
-              <span class="row-name">codex-complexity-optimizer</span>
-              <span class="row-desc">Codebase complexity analysis and optimization reports.</span>
+              <span class="row-name">codex-first-customer-finder-skill</span>
+              <span class="row-desc">Find evidence-backed first customers and draft outreach from public signals.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">1k+ stars</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-design-audit-skill" target="_blank" rel="noopener">
+          <a class="row" data-stars-repo="codex-startup-pressure-test-skill" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener">
             <span class="rank">2</span>
             <span class="row-main">
-              <span class="row-name">codex-design-audit-skill</span>
-              <span class="row-desc">Structured design reviews for frontend polish and UX quality.</span>
+              <span class="row-name">codex-startup-pressure-test-skill</span>
+              <span class="row-desc">Pressure-test startup ideas before building the MVP.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">900+ stars</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener">
+          <a class="row" data-stars-repo="codex-complexity-optimizer" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener">
             <span class="rank">3</span>
             <span class="row-main">
-              <span class="row-name">codex-startup-pressure-test-skill</span>
-              <span class="row-desc">Practical pressure-testing for startup ideas and early MVPs.</span>
+              <span class="row-name">codex-complexity-optimizer</span>
+              <span class="row-desc">Analyze code complexity and identify safe performance improvements.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">900+ stars</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener">
+          <a class="row" data-stars-repo="local-client-prospector-skill" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener">
             <span class="rank">4</span>
             <span class="row-main">
               <span class="row-name">local-client-prospector-skill</span>
-              <span class="row-desc">A local prospecting workflow for finding client opportunities.</span>
+              <span class="row-desc">Find and qualify local businesses that could use a better website.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">150+ stars</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-pomodoro-arena" target="_blank" rel="noopener">
+          <a class="row" data-stars-repo="codex-bug-reproducer" href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener">
             <span class="rank">5</span>
             <span class="row-main">
-              <span class="row-name">codex-pomodoro-arena</span>
-              <span class="row-desc">A focus timer experience built around a boss-fight workflow.</span>
+              <span class="row-name">codex-bug-reproducer</span>
+              <span class="row-desc">Reproduce bugs and prove fixes with focused regression evidence.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">70+ stars</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-video-short-maker-skill" target="_blank" rel="noopener">
+          <a class="row" href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener">
             <span class="rank">6</span>
             <span class="row-main">
-              <span class="row-name">codex-video-short-maker-skill</span>
-              <span class="row-desc">Turn local videos into trimmed shorts with ffmpeg workflows.</span>
+              <span class="row-name">astra-ad-studio</span>
+              <span class="row-desc">Create finished ads, campaign variants and motion previews inside Codex.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">Recent</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-simple-flight-search-skill" target="_blank" rel="noopener">
+          <a class="row" href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener">
             <span class="rank">7</span>
             <span class="row-main">
-              <span class="row-name">codex-simple-flight-search-skill</span>
-              <span class="row-desc">Assisted flight search without APIs, scraping, or booking actions.</span>
+              <span class="row-name">codex-code-avengers</span>
+              <span class="row-desc">Coordinate six review roles for evidence-backed code reviews.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">Recent</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
-          <a class="row" href="https://github.com/Kappaemme-git/codex-fm" target="_blank" rel="noopener">
+          <a class="row" href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener">
             <span class="rank">8</span>
             <span class="row-main">
-              <span class="row-name">codex-fm</span>
-              <span class="row-desc">A Codex lo-fi radio launcher for focused work sessions.</span>
+              <span class="row-name">codex-dev-team</span>
+              <span class="row-desc">Run a five-role collaborative engineering workflow in Codex.</span>
             </span>
-            <span class="repo-path">Skill</span>
+            <span class="repo-path">Recent</span>
+            <span class="row-status"><span class="arrow">↗</span></span>
+          </a>
+          <a class="row" href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener">
+            <span class="rank">9</span>
+            <span class="row-main">
+              <span class="row-name">startup-feedback-engine</span>
+              <span class="row-desc">Turn customer feedback into prioritized product opportunities.</span>
+            </span>
+            <span class="repo-path">Recent</span>
+            <span class="row-status"><span class="arrow">↗</span></span>
+          </a>
+          <a class="row" href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener">
+            <span class="rank">10</span>
+            <span class="row-main">
+              <span class="row-name">app-store-review-guardian</span>
+              <span class="row-desc">Audit an iOS app before App Store submission.</span>
+            </span>
+            <span class="repo-path">Recent</span>
             <span class="row-status"><span class="arrow">↗</span></span>
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ Shared on X ═══════════ -->
+    <section class="block" id="shared">
+      <div class="shell">
+        <div class="block-head">
+          <span class="block-eyebrow">03</span>
+          <h2 class="block-title">Shared by Greg Brockman</h2>
+          <span class="block-count">5 quote posts</span>
+        </div>
+        <div class="proof-top">
+          <p class="proof-intro">Greg Brockman, OpenAI co-founder, quote-posted five of my Codex skill demos on X. Each card opens his original post.</p>
+          <div class="proof-stats" aria-label="Engagement across the five posts">
+            <div class="proof-stat"><strong>5</strong><span>posts by Greg</span></div>
+            <div class="proof-stat"><strong>1.8M+</strong><span>combined views</span></div>
+            <div class="proof-stat"><strong>10K+</strong><span>likes</span></div>
+          </div>
+        </div>
+        <div class="proof-grid">
+          <a class="proof-card" href="https://x.com/gdb/status/2084074129930772953" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Feedback Engine">
+            <div class="proof-author">
+              <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async">
+              <span class="proof-author-name"><strong>Greg Brockman <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@gdb</small></span>
+              <span class="proof-x" aria-hidden="true">𝕏</span>
+            </div>
+            <p class="proof-post">codex for customer feedback → roadmap</p>
+            <div class="proof-quote">
+              <div class="proof-quote-author">
+                <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/2018267726507110400/7yfnGNA2_x96.jpg" alt="" loading="lazy" decoding="async">
+                <span class="proof-quote-name"><strong>Kappaemme <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@Kappaemme1926</small></span>
+              </div>
+              <p>CODEX SKILL THAT TURNS CUSTOMER FEEDBACK INTO A ROADMAP!</p>
+              <span class="proof-tag">Startup Feedback Engine</span>
+            </div>
+            <div class="proof-meta"><span>♡ 732</span><span>138K views</span><span class="proof-open">View on X ↗</span></div>
+          </a>
+          <a class="proof-card" href="https://x.com/gdb/status/2076686329686171666" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about First Customer Finder">
+            <div class="proof-author">
+              <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async">
+              <span class="proof-author-name"><strong>Greg Brockman <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@gdb</small></span>
+              <span class="proof-x" aria-hidden="true">𝕏</span>
+            </div>
+            <p class="proof-post">Codex for finding customers for your startup:</p>
+            <div class="proof-quote">
+              <div class="proof-quote-author">
+                <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/2018267726507110400/7yfnGNA2_x96.jpg" alt="" loading="lazy" decoding="async">
+                <span class="proof-quote-name"><strong>Kappaemme <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@Kappaemme1926</small></span>
+              </div>
+              <p>CODEX SKILL THAT FINDS YOUR STARTUP&#x27;S FIRST CUSTOMERS!</p>
+              <span class="proof-tag">First Customer Finder</span>
+            </div>
+            <div class="proof-meta"><span>♡ 3.7K</span><span>692K views</span><span class="proof-open">View on X ↗</span></div>
+          </a>
+          <a class="proof-card" href="https://x.com/gdb/status/2055646916499714488" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Complexity Optimizer">
+            <div class="proof-author">
+              <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async">
+              <span class="proof-author-name"><strong>Greg Brockman <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@gdb</small></span>
+              <span class="proof-x" aria-hidden="true">𝕏</span>
+            </div>
+            <p class="proof-post">codex for improving computational complexity</p>
+            <div class="proof-quote">
+              <div class="proof-quote-author">
+                <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/2018267726507110400/7yfnGNA2_x96.jpg" alt="" loading="lazy" decoding="async">
+                <span class="proof-quote-name"><strong>Kappaemme <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@Kappaemme1926</small></span>
+              </div>
+              <p>CODEX SKILL THAT FINDS COMPLEXITY HOTSPOTS IN YOUR CODEBASE!</p>
+              <span class="proof-tag">Complexity Optimizer</span>
+            </div>
+            <div class="proof-meta"><span>♡ 1.7K</span><span>331K views</span><span class="proof-open">View on X ↗</span></div>
+          </a>
+          <a class="proof-card" href="https://x.com/gdb/status/2055285857628676399" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Local Client Prospector">
+            <div class="proof-author">
+              <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async">
+              <span class="proof-author-name"><strong>Greg Brockman <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@gdb</small></span>
+              <span class="proof-x" aria-hidden="true">𝕏</span>
+            </div>
+            <p class="proof-post">codex for finding local businesses who may need help building a website:</p>
+            <div class="proof-quote">
+              <div class="proof-quote-author">
+                <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/2018267726507110400/7yfnGNA2_x96.jpg" alt="" loading="lazy" decoding="async">
+                <span class="proof-quote-name"><strong>Kappaemme <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@Kappaemme1926</small></span>
+              </div>
+              <p>CODEX SKILL THAT TURNS LOCAL SEARCH INTO CLIENT LEADS!</p>
+              <span class="proof-tag">Local Client Prospector</span>
+            </div>
+            <div class="proof-meta"><span>♡ 1.5K</span><span>292K views</span><span class="proof-open">View on X ↗</span></div>
+          </a>
+          <a class="proof-card" href="https://x.com/gdb/status/2050972114077843772" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Pressure Test">
+            <div class="proof-author">
+              <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async">
+              <span class="proof-author-name"><strong>Greg Brockman <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@gdb</small></span>
+              <span class="proof-x" aria-hidden="true">𝕏</span>
+            </div>
+            <p class="proof-post">codex for startup ideas</p>
+            <div class="proof-quote">
+              <div class="proof-quote-author">
+                <img class="proof-avatar" src="https://pbs.twimg.com/profile_images/2018267726507110400/7yfnGNA2_x96.jpg" alt="" loading="lazy" decoding="async">
+                <span class="proof-quote-name"><strong>Kappaemme <span class="proof-verified" aria-label="Verified account">✓</span></strong><small>@Kappaemme1926</small></span>
+              </div>
+              <p>CODEX SKILL TO BRUTALLY TEST ANY STARTUP IDEA!</p>
+              <span class="proof-tag">Startup Pressure Test</span>
+            </div>
+            <div class="proof-meta"><span>♡ 2.3K</span><span>395K views</span><span class="proof-open">View on X ↗</span></div>
+          </a>
+        </div>
+        <p class="proof-note">Engagement figures checked on 23 September 2026.</p>
       </div>
     </section>
 
@@ -801,7 +1059,7 @@
     <section class="block" id="stack">
       <div class="shell">
         <div class="block-head">
-          <span class="block-eyebrow">03</span>
+          <span class="block-eyebrow">04</span>
           <h2 class="block-title">Stack</h2>
         </div>
         <div class="stack-grid">
@@ -873,7 +1131,7 @@
     <section class="block" id="journey">
       <div class="shell">
         <div class="block-head">
-          <span class="block-eyebrow">04</span>
+          <span class="block-eyebrow">05</span>
           <h2 class="block-title">Journey</h2>
         </div>
         <div class="timeline">
@@ -896,8 +1154,8 @@
               <p class="tl-org">Building in public · @Kappaemme1926</p>
               <ul class="tl-points">
                 <li>Started in October 2025 and changed my mindset about software.</li>
-                <li>Shipped 4 products so far: VibeDesk, slashcmd, PocketFlow, and Glory Draw.</li>
-                <li>Still early. I am learning fast, building consistently, and raising the bar.</li>
+                <li>Built the Metodo ZAC iPhone app and website, and released Microdex as an open-source Codex companion.</li>
+                <li>Published Codex skills used and starred by developers around the world.</li>
               </ul>
             </div>
           </div>
@@ -909,7 +1167,7 @@
     <section class="block" id="coffee">
       <div class="shell">
         <div class="block-head">
-          <span class="block-eyebrow">05</span>
+          <span class="block-eyebrow">06</span>
           <h2 class="block-title">Coffee</h2>
           <span class="block-count">support the build</span>
         </div>
@@ -930,7 +1188,7 @@
     <section class="block" id="contact">
       <div class="shell">
         <div class="block-head">
-          <span class="block-eyebrow">06</span>
+          <span class="block-eyebrow">07</span>
           <h2 class="block-title">Contact</h2>
         </div>
         <p class="contact-line">Got a project or an idea? Let's talk.</p>
@@ -963,65 +1221,31 @@
     </div>
   </footer>
 
-  <!-- ═══════════ Live repo list from GitHub ═══════════ -->
+  <!-- ═══════════ Current GitHub stars for featured skills ═══════════ -->
   <script>
     (function () {
-      var board = document.getElementById('repo-board');
-      var count = document.getElementById('repo-count');
-      if (!board || !window.fetch) return;
-      // Allowlist: show ONLY these (matched by distinctive keyword, tolerant of -/case). Everything else hidden.
-      var KEEP = ['powerpoint','meng','sell','codexsec','codexmac','mpv','phone','screen',
-                  'complexity','prospector','flight','pomodoro','codexfm','startup','video','design','wins'];
-      var isSkill = function (repo) {
-        var n = repo.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-        return KEEP.some(function (k) { return n.indexOf(k) !== -1; });
-      };
+      var featured = document.querySelectorAll('[data-stars-repo]');
+      if (!featured.length || !window.fetch) return;
       fetch('https://api.github.com/users/Kappaemme-git/repos?per_page=100')
-        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('github ' + r.status)); })
-        .then(function (repos) {
-          if (!Array.isArray(repos) || repos.length === 0) return;
-          repos = repos.filter(isSkill);
-          repos.sort(function (a, b) { return new Date(b.pushed_at) - new Date(a.pushed_at); });
-          board.querySelectorAll('.row').forEach(function (el) { el.remove(); });
-          repos.forEach(function (repo, i) {
-            var a = document.createElement('a');
-            a.className = 'row';
-            a.href = repo.html_url;
-            a.target = '_blank';
-            a.rel = 'noopener';
-            var rank = document.createElement('span');
-            rank.className = 'rank';
-            rank.textContent = String(i + 1);
-            var main = document.createElement('span');
-            main.className = 'row-main';
-            var name = document.createElement('span');
-            name.className = 'row-name';
-            name.textContent = repo.name;
-            main.appendChild(name);
-            if (repo.description) {
-              var desc = document.createElement('span');
-              desc.className = 'row-desc';
-              desc.textContent = repo.description;
-              main.appendChild(desc);
-            }
-            var lang = document.createElement('span');
-            lang.className = 'repo-path';
-            lang.textContent = repo.language || '—';
-            var status = document.createElement('span');
-            status.className = 'row-status';
-            var arrow = document.createElement('span');
-            arrow.className = 'arrow';
-            arrow.textContent = '↗';
-            status.appendChild(arrow);
-            a.appendChild(rank);
-            a.appendChild(main);
-            a.appendChild(lang);
-            a.appendChild(status);
-            board.appendChild(a);
-          });
-          if (count) count.textContent = repos.length + (repos.length === 1 ? ' skill' : ' skills');
+        .then(function (response) {
+          return response.ok ? response.json() : Promise.reject(new Error('GitHub unavailable'));
         })
-        .catch(function () { /* offline or rate-limited — keep the static list */ });
+        .then(function (repos) {
+          if (!Array.isArray(repos)) return;
+          var starsByName = Object.create(null);
+          repos.forEach(function (repo) {
+            starsByName[repo.name.toLowerCase()] = repo.stargazers_count;
+          });
+          featured.forEach(function (row) {
+            var name = row.getAttribute('data-stars-repo');
+            var stars = starsByName[name];
+            var badge = row.querySelector('.repo-path');
+            if (badge && typeof stars === 'number') {
+              badge.textContent = stars.toLocaleString('en-US') + (stars === 1 ? ' star' : ' stars');
+            }
+          });
+        })
+        .catch(function () { /* Keep the verified fallback labels. */ });
     })();
   </script>
   <!-- ═══════════ Scroll reveal ═══════════ -->
