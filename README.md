@@ -23,7 +23,7 @@ Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero cent
 |---|---------|------|
 | — | **Header / nav** | Sticky, blur. Voci: Projects, Skills, On X, Stack, Journey, Coffee, Contact. |
 | — | **Hero** | Nome + scritta ASCII "KAPPAEMME" + tagline + lede + icone social. |
-| 01 | **Projects** | Sette progetti, inclusi l'app iPhone e il sito Metodo ZAC, Microdex e Breathe 3D. |
+| 01 | **Projects** | Sette progetti, inclusi l'app iPhone e il sito Metodo ZAC, la collaborazione su Sidekick e Breathe 3D. |
 | 02 | **Skill library** | Dieci skill selezionate: successi open source e nuove uscite. |
 | 03 | **Shared on X** | Cinque card con i quote post di Greg Brockman e link ai post originali. |
 | 04 | **Stack** | Griglia di 12 tessere tecnologiche con icone a colori di brand. |
