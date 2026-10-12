@@ -26,8 +26,7 @@
 <meta name="twitter:image" content="https://kappaemme.dev/images/og-preview.png">
 <meta name="twitter:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
 
-<!-- Favicon: KM monogram, no extra file needed -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Ctext x='16' y='22' font-family='ui-monospace,Menlo,monospace' font-size='15' font-weight='700' fill='%23fff' text-anchor='middle'%3EKM%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="images/kappaemme-mark.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -125,14 +124,11 @@
     letter-spacing: var(--ls-tight);
   }
   .brand-mark {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--bg);
-    background: var(--text);
-    border-radius: var(--radius-sm);
-    padding: 3px 6px;
-    line-height: 1;
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    border-radius: 9px;
   }
   .topnav {
     display: flex;
@@ -159,10 +155,10 @@
     gap: 0;
   }
   .hero-photo {
-    width: 108px;
-    height: 108px;
+    width: 132px;
+    height: 132px;
     object-fit: cover;
-    border-radius: 24px;
+    border-radius: 30px;
     border: 1px solid var(--border-strong);
     margin-bottom: 24px;
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
@@ -272,6 +268,144 @@
     margin: -12px 0 22px;
     color: var(--text-secondary);
     font-size: var(--t-body-sm);
+  }
+
+  /* ───────── Selected work gallery ───────── */
+  .projects-intro {
+    margin: -9px 0 28px;
+    color: var(--text-secondary);
+    font-size: var(--t-body);
+    max-width: 620px;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .gallery-card {
+    position: relative;
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: 17px;
+    background: #0b0b0d;
+    transition: transform 340ms var(--ease-out), border-color 340ms ease, box-shadow 340ms ease;
+  }
+  .gallery-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,0.42);
+    box-shadow: 0 24px 55px rgba(0,0,0,0.46);
+  }
+  .gallery-card:focus-visible {
+    outline: 2px solid #9dd3ff;
+    outline-offset: 4px;
+  }
+  .gallery-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 310px;
+    aspect-ratio: 1.35;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .gallery-stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), black);
+  }
+  .gallery-stage--zac {
+    background: radial-gradient(circle at 50% 48%, rgba(190,143,55,0.24), transparent 56%), #121b31;
+  }
+  .gallery-stage--vibe {
+    background: radial-gradient(circle at 50% 48%, rgba(234,147,159,0.24), transparent 58%), #33243f;
+  }
+  .gallery-stage-note, .gallery-stage-corner {
+    position: absolute;
+    z-index: 2;
+    font: 500 0.68rem var(--font-mono);
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.78);
+  }
+  .gallery-stage-note { top: 20px; left: 22px; }
+  .gallery-stage-corner { right: 22px; bottom: 19px; }
+  .gallery-art-frame {
+    width: clamp(154px, 18vw, 198px);
+    padding: 9px;
+    border: 1px solid rgba(255,255,255,0.23);
+    border-radius: 26px;
+    background: rgba(255,255,255,0.09);
+    box-shadow: 0 22px 60px rgba(0,0,0,0.45), inset 0 1px rgba(255,255,255,0.18);
+    transform: rotate(-2deg);
+    transition: transform 360ms var(--ease-out), box-shadow 360ms ease;
+  }
+  .gallery-card:nth-child(2) .gallery-art-frame { transform: rotate(2deg); }
+  .gallery-art {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 19px;
+  }
+  .gallery-card:hover .gallery-art-frame,
+  .gallery-card:focus-visible .gallery-art-frame {
+    transform: translateY(-7px) rotate(0) scale(1.06);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.54);
+  }
+  .gallery-card.is-opening .gallery-art-frame,
+  .gallery-card:nth-child(2).is-opening .gallery-art-frame {
+    transform: rotate(0) scale(1.18);
+  }
+  .gallery-card.is-opening .gallery-stage { filter: brightness(1.14); }
+  .gallery-plaque {
+    display: block;
+    padding: 22px 24px 25px;
+    border-top: 1px solid var(--border);
+  }
+  .gallery-title-line { display: flex; align-items: baseline; gap: 16px; }
+  .gallery-title {
+    font-size: 1.17rem;
+    font-weight: 600;
+    letter-spacing: var(--ls-h);
+  }
+  .gallery-type {
+    margin-left: auto;
+    color: var(--text-tertiary);
+    font: 0.67rem var(--font-mono);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .gallery-arrow { display: inline-block; margin-left: 4px; color: var(--text-secondary); transition: transform 250ms var(--ease-out); }
+  .gallery-card:hover .gallery-arrow { transform: translate(3px, -3px); }
+  .gallery-desc { display: block; margin-top: 8px; color: var(--text-secondary); font-size: var(--t-body-sm); }
+  .more-work { margin-top: 54px; }
+  .more-work-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; }
+  .more-work-head h3 { margin: 0; font-size: 1.08rem; letter-spacing: var(--ls-tight); }
+  .more-work-head a {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font: 0.72rem var(--font-mono);
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 4px;
+  }
+  .more-work-head a:hover { color: var(--text); }
+  @media (max-width: 700px) {
+    .gallery-grid { grid-template-columns: 1fr; gap: 18px; }
+    .gallery-stage { min-height: 270px; aspect-ratio: auto; }
+    .gallery-art-frame { width: clamp(150px, 45vw, 190px); }
+    .more-work { margin-top: 46px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-card, .gallery-art-frame, .gallery-arrow { transition: none !important; }
+    .gallery-card:hover, .gallery-card:hover .gallery-art-frame, .gallery-card:focus-visible .gallery-art-frame,
+    .gallery-card.is-opening .gallery-art-frame { transform: none !important; }
   }
 
   /* ───────── Leaderboard table ───────── */
@@ -698,11 +832,11 @@
     .board-head { grid-template-columns: 32px 1fr 90px; }
     .board-head { grid-template-columns: 32px minmax(0, 1fr) 90px; }
     .row { grid-template-columns: 32px minmax(0, 1fr) 90px; }
-    #products .col-kind, #products .row-kind { display: none; }
+    .more-work .col-kind, .more-work .row-kind { display: none; }
     #skills .col-right, #skills .row-status { display: none; }
     .stack-grid { grid-template-columns: repeat(2, 1fr); }
     .tl-entry { grid-template-columns: 1fr; gap: 8px; }
-    .hero-photo { width: 92px; height: 92px; border-radius: 20px; }
+    .hero-photo { width: 108px; height: 108px; border-radius: 24px; }
     .ascii-banner { font-size: 1.55vw; }
   }
 </style>
@@ -712,7 +846,7 @@
   <header class="topbar">
     <div class="shell topbar-inner">
       <a class="brand" href="#top">
-        <span class="brand-mark">KM</span>
+        <img class="brand-mark" src="images/kappaemme-mark.svg" alt="" width="32" height="32">
         <span>Kappaemme</span>
       </a>
       <nav class="topnav">
@@ -731,7 +865,7 @@
 
     <!-- ═══════════ Hero ═══════════ -->
     <section class="shell hero">
-      <img class="hero-photo" src="images/me.jpg" alt="Francesco Mistero at his desk with a laptop">
+      <img class="hero-photo" src="images/me.jpg" alt="Portrait of Francesco Mistero" width="132" height="132">
       <h1 class="hero-name">Francesco Mistero</h1>
       <pre class="ascii-banner" aria-hidden="true">
 ██╗  ██╗  █████╗  ██████╗  ██████╗   █████╗  ███████╗ ███╗   ███╗ ███╗   ███╗ ███████╗
@@ -756,75 +890,56 @@
       </div>
     </section>
 
-    <!-- ═══════════ Products ═══════════ -->
+    <!-- ═══════════ Selected work ═══════════ -->
     <section class="block" id="products">
       <div class="shell">
         <div class="block-head">
           <span class="block-eyebrow">01</span>
           <h2 class="block-title">Projects</h2>
-          <span class="block-count">6 projects</span>
+          <span class="block-count">2 featured · 3 more</span>
         </div>
-        <div class="board">
-          <div class="board-head">
-            <span>#</span>
-            <span>Project</span>
-            <span class="col-kind" style="text-align:right">Type</span>
-            <span class="col-right">Link</span>
+        <p class="projects-intro">A small gallery of products I build and maintain. Select a piece to explore it.</p>
+        <div class="gallery-grid" aria-label="Featured projects">
+          <a class="gallery-card" data-gallery-link href="https://apps.apple.com/it/app/metodo-zac/id6800744272" aria-label="Open Metodo ZAC on the App Store">
+            <span class="gallery-stage gallery-stage--zac">
+              <span class="gallery-stage-note">01 / FEATURED WORK</span>
+              <span class="gallery-art-frame"><img class="gallery-art" src="images/metodo-zac-app-icon.jpg" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
+              <span class="gallery-stage-corner">VIEW ON APP STORE ↗</span>
+            </span>
+            <span class="gallery-plaque">
+              <span class="gallery-title-line"><span class="gallery-title">Metodo ZAC <span class="gallery-arrow" aria-hidden="true">↗</span></span><span class="gallery-type">iPhone app</span></span>
+              <span class="gallery-desc">Coach-led workouts, progress tracking and check-ins.</span>
+            </span>
+          </a>
+          <a class="gallery-card" data-gallery-link href="https://www.vibedesk.online/" aria-label="Open VibeDesk website">
+            <span class="gallery-stage gallery-stage--vibe">
+              <span class="gallery-stage-note">02 / FEATURED WORK</span>
+              <span class="gallery-art-frame"><img class="gallery-art" src="images/vibedesk-gallery.png" alt="" width="1024" height="1024" loading="lazy" decoding="async"></span>
+              <span class="gallery-stage-corner">VISIT WEBSITE ↗</span>
+            </span>
+            <span class="gallery-plaque">
+              <span class="gallery-title-line"><span class="gallery-title">VibeDesk <span class="gallery-arrow" aria-hidden="true">↗</span></span><span class="gallery-type">Web app</span></span>
+              <span class="gallery-desc">A study and work companion I am currently building.</span>
+            </span>
+          </a>
+        </div>
+        <div class="more-work">
+          <div class="more-work-head">
+            <h3>More work</h3>
+            <a href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">Explore all GitHub projects ↗</a>
           </div>
-          <a class="row" href="https://apps.apple.com/it/app/metodo-zac/id6800744272" target="_blank" rel="noopener">
-            <span class="rank">1</span>
-            <span class="row-main">
-              <span class="row-name">metodo ZAC · iPhone app</span>
-              <span class="row-desc">Training plans, exercise videos, workout logs and progress tracking with a coach.</span>
-            </span>
-            <span class="row-kind">iOS app</span>
-            <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
-          </a>
-          <a class="row" href="https://www.metodozac.com/" target="_blank" rel="noopener">
-            <span class="rank">2</span>
-            <span class="row-main">
-              <span class="row-name">metodo ZAC · website</span>
-              <span class="row-desc">A complete website for structured bodybuilding coaching, programs and client journeys.</span>
-            </span>
-            <span class="row-kind">Website</span>
-            <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
-          </a>
-          <a class="row" href="https://github.com/Kappaemme-git/breathe-3d" target="_blank" rel="noopener">
-            <span class="rank">3</span>
-            <span class="row-main">
-              <span class="row-name">breathe 3D</span>
-              <span class="row-desc">An interactive Three.js experience exploring what smoking leaves behind.</span>
-            </span>
-            <span class="row-kind">Web experience</span>
-            <span class="row-status"><span>GitHub</span><span class="arrow">↗</span></span>
-          </a>
-          <a class="row" href="https://www.vibedesk.online/" target="_blank" rel="noopener">
-            <span class="rank">4</span>
-            <span class="row-main">
-              <span class="row-name">vibedesk</span>
-              <span class="row-desc">Currently building this study and work companion — music, tasks, notes, calendar and focus timer.</span>
-            </span>
-            <span class="row-kind">Web app</span>
-            <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
-          </a>
-          <a class="row" href="https://www.pocketflow.online/" target="_blank" rel="noopener">
-            <span class="rank">5</span>
-            <span class="row-main">
-              <span class="row-name">pocketflow</span>
-              <span class="row-desc">Minimal widget app for deep focus — tasks, timer and music from your home screen.</span>
-            </span>
-            <span class="row-kind">App</span>
-            <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
-          </a>
-          <a class="row" href="https://www.glorydraw.online/" target="_blank" rel="noopener">
-            <span class="rank">6</span>
-            <span class="row-main">
-              <span class="row-name">glorydraw</span>
-              <span class="row-desc">Fantasy football app — draft and build your dream team from World Cup players.</span>
-            </span>
-            <span class="row-kind">Web app</span>
-            <span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
-          </a>
+          <div class="board">
+            <div class="board-head"><span>#</span><span>Project</span><span class="col-kind" style="text-align:right">Type</span><span class="col-right">Link</span></div>
+            <a class="row" href="https://www.metodozac.com/" target="_blank" rel="noopener">
+              <span class="rank">1</span><span class="row-main"><span class="row-name">metodo ZAC · website</span><span class="row-desc">Coaching programs, client journeys and the digital home for Metodo ZAC.</span></span><span class="row-kind">Website</span><span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
+            </a>
+            <a class="row" href="https://www.pocketflow.online/" target="_blank" rel="noopener">
+              <span class="rank">2</span><span class="row-main"><span class="row-name">pocketflow</span><span class="row-desc">Minimal widget app for deep focus — tasks, timer and music.</span></span><span class="row-kind">App</span><span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
+            </a>
+            <a class="row" href="https://www.glorydraw.online/" target="_blank" rel="noopener">
+              <span class="rank">3</span><span class="row-main"><span class="row-name">glorydraw</span><span class="row-desc">Fantasy football app for drafting a World Cup dream team.</span></span><span class="row-kind">Web app</span><span class="row-status"><span class="live-dot"></span><span>Live</span><span class="arrow">↗</span></span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -1212,6 +1327,22 @@
     </div>
   </footer>
 
+  <!-- ═══════════ Gallery link transition ═══════════ -->
+  <script>
+    (function () {
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) return;
+      document.querySelectorAll('[data-gallery-link]').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          if (link.classList.contains('is-opening')) return;
+          link.classList.add('is-opening');
+          window.setTimeout(function () { window.location.assign(link.href); }, 360);
+        });
+      });
+    })();
+  </script>
   <!-- ═══════════ Current GitHub stars for featured skills ═══════════ -->
   <script>
     (function () {

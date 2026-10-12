@@ -13,7 +13,7 @@ Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero cent
   - Google Fonts: **Geist** + **Geist Mono** (`fonts.googleapis.com`).
   - GitHub API (`api.github.com`) per aggiornare le stelle delle skill selezionate; la lista resta visibile anche se l'API non risponde.
 - Stili, animazioni e icone della pagina principale sono **incorporati** nel file.
-- SEO incluso: `<title>`, meta description, Open Graph / Twitter card, favicon (monogramma KM), `theme-color`.
+- SEO incluso: `<title>`, meta description, Open Graph / Twitter card, favicon (simbolo geometrico Kappaemme), `theme-color`.
 
 ---
 
@@ -23,7 +23,7 @@ Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero cent
 |---|---------|------|
 | — | **Header / nav** | Sticky, blur. Voci: Projects, Skills, On X, Stack, Journey, Coffee, Contact. |
 | — | **Hero** | Nome + scritta ASCII "KAPPAEMME" + tagline + lede + icone social. |
-| 01 | **Projects** | Sei progetti, inclusi l'app iPhone e il sito Metodo ZAC, Breathe 3D e VibeDesk. |
+| 01 | **Projects** | Galleria con Metodo ZAC iPhone app e VibeDesk; sotto Metodo ZAC website, Pocketflow, Glorydraw e link ai repository GitHub. |
 | 02 | **Skill library** | Dieci skill selezionate: successi open source e nuove uscite. |
 | 03 | **Shared on X** | Cinque card con i quote post di Greg Brockman e link ai post originali. |
 | 04 | **Stack** | Griglia di 12 tessere tecnologiche con icone a colori di brand. |
