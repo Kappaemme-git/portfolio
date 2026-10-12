@@ -1,8 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kappaemme mark">
-  <rect width="64" height="64" rx="17" fill="#f3f0e9"/>
-  <g fill="none" stroke="#111115" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter">
-    <path d="M13 25V14h11M40 14h11v11M51 39v11H40M24 50H13V39"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 48" role="img" aria-label="KM">
+  <g fill="none" stroke="#080808" stroke-width="6.5" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M8 8v32M30 8 10 24l20 16"/>
+    <path d="M42 40V8l17 20L76 8v32"/>
   </g>
-  <path d="M32 23 41 32 32 41 23 32Z" fill="#111115"/>
-  <path d="M32 28 36 32 32 36 28 32Z" fill="#c29355"/>
 </svg>

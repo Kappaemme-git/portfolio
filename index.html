@@ -26,7 +26,7 @@
 <meta name="twitter:image" content="https://kappaemme.dev/images/og-preview.png">
 <meta name="twitter:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
 
-<link rel="icon" type="image/svg+xml" href="images/kappaemme-mark.svg">
+<link rel="icon" type="image/svg+xml" href="images/kappaemme-favicon.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -125,10 +125,10 @@
   }
   .brand-mark {
     display: block;
-    width: 32px;
-    height: 32px;
-    flex: 0 0 32px;
-    border-radius: 9px;
+    width: 47px;
+    height: 28px;
+    flex: 0 0 47px;
+    filter: invert(1);
   }
   .topnav {
     display: flex;
@@ -310,30 +310,21 @@
     overflow: hidden;
     isolation: isolate;
   }
-  .gallery-stage::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-image: linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
-    background-size: 36px 36px;
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), black);
-  }
   .gallery-stage--zac {
-    background: radial-gradient(circle at 50% 48%, rgba(190,143,55,0.24), transparent 56%), #121b31;
+    background: radial-gradient(circle at 50% 48%, rgba(190,143,55,0.18), transparent 60%), #121b31;
   }
   .gallery-stage--vibe {
-    background: radial-gradient(circle at 50% 48%, rgba(234,147,159,0.24), transparent 58%), #33243f;
+    background: radial-gradient(circle at 50% 48%, rgba(234,147,159,0.18), transparent 60%), #33243f;
   }
-  .gallery-stage-note, .gallery-stage-corner {
+  .gallery-stage-corner {
     position: absolute;
+    right: 22px;
+    bottom: 19px;
     z-index: 2;
     font: 500 0.68rem var(--font-mono);
     letter-spacing: 0.12em;
     color: rgba(255,255,255,0.78);
   }
-  .gallery-stage-note { top: 20px; left: 22px; }
-  .gallery-stage-corner { right: 22px; bottom: 19px; }
   .gallery-art-frame {
     width: clamp(154px, 18vw, 198px);
     padding: 9px;
@@ -846,7 +837,7 @@
   <header class="topbar">
     <div class="shell topbar-inner">
       <a class="brand" href="#top">
-        <img class="brand-mark" src="images/kappaemme-mark.svg" alt="" width="32" height="32">
+        <img class="brand-mark" src="images/kappaemme-mark.svg" alt="" width="47" height="28">
         <span>Kappaemme</span>
       </a>
       <nav class="topnav">
@@ -896,13 +887,12 @@
         <div class="block-head">
           <span class="block-eyebrow">01</span>
           <h2 class="block-title">Projects</h2>
-          <span class="block-count">2 featured · 3 more</span>
+          <span class="block-count">5 projects</span>
         </div>
         <p class="projects-intro">A small gallery of products I build and maintain. Select a piece to explore it.</p>
-        <div class="gallery-grid" aria-label="Featured projects">
+        <div class="gallery-grid" aria-label="Project gallery">
           <a class="gallery-card" data-gallery-link href="https://apps.apple.com/it/app/metodo-zac/id6800744272" aria-label="Open Metodo ZAC on the App Store">
             <span class="gallery-stage gallery-stage--zac">
-              <span class="gallery-stage-note">01 / FEATURED WORK</span>
               <span class="gallery-art-frame"><img class="gallery-art" src="images/metodo-zac-app-icon.jpg" alt="" width="512" height="512" loading="lazy" decoding="async"></span>
               <span class="gallery-stage-corner">VIEW ON APP STORE ↗</span>
             </span>
@@ -913,7 +903,6 @@
           </a>
           <a class="gallery-card" data-gallery-link href="https://www.vibedesk.online/" aria-label="Open VibeDesk website">
             <span class="gallery-stage gallery-stage--vibe">
-              <span class="gallery-stage-note">02 / FEATURED WORK</span>
               <span class="gallery-art-frame"><img class="gallery-art" src="images/vibedesk-gallery.png" alt="" width="1024" height="1024" loading="lazy" decoding="async"></span>
               <span class="gallery-stage-corner">VISIT WEBSITE ↗</span>
             </span>

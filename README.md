@@ -13,7 +13,7 @@ Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero cent
   - Google Fonts: **Geist** + **Geist Mono** (`fonts.googleapis.com`).
   - GitHub API (`api.github.com`) per aggiornare le stelle delle skill selezionate; la lista resta visibile anche se l'API non risponde.
 - Stili, animazioni e icone della pagina principale sono **incorporati** nel file.
-- SEO incluso: `<title>`, meta description, Open Graph / Twitter card, favicon (simbolo geometrico Kappaemme), `theme-color`.
+- SEO incluso: `<title>`, meta description, Open Graph / Twitter card, favicon (monogramma KM), `theme-color`.
 
 ---
 
