@@ -8,6 +8,7 @@ Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero cent
 ## 1. File e tecnologia
 
 - **Pagina principale: `index.html`** — HTML, CSS e JavaScript senza framework né build.
+- **Grok Bots: `grok-bot/index.html`** — route `/grok-bot`, basata sul prototipo in `design/grok-bot/`. I bot e i sei frame dell'intro sono definiti una sola volta in `grok-bot/bots.data.js`.
 - **Asset locali:** la cartella `images/` contiene foto, icone e anteprima social. La pagina `coffee/index.html` è separata.
 - **Dipendenze esterne (solo queste):**
   - Google Fonts: **Geist** + **Geist Mono** (`fonts.googleapis.com`).
@@ -15,13 +16,15 @@ Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero cent
 - Stili, animazioni e icone della pagina principale sono **incorporati** nel file.
 - SEO incluso: `<title>`, meta description, Open Graph / Twitter card, favicon (monogramma KM), `theme-color`.
 
+Per l'anteprima locale, avvia `python3 -m http.server` dalla radice del repo e apri `/` o `/grok-bot/`.
+
 ---
 
 ## 2. Struttura delle sezioni (in ordine)
 
 | # | Sezione | Note |
 |---|---------|------|
-| — | **Header / nav** | Sticky, blur. Voci: Projects, Skills, On X, Stack, Journey, Coffee, Contact. |
+| — | **Header / nav** | Sticky, blur. Voci: Projects, Skills, Grok Bots, On X, Stack, Journey, Coffee, Contact. |
 | — | **Hero** | Nome + scritta ASCII "KAPPAEMME" + tagline + lede + icone social. |
 | 01 | **Projects** | Galleria con Metodo ZAC iPhone app e VibeDesk; sotto Metodo ZAC website, Pocketflow, Glorydraw e link ai repository GitHub. |
 | 02 | **Skill library** | Dieci skill selezionate: successi open source e nuove uscite. |

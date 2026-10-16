@@ -1,15 +1,15 @@
 # Grok Bot library — design spec
 
-Design hand-off for the `/grok-bot` page of kappaemme.dev. **Design only:** nothing here is wired into the live site. Codex integrates it later.
+Design hand-off for the `/grok-bot` page of kappaemme.dev. The production implementation is in `../../grok-bot/`; this folder remains the visual reference.
 
 | File | What it is |
 |---|---|
-| `prototype.html` | Standalone, working prototype. All CSS and JS are inline; it renders from `bots.data.js`. Final copy. |
-| `bots.data.js` | **Single data file.** `window.GROK_BOTS` is an array, one object per bot. Add a bot here and every section picks it up. |
+| `prototype.html` | Working design prototype. All CSS and JS are inline; it reads the shared data file in `../../grok-bot/`. Final copy. |
+| `../../grok-bot/bots.data.js` | **Single data file.** `window.GROK_BOTS` is an array, one object per bot; the production route and prototype read the same file. |
 | `assets/` | SVG avatars: static, self-animated, Grok Bot panel previews and the empty-slot ghost. |
 | `../../.shots/grok-bot/` | Desktop (1440×900) and mobile (390×844 @2x) screenshots of every section, the intro frames and the interaction states. |
 
-Open it with `python3 -m http.server -d design/grok-bot` → `http://localhost:8000/prototype.html`. Opening the file directly with `file://` also works, apart from the favicon.
+Open it from the repository root with `python3 -m http.server` → `http://localhost:8000/design/grok-bot/prototype.html`. Opening the file directly with `file://` also works, apart from the favicon.
 
 ---
 
@@ -241,14 +241,13 @@ The order mirrors the reference: intro, hero, proof, everything-it-does tiles, f
 
 ## 8. Integration notes for Codex
 
-- **Route:** `/grok-bot`. With the current static setup that is `grok-bot/index.html`; copy `prototype.html` there.
-  - Point `bots.data.js` and `assets/` to their final paths, e.g. `/grok-bot/bots.data.js` and `/images/bots/*.svg`.
-  - Add a link to the main nav in `index.html` (e.g. "Bots" between Skills and On X). Optionally add an entry to the Projects section.
-- **Fonts:** the main site loads Geist at 400–700. Add **800** to the Google Fonts URL, or share one URL across both pages.
+- **Route:** `/grok-bot` is implemented at `grok-bot/index.html`. Its bot data lives in `grok-bot/bots.data.js`, and production SVG assets live in `grok-bot/assets/`. The home nav links to it between Skills and On X.
+- **Fonts:** the Grok Bot page loads Geist at 400–800 and Geist Mono, consistent with the main site's typography.
 - **Back chip, nav and footer links** use root-relative paths (`/`, `/#products`, `/#skills`). Keep them root-relative once the page lives at `/grok-bot`.
-- **Keep the intro inline script right after the intro markup.** It paints the intro avatars synchronously so their pops stay on the CSS clock. Load `bots.data.js` before it, as a synchronous `<script>` in `<head>`.
-- **Adding a bot:** append to `GROK_BOTS`.
-  - Required: `id`, `name`, `subtitle`, `pill`, `tile` (`blue` | `light` | `dark`), `avatar` (`circle` | `blob` + eyes), `headline`, `body`, `handles`, `links`.
+- **Keep the intro inline script right after the intro markup.** It paints the data-driven layers and avatars synchronously so their pops stay on the CSS clock. Load `bots.data.js` before it, as a synchronous `<script>` in `<head>`.
+- **Adding a bot:** append to `GROK_BOTS` in `grok-bot/bots.data.js`.
+  - Required: `id`, `name`, `subtitle`, `projectName`, `pill`, `tile` (`blue` | `light` | `dark`), `avatar` (`circle` | `blob` + eyes), `headline`, `body`, `handles`, `links`.
+  - The six intro frames are in `GROK_BOT_INTRO` in the same file. Edit them only when changing the cinematic sequence.
   - Optional: `mock`, `proof`.
   - `featured: true` makes the bot the wide first tile and the "lead" (sticky bar and footer mark).
   - `GROK_BOT_SLOTS` controls how many empty slots follow.

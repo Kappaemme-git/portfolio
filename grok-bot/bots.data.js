@@ -1,12 +1,14 @@
 /*
  * Grok Bot library — single source of truth for every bot on the page.
  *
- * To add a bot: append one object to the array. The hero crew, the intro
- * curtain, the library tiles and the closing crew all render from here.
+ * To add a bot: append one object to the array. The hero crew, library tiles,
+ * under-the-hood cards, closing crew and repository links render from here.
+ * Intro frames are configured below, in this same file, to preserve their
+ * exact six-beat cinematic sequence.
  *
  * Avatar geometry lives in a 100 × 100 viewBox:
  *   shape "circle" → <circle cx=50 cy=50 r=45>
- *   shape "blob"   → soft, slightly squashed circle (see BLOB_PATH in prototype.html)
+ *   shape "blob"   → soft, slightly squashed circle (see BLOB in index.html)
  *   eyes           → capsules: centre (cx, cy), width w, height h, rotation rot (deg)
  * Eyes are clipped to the body, so cursor-follow can never push them outside.
  *
@@ -20,6 +22,7 @@ window.GROK_BOTS = [
     name: "Limit Coach",
     featured: true,
     subtitle: "Claude + Codex limits",
+    projectName: "LimitNotch",
     // Only strong colour on the page.
     color: "#2474F7",
     pill: { bg: "#2474F7", fg: "#FFFFFF" },
@@ -35,7 +38,6 @@ window.GROK_BOTS = [
         { cx: 75.5, cy: 26, w: 7, h: 19, rot: -37 }
       ]
     },
-    intro: ["Watches my limits.", "Lives in the notch."],
     label: "Featured bot",
     headline: "It watches my limits, so I don't have to.",
     body:
@@ -63,6 +65,7 @@ window.GROK_BOTS = [
     name: "Crankobot",
     featured: false,
     subtitle: "First Customer Finder",
+    projectName: "First Customer Finder",
     color: "#FFFFFF",
     pill: { bg: "#FFFFFF", fg: "#0A0A0A" },
     tile: "light",
@@ -76,7 +79,6 @@ window.GROK_BOTS = [
         { cx: 78.5, cy: 32.5, w: 6.5, h: 19, rot: -22 }
       ]
     },
-    intro: ["Finds first customers.", "Reads public demand."],
     label: "Crankobot",
     headline: "It finds the people already asking.",
     body:
@@ -104,6 +106,16 @@ window.GROK_BOTS = [
       message: "P1 and P3 fit. Find 5 more."
     }
   }
+];
+
+/* The six intro beats are data as well; their order and grounds match SPEC.md. */
+window.GROK_BOT_INTRO = [
+  { bg: "#0A0A0A", fg: "#FFFFFF", botIds: ["limit-coach"], word: "Watches my limits." },
+  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"], word: "Finds first customers." },
+  { bg: "#F2F2EF", fg: "#0A0A0A", botIds: ["limit-coach"], word: "Lives in the notch." },
+  { bg: "#161616", fg: "#FFFFFF", botIds: ["limit-coach", "crankobot"], word: "Runs on Grok Bot." },
+  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"], word: "Reads public demand." },
+  { bg: "#F2F2EF", fg: "#0A0A0A", botIds: ["limit-coach"], word: "Built in public." }
 ];
 
 /* Empty slots shown after the real bots, so the library reads as a library. */
