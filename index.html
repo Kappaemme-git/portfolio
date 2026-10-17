@@ -403,7 +403,7 @@
     66% { transform: translateY(0) scale(1.06, .94); } 82% { transform: scale(.98, 1.02); } 100% { transform: none; }
   }
 
-  /* Bots CTA keeps its white pill while the shared scan handles navigation. */
+  /* Bots CTA keeps its white pill. */
   .gb-cta {
     display: inline-flex; align-items: center; justify-content: center;
     min-height: 3.5rem; padding: 0 1.75rem; border-radius: 999px; border: 0; background: #fff; cursor: pointer;
@@ -605,6 +605,7 @@
   .k-scan__line { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #2474F7; box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px #2474F7; transform: translateY(-6px); }
   .k-scan__prompt { position: absolute; z-index: 1; top: 50%; left: 50%; display: flex; align-items: center; gap: 0; max-width: calc(100vw - 2rem); font: 500 clamp(.95rem, 3vw, 1.3rem)/1.2 var(--font-mono); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; }
   .k-scan__sig { margin-right: .45em; color: #2474F7; }
+  .k-scan.is-skill-command .k-scan__sig { margin-right: 0; }
   .k-scan__cmd { display: inline-block; }
   .k-scan__cursor { flex: none; width: .5em; height: 1em; background: #2474F7; opacity: 0; }
   .k-scan.is-out { visibility: visible; pointer-events: auto; }
@@ -661,7 +662,7 @@
     <nav class="k-links" aria-label="Sections">
       <a data-spy="products" href="#products">projects</a>
       <a data-spy="skills" href="#skills">skills</a>
-      <a data-spy="grok-bots" href="grok-bot/" data-scan>grok bots</a>
+      <a data-spy="grok-bots" href="grok-bot/">grok bots</a>
       <a data-spy="shared" href="#shared">on x</a>
       <a data-spy="stack" href="#stack">stack</a>
       <a data-spy="journey" href="#journey">journey</a>
@@ -679,7 +680,7 @@
     <ol class="k-sheet__list">
       <li style="--i:0"><a class="k-sheet__l" data-spy="products" href="#products">projects</a></li>
       <li style="--i:1"><a class="k-sheet__l" data-spy="skills" href="#skills">skills</a></li>
-      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="grok-bot/" data-scan>grok bots</a></li>
+      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="grok-bot/">grok bots</a></li>
       <li style="--i:3"><a class="k-sheet__l" data-spy="shared" href="#shared">on x</a></li>
       <li style="--i:4"><a class="k-sheet__l" data-spy="stack" href="#stack">stack</a></li>
       <li style="--i:5"><a class="k-sheet__l" data-spy="journey" href="#journey">journey</a></li>
@@ -1118,13 +1119,14 @@
     var a = e.target.closest && e.target.closest(".k-top .k-links a[data-scan], .k-sheet nav a[data-scan]");
     if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
     var url = new URL(a.href, location.href);
-    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location)) return;
+    var page = path(url).split("/").pop();
+    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location) || page === "grok-bot") return;
     e.preventDefault();
     if (leaving) return;
     leaving = true;
-    var page = path(url).split("/").pop();
-    var command = "cd ~" + (page === "grok-bot" ? "/grok-bots" : page === "skills" || page === "coffee" ? "/" + page : "");
+    var command = page === "skills" ? "use-Kappaemme's skill" : "cd ~" + (page === "coffee" ? "/coffee" : "");
     var cmd = $(".k-scan__cmd", scan);
+    scan.classList.toggle("is-skill-command", page === "skills");
     typeScanCommand(cmd, command);
     clearTimeout(arrivalTimer);
     scan.style.display = "";

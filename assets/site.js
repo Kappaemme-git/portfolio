@@ -167,13 +167,14 @@
     var a = e.target.closest && e.target.closest(".k-top .k-links a[data-scan], .k-sheet nav a[data-scan]");
     if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
     var url = new URL(a.href, location.href);
-    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location)) return;
+    var page = path(url).split("/").pop();
+    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location) || page === "grok-bot") return;
     e.preventDefault();
     if (leaving) return;
     leaving = true;
-    var page = path(url).split("/").pop();
-    var command = "cd ~" + (page === "grok-bot" ? "/grok-bots" : page === "skills" || page === "coffee" ? "/" + page : "");
+    var command = page === "skills" ? "use-Kappaemme's skill" : "cd ~" + (page === "coffee" ? "/coffee" : "");
     var cmd = $(".k-scan__cmd", scan);
+    scan.classList.toggle("is-skill-command", page === "skills");
     typeScanCommand(cmd, command);
     clearTimeout(arrivalTimer);
     scan.style.display = "";

@@ -6,7 +6,7 @@
 <title>Grok Bots — Kappaemme · Francesco Mistero</title>
 <meta name="description" content="A small library of Grok Bots by Francesco Mistero (Kappaemme): Limit Coach watches Claude and Codex limits for LimitNotch, Crankobot finds first customers from public demand.">
 <meta name="author" content="Francesco Mistero">
-<meta name="theme-color" content="#F2F2EF">
+<meta name="theme-color" content="#0A0A0A">
 <link rel="canonical" href="https://kappaemme.dev/grok-bot">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Grok Bots — Kappaemme">
@@ -15,24 +15,100 @@
 <link rel="icon" type="image/svg+xml" href="assets/limit-coach.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <!--
   Grok Bots library; shared light system in ../assets/. Bot data: bots.data.js.
 -->
 <script>
-  /* A tab transition gets its own scan reveal. */
+  /* Grok Bots opens directly; discard any previous scan arrival flag. */
   (function () {
-    var d = document.documentElement; d.classList.add("js");
-    try {
-      var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var viaScan = sessionStorage.getItem("k-scan"); sessionStorage.removeItem("k-scan");
-      if (!reduce && viaScan) d.setAttribute("data-scan", "in");
-    } catch (e) {}
+    var d = document.documentElement; d.classList.add("js"); d.setAttribute("data-intro", "pending");
+    try { sessionStorage.removeItem("k-scan"); } catch (e) {}
   })();
 </script>
 <link rel="stylesheet" href="../assets/site.css">
 <script src="bots.data.js"></script>
 <style>
+  /* Intro curtain — six full-bleed layers, .9s apart, then lifts away. */
+  html[data-intro] {
+    --intro-step: .9s;
+    --intro-end: 5.4s;
+    --curtain-out: cubic-bezier(.7, 0, .2, 1);
+    --enter: calc(var(--intro-end) + .65s + .2s);
+  }
+  html[data-intro="done"][data-intro-skipped] { --enter: 0s; }
+  html[data-intro="pending"] .k-rise,
+  html[data-intro="pending"] .k-top,
+  html[data-intro="pending"] .gb-cast > .k-actor { animation: none; opacity: 0; }
+  .gb-intro {
+    position: fixed; inset: 0; z-index: 2000; overflow: hidden;
+    display: none; pointer-events: auto; background-color: #0A0A0A;
+    font-family: var(--font-sans); line-height: 1;
+  }
+  html[data-intro="pending"] .gb-intro,
+  html[data-intro="playing"] .gb-intro { display: block; }
+  html[data-intro="playing"] .gb-intro {
+    animation:
+      intro-curtain .65s var(--curtain-out) var(--intro-end) forwards,
+      intro-tint var(--intro-end) step-end forwards;
+  }
+  html[data-intro="playing"] .gb-intro[data-done] { animation: intro-curtain .45s var(--curtain-out) forwards; }
+  @keyframes intro-tint {
+    0%      { background-color: #0A0A0A; }
+    16.667% { background-color: #2474F7; }
+    33.333% { background-color: #F2F2EF; }
+    50%     { background-color: #161616; }
+    66.667% { background-color: #2474F7; }
+    83.333%, 100% { background-color: #F2F2EF; }
+  }
+  @keyframes intro-curtain { to { visibility: hidden; pointer-events: none; transform: translateY(-100%); } }
+  .gb-intro__layer {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: var(--bg); color: var(--fg); visibility: hidden;
+  }
+  html[data-intro="playing"] .gb-intro__layer {
+    animation: intro-show 1ms linear calc(var(--i) * var(--intro-step)) forwards;
+  }
+  @keyframes intro-show { to { visibility: visible; } }
+  .gb-intro__stack { display: flex; flex-direction: column; align-items: center; gap: clamp(1rem, 3vw, 2rem); padding: 0 1.25rem; }
+  .gb-intro__bots { display: flex; gap: clamp(.8rem, 3vw, 2rem); }
+  .gb-intro__bot {
+    width: clamp(6rem, 22vw, 11rem); height: auto;
+  }
+  html[data-intro="playing"] .gb-intro__bot {
+    animation: intro-pop-bot .62s var(--spring) calc(var(--i) * var(--intro-step)) both;
+  }
+  .gb-intro__bots .gb-intro__bot { width: clamp(5rem, 17vw, 8.5rem); }
+  html[data-intro="playing"] .gb-intro__bots .gb-intro__bot + .gb-intro__bot { animation-delay: calc(var(--i) * var(--intro-step) + 70ms); }
+  .gb-intro__layer[data-light] .gb-intro__bot[data-bot="crankobot"] .gbot__bob > path { stroke: rgba(10,10,10,.35); stroke-width: 1.5; }
+  .gb-intro__word {
+    max-width: 11ch; text-align: center; text-wrap: balance;
+    font-size: clamp(2.9rem, 10.5vw, 8.5rem); font-weight: 800; line-height: .92; letter-spacing: -.045em;
+  }
+  html[data-intro="playing"] .gb-intro__word {
+    animation: intro-pop .56s var(--spring) calc(var(--i) * var(--intro-step) + 90ms) both;
+  }
+  .gb-intro__name {
+    position: absolute; left: 0; right: 0; bottom: max(1.6rem, env(safe-area-inset-bottom));
+    text-align: center; font-size: .95rem; font-weight: 700; letter-spacing: -.01em; opacity: .7;
+  }
+  @keyframes intro-pop { 0% { opacity: 0; transform: translateY(.14em) scale(.8); } 25% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+  @keyframes intro-pop-bot { 0% { opacity: 0; transform: translateY(40%) scale(.4); } 30% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+
+  /* The current page arrives after the curtain has cleared the viewport. */
+  .gb-cast > .k-actor { --i: 0; animation: intro-stage-bot .56s var(--spring) calc(var(--enter) + .45s + var(--i) * 80ms) both; }
+  .gb-cast > .k-actor:nth-child(2) { --i: 1; }
+  @keyframes intro-stage-bot { 0% { opacity: 0; transform: translateY(1.2rem) scale(.6); } 100% { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    html[data-intro="playing"] .gb-intro { animation-name: intro-curtain-fade, intro-tint; }
+    html[data-intro="playing"] .gb-intro[data-done] { animation-name: intro-curtain-fade; }
+    html[data-intro="playing"] .gb-intro__word,
+    html[data-intro="playing"] .gb-intro__bot { animation-name: intro-fade; animation-timing-function: ease-out; }
+    .gb-cast > .k-actor { animation: none; }
+  }
+  @keyframes intro-fade { 0% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes intro-curtain-fade { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
   @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
 
   /* ══════════════ Hero (left-aligned, two-column head) ══════════════ */
@@ -153,6 +229,8 @@
 </style>
 </head>
 <body>
+
+<div class="gb-intro" aria-hidden="true"></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -337,9 +415,74 @@
 
   KM.boot();
 
-  /* ── bots wake with a hop after the stage enters ── */
-  function wake() { $$(".gb-cast .gbot").forEach(function (svg, i) { setTimeout(function () { KM.hop(svg, "hop"); }, 120 + i * 140); }); }
-  setTimeout(wake, 600);
+  /* ── each bot wakes once its stage entrance finishes ── */
+  $("#gb-cast").addEventListener("animationend", function (e) {
+    if (e.animationName !== "intro-stage-bot" || !e.target.classList.contains("k-actor")) return;
+    var svg = $(".gbot", e.target);
+    setTimeout(function () { KM.hop(svg, "hop"); }, 120);
+  });
+})();
+</script>
+<script>
+/* Build all layers before starting their CSS clock; KM.avatar is the page's current renderer. */
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var intro = document.querySelector(".gb-intro");
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  var frames = window.GROK_BOT_INTRO || [];
+  var byId = KM.botById;
+  function setTheme(c) { if (themeMeta) themeMeta.content = c; }
+  root.style.setProperty("--intro-end", (frames.length * .9) + "s");
+  intro.innerHTML = frames.map(function (frame, i) {
+    var avatars = frame.botIds.map(function (id) { return byId[id] ? KM.avatar(byId[id], "gb-intro__bot") : ""; }).join("");
+    var bots = frame.botIds.length > 1 ? '<div class="gb-intro__bots">' + avatars + '</div>' : avatars;
+    var light = frame.fg.toLowerCase() === "#0a0a0a" ? " data-light" : "";
+    return '<div class="gb-intro__layer"' + light + ' style="--i:' + i + ';--bg:' + frame.bg + ';--fg:' + frame.fg + '">' +
+      '<div class="gb-intro__stack">' + bots + '<span class="gb-intro__word">' + KM.esc(frame.word) + '</span></div>' +
+      '<span class="gb-intro__name">Kappaemme · Grok Bots</span></div>';
+  }).join("");
+  var layers = Array.prototype.slice.call(intro.querySelectorAll(".gb-intro__layer"));
+  function restartEntrance() {
+    document.querySelectorAll(".k-top, .k-rise, .gb-cast > .k-actor").forEach(function (el) {
+      el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
+    });
+  }
+  function finishIntro() {
+    if (root.getAttribute("data-intro") === "done") return;
+    var skipped = intro.hasAttribute("data-done");
+    if (skipped) root.setAttribute("data-intro-skipped", "");
+    root.setAttribute("data-intro", "done");
+    intro.style.display = "none";
+    setTheme("#F2F2EF");
+    if (skipped) restartEntrance();
+  }
+  function skipIntro() {
+    if (root.getAttribute("data-intro") !== "playing" || intro.hasAttribute("data-done")) return;
+    intro.setAttribute("data-done", "");
+    setTimeout(finishIntro, 550);
+  }
+  intro.addEventListener("animationstart", function (e) {
+    if (e.animationName === "intro-show" && layers.indexOf(e.target) > -1) {
+      setTheme(getComputedStyle(e.target).getPropertyValue("--bg").trim());
+    }
+  });
+  intro.addEventListener("animationend", function (e) {
+    if (e.target === intro && (e.animationName === "intro-curtain" || e.animationName === "intro-curtain-fade")) finishIntro();
+  });
+  ["pointerdown", "click", "keydown", "wheel", "touchmove"].forEach(function (ev) {
+    window.addEventListener(ev, skipIntro, { once: true, passive: true });
+  });
+  window.addEventListener("pageshow", function (e) {
+    if (!e.persisted) return;
+    if (root.getAttribute("data-intro") !== "done") root.setAttribute("data-intro-skipped", "");
+    root.setAttribute("data-intro", "done");
+    intro.style.display = "none";
+    setTheme("#F2F2EF");
+  });
+  setTheme(frames[0] ? frames[0].bg : "#F2F2EF");
+  root.setAttribute("data-intro", "playing");
+  setTimeout(finishIntro, frames.length * 900 + 1400);
 })();
 </script>
 </body>

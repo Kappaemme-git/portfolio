@@ -337,6 +337,7 @@ a:hover > .k-go svg { transform: translate(1px, -1px); }
 .k-scan__line { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #2474F7; box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px #2474F7; transform: translateY(-6px); }
 .k-scan__prompt { position: absolute; z-index: 1; top: 50%; left: 50%; display: flex; align-items: center; gap: 0; max-width: calc(100vw - 2rem); font: 500 clamp(.95rem, 3vw, 1.3rem)/1.2 var(--font-mono); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; }
 .k-scan__sig { margin-right: .45em; color: #2474F7; }
+.k-scan.is-skill-command .k-scan__sig { margin-right: 0; }
 .k-scan__cmd { display: inline-block; }
 .k-scan__cursor { flex: none; width: .5em; height: 1em; background: #2474F7; opacity: 0; }
 .k-scan.is-out { visibility: visible; pointer-events: auto; }
