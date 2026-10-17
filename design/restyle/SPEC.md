@@ -1,323 +1,289 @@
-# kappaemme.dev restyle: design spec
+# kappaemme.dev restyle (dark): design spec
 
-Design hand-off for restyling the **whole portfolio** in the visual language of `/grok-bot`. Codex implements it. This folder is the visual reference only; nothing in `index.html`, `coffee/` or `grok-bot/` has been changed.
+Design hand-off for the whole site: home, `/coffee` and `/grok-bot`. **This replaces the earlier light "paper" direction.** Codex implements it in `index.html`, `coffee/index.html` and `grok-bot/index.html`. Nothing in those files has been changed by design.
 
 | File | What it is |
 |---|---|
-| `prototype.html` | Hi-fi prototype of the restyled **home** (`index.html`) with all real content. CSS and JS are inline. |
-| `coffee.html` | Hi-fi prototype of `/coffee` (`coffee/index.html`). Its shared CSS blocks are byte-identical to `prototype.html`. |
-| `../../.shots/restyle/` | Screenshots at 1440×900 and 390×844 @2x: every home section, the footer lifting and fully revealed, the full page, the mobile menu, both coffee viewports and reduced motion. |
+| `shared.css` | **The shared dark system:** tokens, top bar, headers, keycap buttons, rows, bots, scan transition, floor footer, cursor, reduced motion. Becomes `/assets/site.css`. |
+| `shared.js` | **The shared behaviour:** nav caret + scroll-spy, menu sheet, reveals, GitHub stars, bot avatars + stage physics, scan transition, floor reveal, cursor. One rAF loop. Becomes `/assets/site.js`. |
+| `prototype.html` | Home (`index.html`) with all real content. |
+| `coffee.html` | `/coffee` (`coffee/index.html`). |
+| `../grok-bot/prototype.html` | `/grok-bot` (`grok-bot/index.html`); its own spec is `../grok-bot/SPEC.md`. |
+| `../../.shots/restyle-dark/` | 67 screenshots: desktop 1440×900, mobile 390×844 @2x, every section, footer lifting and revealed, the scan transition frame by frame, the Grok Bot boot, the bot stage tracking the cursor, and reduced motion. |
 
-Preview from the repo root with `python3 -m http.server`, then open `/design/restyle/prototype.html` and `/design/restyle/coffee.html`. The prototypes use relative paths (`../../images/`, `../../grok-bot/assets/`, `prototype.html`, `coffee.html`). Production paths are in §9.
-
----
-
-## 1. Direction in one paragraph
-
-The base is **light**: off-white paper `#F2F2EF` (the `/grok-bot` footer ground) with black ink type. The type is huge, tight Geist 800 with negative tracking, plus calm grey ledes. Content sits on white cards and full-colour tiles with 2rem radius, as on the Grok Bot page and Tobia Donadon's reference. There are **exactly two dark moments**:
-1. the Grok Bots teaser tile, so the bots sit on their own black ground;
-2. the closing Contact band, which the page lifts off to reveal the paper footer with the sliding `kappaemme.dev` wordmark.
-
-Colour comes from the work itself: Metodo ZAC navy and VibeDesk plum, both sampled from their images, the lavender of the portrait, and one Limit Coach blue stat. Sections are **left-aligned on a 12-column grid**, with a numbered hairline bar above each one. They are not centred templates. Motion uses the same calm vocabulary as `/grok-bot`: a staggered rise on load, a 26px fade-up on scroll, hairlines that draw in, light parallax and the footer reveal. Everything animates transform or opacity only and switches off under reduced motion.
+Preview from the repo root with `python3 -m http.server`, then open `/design/restyle/prototype.html`. The three prototypes link to each other, so the scan transition and the boot intro can be tried for real (home → "Meet the bots").
 
 ---
 
-## 2. Colour tokens
+## 1. Direction
+
+**Black throughout.** The page is `#000`, type is off-white `#F3F3EF`, and the only colours are the bots (Limit Coach blue `#2474F7`, Crankobot white), the green "live" dot from the original site, and the real colours inside project art. There are no light sections anywhere, including the footer.
+
+The personality comes from Francesco's own roots. The original site was a terminal/CRT page with an ASCII banner, so the whole system is built on **one motif: the caret.** It appears as:
+- the cursor (a block caret);
+- the active-nav marker (a blue caret bar);
+- the skills terminal and its blinking caret;
+- the page transition (a blue scan line);
+- the boot log on `/grok-bot`;
+- the footer wordmark, which types itself and ends in a blinking blue caret.
+
+Section headers are un-numbered `~/path` labels.
+
+The motion vocabulary Francesco likes is kept: staggered rise on load, 26px fade-up on scroll, hairlines that draw in, calm parallax, the footer revealed under the page. It is all transform/opacity only and off under reduced motion.
+
+---
+
+## 2. Diversification from reference (Tobia Donadon / previous version)
+
+| # | Signature element | Before (Tobia-like) | After (Francesco's own) |
+|---|---|---|---|
+| 1 | Page ground | Light paper `#F2F2EF`, white cards, colour tiles | **Black** `#000`, near-black cards `#0B0B0B` with 1px hairlines, colour only from bots and project art |
+| 2 | Primary CTA "Meet the bots" | White pill whose letters fly into a Crankobot face, grumpy brows, speech bubble | **Keycap button** (`label + ↵ key`). On click the label becomes a typed mono line `cd ~/grok-bots ▍`, then the **scan transition** runs (#3) |
+| 3 | Page transition / intro | 6 full-bleed coloured layers with a word each, then a curtain lifts up (5.4s) | **Scan:** a 2px blue scan line sweeps **down**; black fills behind it on leave, and on arrival the new page is revealed behind the same line (0.6s + 0.75s). `/grok-bot` adds a 1s **boot log** (`$ cd ~/grok-bots` / `● limit-coach online` / `● crankobot online`) before the sweep. Skippable; once per session |
+| 4 | Footer | Paper footer; "kappaemme" and ".dev" slide in from opposite sides; Limit Coach mark scales in | **Dark "floor"** `#0E0E0E` under a page with a rounded, hairline-edged bottom. Order is inverted: links on top, the **mono wordmark at the bottom types itself letter by letter** as the page lifts (".dev" dimmed), then a **blue block caret** blinks. A terminal-style status line closes it |
+| 5 | Navigation | Floating centred dark pill + "lamp" + corner chips | **Full-width top bar:** KM monogram + mono `kappaemme`, mono lowercase links, a **blue caret bar** that slides under the active item, transparent at the top and blurred black after scroll. Mobile: `menu` button + full-screen sheet with `~/` links |
+| 6 | Section headers | Numbered pill bars "01 Projects" … "08 Contact" | **Un-numbered `~/path` labels** (`~/projects`, `~/skills` …) with a mono count on the right |
+| 7 | Display type | Geist **800**, very tight, single colour | Geist **600**, −0.045 to −0.058em, **two-tone headlines** (statement in off-white, continuation dimmed: "Building apps *and tools.*"), with many **Geist Mono** accents |
+| 8 | Buttons, tags | Full pills, pill labels on photos | **12px-radius buttons with a keycap**, 7px mono tags, square arrow keys (`k-go`). No pill labels on the portrait: it gets a **figure caption** in mono |
+| 9 | Hero | Centred crew of avatars + huge centred headline | Left-aligned editorial hero, matted portrait (a frame 7px outside the photo), mono links row |
+| 10 | Project tiles | Full-colour 2rem tiles with H3 + pill + floating art | **Spec-sheet cards:** brand-coloured "screen" with the art, then the name, line and a mono `type / open` spec table |
+| 11 | Stat tiles | Colour blocks (white / blue / ink) | **Inline stats on hairlines**, the views figure in blue |
+| 12 | Stack | Rounded tiles with gaps | **Hairline cell grid** (no radius, no gaps) |
+| 13 | Bots | Gallery of tiles + centred crew + dashed "Next bot / Soon" slots | **A stage:** two large bots side by side on a horizon line, each on a breathing ring; eyes track the pointer, blink, float, and **sway and squash with scroll velocity**. **No empty slots anywhere** |
+| 14 | Skills | Plain list | **Terminal teaser** (`ls --most-starred`, `ls --recent`): lines type in when it scrolls into view, live star counts, blinking caret; then the full list |
+| 15 | Cursor | Round dot that grows | **Block caret** (9×17) that becomes a 34px rounded square over links and turns blue over Limit Coach |
+
+---
+
+## 3. Tokens (`shared.css :root`)
+
+**Colour**
 
 | Token | Value | Use |
 |---|---|---|
-| `--paper` | `#F2F2EF` | Page ground, footer, chips (78% alpha + blur), quote boxes |
-| `--paper-2` | `#E8E8E3` | Badges, star pills |
-| `--card` | `#FFFFFF` | Cards and tiles on paper |
-| `--ink` | `#0A0A0A` | Text, primary buttons, index pills, ink tiles |
-| `--ink-2` | `rgba(10,10,10,.68)` | Ledes, descriptions (≈6.7:1 on paper) |
-| `--ink-3` | `rgba(10,10,10,.60)` | Mono counts, numbers, fine print (≈5.0:1 on paper, 5.2:1 on white) |
-| `--line` / `--line-2` | `rgba(10,10,10,.10)` / `.20` | Hairlines, ghost-button rings |
-| `--night` | `#000000` | Dark moments (same ground as `/grok-bot`) |
-| `--panel` | `#161616` | Grok Bot app panel inside the teaser |
-| `--text`, `--text-2`, `--text-3` | `#FFF`, 68%, 50% | Text on dark |
-| `--line-d` | `rgba(255,255,255,.14)` | Hairlines on dark |
-| **`--lc`** | **`#2474F7`** | Limit Coach blue. Used for the bot, its label, the "1.8M+" stat, the coffee "Build" tile, focus rings and `::selection`. Nowhere else. |
-| `--live` | `#0E9F7A` | "Live" dot (darker than the old `#10a37f` so it reads on paper) |
-| `--zac` | `#0B193E` | Metodo ZAC tile, sampled from `metodo-zac-app-icon.jpg` so the icon melts into it |
-| `--vibe` | `#613F6D` | VibeDesk tile, sampled from `vibedesk-gallery.png` |
-| `--me` | `#8D85C0` | Portrait placeholder while `me.jpg` loads (its backdrop) |
-| `--stripe` | `#635BFF` | Only the 9px dot next to "Stripe payment" on `/coffee` |
-| `theme-color` | `#F2F2EF` | Was `#000000` |
+| `--bg` | `#000000` | Every page, `theme-color` |
+| `--raise` | `#0B0B0B` | Cards |
+| `--raise-2` | `#141414` | Nested panels (quote boxes, Grok Bot files) |
+| `--floor` | `#0E0E0E` | Footer floor |
+| `--text` | `#F3F3EF` | Primary text |
+| `--text-2` | `rgba(243,243,239,.66)` | Ledes, descriptions (≈8:1) |
+| `--text-3` | `rgba(243,243,239,.50)` | Meta, mono labels, dim half of headlines (≈4.8:1) |
+| `--line` / `--line-2` / `--line-3` | white 9% / 16% / 30% | Hairlines, card rings, hover rings |
+| `--lc` | `#2474F7` | Limit Coach, nav caret, scan line, focus ring, footer caret, `::selection` |
+| `--lc-text` | `#6AA1FF` | Blue for **small** text on black (`~/`, kickers, the 1.8M+ stat) (≈7.8:1) |
+| `--live` | `#10A37F` | Live dots, terminal ✓, boot "online" (the original site's green) |
+| `--zac`, `--vibe`, `--me`, `--stripe` | `#0B193E`, `#613F6D`, `#8D85C0`, `#635BFF` | Project screens, portrait placeholder, Stripe dot |
 
-Rules:
-- No gradients, glows or glass blobs. The only blur is on the fixed chrome, and only for legibility.
-- Limit Coach only on dark or light grounds; Crankobot only on dark. These are the `/grok-bot` rules.
-- Stack icons keep brand colours on white. Two exceptions: **C uses `#00599C`** (the official dark C blue; `#A8B9CC` vanishes on white), and **React uses `#149ECA`** (react.dev's light-mode cyan). GitHub and Railway turn ink, because they were white only because the old ground was black.
+Stack icons keep their original brand colours, which now read on black again. PostgreSQL is lifted to `#6C8FEF` and Stripe to `#7A73FF` for contrast.
 
----
+**Type** (Geist 400–700 + Geist Mono 400–600; weight 800 is no longer needed)
 
-## 3. Typography
-
-**Geist** 400–800 plus **Geist Mono** 400–600, loaded from Google Fonts as now with weight **800 added**. The URL is in `prototype.html` `<head>`. Body: Geist 500, tracking −0.01em, line height 1.5.
-
-| Role | Size | Weight | LH | Tracking | Notes |
-|---|---|---|---|---|---|
-| Hero H1 | mobile `clamp(3.25rem, 13.6vw, 7.4rem)`; ≥640 `clamp(4.5rem, 9.2vw, 7.4rem)` | 800 | .88 | −.058em | `text-wrap: balance` |
-| Coffee H1 | mobile `clamp(3.4rem, 15vw, 7.25rem)`; ≥640 `clamp(4.5rem, 9.4vw, 7.25rem)` | 800 | .88 | −.058em | max 9ch |
-| Section H2 (`.k-h2`) | `clamp(2.6rem, 6.6vw, 5.4rem)` | 800 | .95 | −.05em | balance. Grok teaser `clamp(2.6rem, 5.4vw, 4.6rem)`, coffee card `clamp(2.5rem, 5.6vw, 4.6rem)` |
-| Contact H2 | `clamp(3rem, 7.6vw, 6.2rem)` | 800 | .92 | −.055em | max 10ch |
-| Tile H3 | `clamp(1.9rem, 3.3vw, 2.8rem)` | 800 | 1 | −.045em | max 17ch |
-| Journey role H3 | `clamp(1.9rem, 3.4vw, 2.75rem)` | 800 | 1 | −.045em | |
-| Card title ("More work", "Most starred") | 1.45rem | 800 | — | −.035em | |
-| Row name | 1.15rem → 1.28rem (≥768); skills 1.08 → 1.15 | 700 | 1.2 | −.025em | `overflow-wrap: anywhere` for long repo names |
-| Hero lede | 1.12rem → 1.32rem (≥768) | 500 | 1.5 / 1.45 | −.01em | first sentence in ink 600 |
-| Lede (`.k-lede`) | 1.12rem → 1.22rem | 500 | 1.5 | −.01em | ink-2, max 40ch, `text-wrap: pretty` |
-| Body / desc | .98–1.05rem | 500 | 1.45–1.5 | | |
-| Bar label | .95rem | 600 | | | |
-| Index pill | .68rem Geist Mono | 600 | 1 | .06em | ink pill, paper text |
-| Mono count / badge | .66–.72rem Geist Mono, uppercase | 500–600 | 1 | .08em | |
-| Pill label (`.k-pill`, `.k-label`) | .85–.92rem | 700 | | −.01em | |
-| Footer wordmark | `clamp(2.25rem, 11.3vw, 9rem)` | 500 | .88 | −.045em | identical to `/grok-bot` |
-| Footer links | .78 → .82rem uppercase | 500 | | .11em | identical to `/grok-bot` |
-
-No orphans: every display heading uses `text-wrap: balance`, and every paragraph uses `pretty`. All screenshots were checked for widows.
-
----
-
-## 4. Space, grid, radii
-
-- **Container `.wrap`:** content max **76rem** (1216px) plus a gutter of **1.25rem** (<640) or **2rem** (≥640). At 1440 the content runs x 112 → 1328.
-- **Grid:** section heads use 12 columns ≥1024. The bar spans 12, the H2 spans 1–7, and the lede spans 8–12, bottom-aligned. Two-up blocks use 1fr/1fr or 1.1fr/1fr.
-- **Section rhythm `--section-y`:** 5.5rem mobile, 7rem ≥768, 8.5rem ≥1024. Measured from the hairline bar of one section to the bottom of the previous one.
-- **Head to content:** 2.25rem mobile, 3.5rem ≥1024.
-- **Gaps:** tiles 1rem (mobile) / 1.25rem; stat and stack tiles .6rem / 1rem; post cards .75rem / 1rem.
-- **Radii:** 2rem for tiles, big cards and the portrait (`--r-tile`); 1.5rem for post cards and reasons (`--r-card`); 1.1–1.25rem for stat and stack tiles; 1.6rem for the Grok panel; 1rem for quote boxes; 999px for pills and buttons. The contact band uses 1.75rem (mobile) or 2.5rem (≥768).
-- **Buttons:** min-height 3.5rem; pill links 2.6rem; round row arrows 2.5rem; chips ≥44px. Every tap target is ≥44px.
-
----
-
-## 5. Components
-
-| Component | Class | Spec |
+| Role | Size | Weight / tracking |
 |---|---|---|
-| Brand chip | `.k-chip--brand` | Fixed top-left (1rem / 1.75rem ≥640). Paper 78% + blur 14px, ring `--line-2`. KM mark (`images/kappaemme-mark.svg`, 27×16) + "Kappaemme". Links to `#top`. Hover: ring darkens, mark tilts −6° with `--pop`. |
-| Pill nav | `.k-nav` | Fixed, centred, ≥1024 only. Eight links: Projects · Skills · Grok Bots · On X · Stack · Journey · Coffee · Contact (13px/500, padding 6×13, 6×16 ≥1280). Paper 80% + blur 16px. **Lamp:** a 32×5 ink bar at the top edge with an ink radial glow below, sliding `left .5s --ease-out`. It is **scroll-spied**: whichever section crosses the middle band of the viewport (rootMargin `-45% 0 -54% 0`) gets `aria-current="true"` and the lamp; in the hero there is no lamp. "Grok Bots" lights while the teaser is in view, but its href goes to `/grok-bot`. |
-| GitHub chip | `.k-chip--right` | Top-right, ≥1280 on home and ≥640 on sub-pages. |
-| Menu button + sheet | `.k-chip--menu`, `.k-sheet` | Below 1024 an ink "Menu" chip replaces the pill. It opens a full-screen paper sheet with the eight links at `clamp(2rem, 9.4vw, 2.9rem)` 800, numbered 01–08 in mono, with hairlines. Socials sit at the bottom. Motion: sheet opacity .35s + translateY −1rem → 0 over .5s; items stagger 35ms. The burger morphs into an ×. `role="dialog"`, `aria-modal`, `inert` when closed; Esc closes and returns focus; `html.menu-open` locks scroll. |
-| Section bar | `.k-bar` | Hairline on top (draws in), ink index pill "01", label, mono count on the right. On dark the hairline is white 14% and the index pill is white. |
-| Buttons | `.k-btn`, `--ghost`, `--light` | Ink pill / transparent with a 1.5px ring / white pill. Hover: ink lifts to `#262626` with a soft shadow; arrows nudge 2px. |
-| Wake-up CTA | `.gb-cta` | **Copied from `/grok-bot`** and used only once on home ("Meet the bots"). On click, letters fly in, the pill turns into Crankobot's face, the brows go grumpy and a bubble line appears. Navigation to `/grok-bot` happens at 1.35s. Cmd/Ctrl/Shift click and reduced motion navigate immediately. `pageshow` resets it for bfcache. |
-| Badge | `.k-badge` | Mono .66rem uppercase pill on `--paper-2`. Variant on dark: white 14%. |
-| Feature tile | `.k-tile` | The whole tile is a link. Label row: 1.9rem icon chip + name + badge, then H3, then pill link. The stage centres the art. ZAC icon at `clamp(9.5rem, 20vw, 13rem)`, radius 22.5%, deep shadow. VibeDesk art at `clamp(13rem, 27vw, 18.5rem)`, round. Hover: art −6px and scale 1.03, pill brightens, arrow nudges. |
-| List card + row | `.k-card`, `.k-row` | White card, 2rem radius. Rows: number · name/desc · meta (badge, Live dot) · round arrow. Hairline on top of each row draws in, staggered 90ms. Hover: the arrow circle fills ink. Mobile areas: `"n main go" / ". meta go"`. |
-| Stat tile | `.k-stat` | White / blue / ink. Big number `clamp(1.75rem, 5vw, 3.6rem)` 800. Hover: lift 3px and tilt −1° with `--pop`. |
-| X post card | `.k-post` | White card, 1.5rem radius. Author row (avatar 2.5rem, name + blue check SVG, handle, X logo). Greg's line at 1.2rem 700. Quote box on paper holds Kappaemme's quote, kept in its original capitals, plus a mono tag. Mono meta: ♡ likes · views · "View on X ↗". Hover: lift 3px with a soft shadow. |
-| Tech tile | `.k-tech` | White, 28px brand icon top-left, name + mono tag bottom-left. Same hover as stat tiles. |
-| Footer | `.site-footer` | **Same markup, classes and maths as `/grok-bot`** (§6). The only difference on home: the wordmark links to `#top` with an ↑ arrow, and the corner mark is the KM mark in an ink circle (`/grok-bot` keeps Limit Coach). |
-| Cursor | `.k-cursor` | Fine pointers only, off under reduced motion. 14px ink dot that grows to 46px at 14% over links and tiles. It turns **white over `[data-cursor-light]`** (teaser, project tiles, contact band) and **blue with a glow over `[data-cursor-blue]`** (Limit Coach). It follows the `/grok-bot` spring: k 1100, c 52, m .3, two sub-steps. |
+| H1 (hero, coffee, grok) | mobile `clamp(3.3rem, 13.6–14.4vw, 7.75rem)`, ≥640 `clamp(4.6rem, ~9.4vw, 7.5–7.75rem)` | 600 / −.058em, lh .93 |
+| Section H2 `.k-h2` | `clamp(2.4rem, 5.8vw, 4.75rem)` | 600 / −.045em, lh 1 |
+| Closing H2 (contact, grok close) | `clamp(3rem, 7.6vw, 6.2rem)` | 600 / −.055em, lh .95 |
+| Card names, roles | 1.6rem / `clamp(1.75rem, 3.2vw, 2.5rem)` | 600 / −.035 to −.04em |
+| Lede | 1.08 → 1.16rem (hero 1.1 → 1.28rem) | 400 |
+| Mono labels | .7–.8rem Geist Mono | 500 |
+| Footer wordmark | `clamp(2.3rem, 10.2vw, 9.75rem)` **Geist Mono** | 500 / −.045em |
+
+Two-tone rule: `<span class="k-dim">` holds the second half of a headline. Use it only on H1s and closing H2s.
+
+**Shape and space:** cards 16px, buttons and screens 12px (inner screens 10px), keycaps and tags 7px. Container 76rem + gutter 1.25rem (<640) or 2rem. `--section-y` is 6 / 8 / 9rem. Top bar 64px. Floor 34rem (<768) or 30rem.
+
+**Motion:** `--ease-out cubic-bezier(.22,1,.36,1)`, `--ease-soft cubic-bezier(.2,.8,.2,1)`, `--ease-io cubic-bezier(.65,0,.35,1)` (scan), `--spring` (bot hop only). `--enter` offsets every entrance while a scan or boot plays.
 
 ---
 
-## 6. Motion
+## 4. Components
 
-Tokens are the same as `/grok-bot`:
-
-| Token | Value |
+| Component | Spec |
 |---|---|
-| `--spring` | `linear(0, .42 9%, .84 21%, 1.02 33%, 1.05 41%, 1.01 55%, .99 70%, 1)` |
-| `--ease-out` | `cubic-bezier(.22, 1, .36, 1)` |
-| `--ease-soft` | `cubic-bezier(.2, .8, .2, 1)` |
-| `--pop` | `cubic-bezier(.3, 1.7, .5, 1)` |
-
-| Moment | Spec |
-|---|---|
-| **No intro curtain on home or `/coffee`.** | The curtain belongs to `/grok-bot`. The home has to be clear and fast. |
-| Chrome in | `nav-in` .45s ease-out, .1s delay (opacity and visibility). |
-| Hero rise | `rise` .7s `--ease-out`, `translateY(14px)` → 0. Delays: name pill .05s, H1 .12s, lede .22s, CTAs .30s, fine print .38s, portrait .20s. The portrait takes .9s and its image settles from `scale(1.06)` over 1.4s. |
-| Portrait pills | `crew-in` .56s `--spring` from `translateY(1rem) scale(.6)`, delay .55s + i·80ms. |
-| Scroll reveal | `.reveal`: elements below 92% of the viewport at load are armed with `opacity 0, translateY(26px)`. An IntersectionObserver (rootMargin `0 0 -12% 0`, threshold .15) adds `--in`: opacity .85s and transform .9s `--ease-out`. `.reveal__art` follows .12s later from `translateY(16px) rotate(−3.5°) scale(.94)`; this applies to the project art and the Grok panel. `[data-stagger]` siblings get 80ms steps. Classes are removed after 1.1s so hovers stay snappy. **Same code as `/grok-bot`.** |
-| Hairlines | `.k-grow::before` goes `scaleX(0 → 1)` over 1.1s `--ease-soft`, staggered 90ms per row: section bars, list rows, journey entries, coffee steps, contact rows. |
-| Parallax | One rAF loop with all reads first, then all writes, transform only. Hero portrait wrapper: `scrollY × 0.06` (hero only). Project art: `(offset from viewport centre) × −0.05`, only while on screen. |
-| Bots | `grok-bot/assets/*-animated.svg` bob and blink by themselves, and their SVG-internal CSS honours reduced motion. Hovering a crew item plays `bot-hop` (.62s) on the avatar, and the label pops up 2px with scale 1.04. Limit Coach's label also gets a blue glow. |
-| Live dot | Opacity pulse 2.4s. It is the only infinite animation besides the bots. Off under reduced motion. |
-| Footer reveal | Footer is `position: fixed` under the page, and `body` gets `padding-bottom: var(--footer-h)` (37rem mobile, 36rem ≥768). `--reveal` (0 → 1) is measured on scroll in rAF. Text rises at `(r − .04 − .09i)·6`, the rule draws at `(r − .56)·3.4`, "kappaemme" and ".dev" slide in from opposite sides at `(r − .6/.66)·3` over 5vw, the arrow follows at `(r − .72)·3`, and the mark scales at `(r − .62)·4`. Chips and nav fade out while the footer is open. **Same maths as `/grok-bot`.** Focusing a footer link jumps to the bottom. |
-| Anchors | Native smooth scroll with `scroll-padding-top: 5.5rem`, so headings clear the chrome. No smooth-scroll library. |
-
-**Reduced motion:** no rise, pop, reveal, parallax, hairline draw, hover transforms, live pulse or cursor. The wake-up CTA navigates directly, and the bubble does not move. The footer becomes static and in flow (`body` padding 0). The bots stop by themselves.
-
-**Performance:** only transform and opacity animate. `will-change` is set only on parallax targets. The rAF loop pauses when the tab is hidden. One fetch to the GitHub API, as today.
+| **Top bar** `.k-top` | Fixed, 64px, transparent; `.is-scrolled` (scrollY > 8) adds black 74%, blur 14px and a bottom hairline. Brand = 34px KM monogram tile + mono `kappaemme`. Links are mono .78rem, `--text-3`, and white when hovered or current. **Caret** `.k-caret`: a 2px blue bar under the current link, `translateX + scaleX` .5s `--ease-out`. GitHub chip ≥1280. |
+| Home nav | Eight links (projects, skills, grok bots, on x, stack, journey, coffee, contact), scroll-spied (`rootMargin -45% 0 -54% 0`, hero = none). "grok bots" goes to `/grok-bot` with the scan. Below 1024 a `menu` button opens `.k-sheet`: a full-screen black sheet, `~/` + 2.6rem links, 32ms stagger, `inert` when closed, Esc closes. |
+| Sub-page nav `.k-top--sub` | Back arrow + monogram (name hidden <640) → home; four links **home · grok bots · coffee · on x ↗**, current one has the caret (`aria-current="page"`); short labels <640 (`home bots coffee x`). |
+| Header `.k-head` | `~/path` (blue `~/`) + mono count right; H2 cols 1–7, lede cols 8–12 ≥1024. |
+| Buttons `.k-btn` | Off-white with black label + keycap `.k-key` (mono glyph or icon, inset bevel, presses 1px on `:active`). `--ghost` is a hairline variant, `--plain` has no keycap. Hover lifts 1px. Busy state (scan links with `data-busy-text`): label hidden, mono text + blinking caret. |
+| Card `.k-card` | `#0B0B0B`, 16px, inset 1px `--line`; hover ring `--line-3`. |
+| Row `.k-row` | Hairline-topped grid: main (name + desc) · meta (tags) · `k-go` square arrow key (fills off-white on hover). Hairlines draw in (`.k-grow`, 90ms stagger). |
+| Project card `.k-proj` | 8px inset card: brand screen 16:10.5 with a mono type tag and the art (ZAC icon 22.5% radius; VibeDesk round), then name, line and the `type / open` spec table in mono. |
+| Terminal `.k-term` | `#050505` panel, mono .8rem, header `~/codex-skills · Kappaemme-git`, `$` commands in blue, ✓ in green, name (ellipsis), live star count or `recent`. Every line is a link to its repo. Lines animate in (`term-in` .45s, 70ms stagger) when 20% in view; the final caret blinks at 1s. |
+| Stage `.k-stage` / `.gb-set` | `#050505` panel; actors `.k-actor` = inline SVG avatar + hairline ring (blue for Limit Coach) that breathes with the bob; mono caption under each. |
+| Floor `.k-floor` | See §6. |
+| Cursor `.k-cursor` | Fine pointers only. 9×17 off-white block; over links, buttons and bots it becomes 34px / 10px radius / white 10% with a 55% ring; blue + glow over Limit Coach (`[data-cursor-blue]`). Spring k1100 c52 m.3. |
 
 ---
 
-## 7. Section by section (home)
+## 5. Signature interaction: the scan
 
-Desktop is 1440×900, mobile 390×844. ✓ means the screenshot was checked for alignment, overflow (none: `scrollWidth == clientWidth` at both widths) and orphans.
+**Leaving a page** (any `a[data-scan]`: "Meet the bots", the cross-page nav, footer and wordmark links):
+1. 0ms: `data-busy` → the label swaps to the `data-busy-text` mono line with a blinking caret (only on buttons that have it).
+2. 180ms: `.k-scan.is-out`. The fill `scaleY(0→1)` (origin top) and the line `translateY(-6px → 100vh)` run over .6s `--ease-io`.
+3. 820ms: `sessionStorage.k-scan = 1`, then navigate.
 
-### Hero `#top` ✓ `home-desktop-01`, `home-mobile-01`
-- **Desktop:** two columns, 1.72fr / 1fr, gap 4rem, vertically centred in `min(100svh − 11rem, 46rem)`, top padding 8rem.
-  - Left column: name pill (2rem avatar, "Francesco Mistero · aka Kappaemme"), H1 **"Building apps and tools."** on two lines, lede, two CTAs ("See my work ↓" ink, "Get in touch" ghost), and a fine-print line with X, GitHub and email links.
-  - Right column: portrait tile, 4:5, 2rem radius, lavender. Pills on top of it: "CS student" · "Indie hacker" · "@Kappaemmedev" (ink).
-- **Mobile:** single column, H1 at ~53px on two lines, the two CTAs share one row, then the portrait at 5:4 below. The top of the hero sits under the chips at 7rem.
-- **Replaces:** the centred 132px photo, the ASCII "KAPPAEMME" CRT banner and the icon row. The banner is retired on purpose: it was the dark/terminal style. The brand wordmark now lives in the footer. GitHub, Email and X stay as text links in the fine print and in the chrome.
+Modifier clicks, middle clicks and reduced motion navigate normally. `pageshow` (bfcache) resets the state.
 
-### 01 Projects `#products` ✓ `home-desktop-02/03`, `home-mobile-02/03`
-- Head: "01 Projects · 5 PROJECTS" / H2 "Selected work." / lede "A small gallery of products I build and maintain. Select a piece to explore it."
-- **Two feature tiles**, side by side ≥768 and stacked on mobile; min-height 28rem / 32rem / 38rem (≥1024).
-  - **Metodo ZAC** (navy): chip, "iPhone app" badge, H3 "Coach-led workouts, progress tracking and check-ins.", pill "View on the App Store ↗", app icon on stage.
-  - **VibeDesk** (plum): chip `vibedesk-icon.png`, "Web app" badge, H3 "A study and work companion I am currently building.", pill "Visit the website ↗", round `vibedesk-gallery.png` on stage.
-- **More work card:** title + "Explore all GitHub projects ↗", then three rows: Metodo ZAC · website, Pocketflow, Glorydraw, each with a type badge, a Live dot and an arrow.
+**Arriving** (head inline script): if `k-scan` is set, set `html[data-scan="in"]` before first paint. The fill and line continue down (`translateY(0 → 100%)` / `0 → 100vh`, .75s); `--enter: .45s` delays the hero rise so it surfaces behind the line. `/grok-bot` plays the **boot** instead (see `../grok-bot/SPEC.md`).
 
-### 02 Skill library `#skills` ✓ `home-desktop-04`, `home-mobile-04`
-- Head: "02 Skill library · 10 FEATURED" / H2 "Codex skills, open source." / lede, unchanged.
-- **Two cards, ≥1024 side by side:**
-  - **Most starred** (rows 01–05): star pill under the description. The first star pill is ink. Footer note "Star counts refresh from GitHub on load."
-  - **Recent releases** (rows 06–10, replacing the "Recent" labels). Footer link "All repositories on GitHub ↗".
-- This replaces the 470px inner scroll box, so the whole list is visible with no nested scrolling.
-- Star updates use the same API logic, now targeting `[data-stars]` inside each `[data-stars-repo]` row. Fallback labels: 1k+, 900+, 900+, 150+, 70+.
-
-### 03 Grok Bots teaser `#grok-bots` (new anchor, dark moment #1) ✓ `home-desktop-05`, `home-mobile-05`
-- Black tile, 2rem radius, inside the container. ≥1024 it splits 1fr / 1fr with 4rem padding and min-height 32rem.
-- **Left:** bar "03 Grok Bots · 2 BOTS", H2 "My Grok Bots.", lede "Small bots I build and run inside Grok Bot. Each one does one job. The code is on GitHub." (all copy from `/grok-bot`), wake-up CTA "Meet the bots" → `/grok-bot`, and "New ones land there first."
-- **Right:** a Grok Bot-style panel (`#161616`, header "Library · kappaemme.dev/grok-bot"), with a crew of `limit-coach-animated.svg` (blue label, subtitle "Claude + Codex limits") → `/grok-bot#bot-limit-coach`, `crankobot-animated.svg` (white label, "First Customer Finder") → `/grok-bot#bot-crankobot`, and `ghost-slot.svg` "Next bot / Soon". The ghost is hidden below 480px so the labels don't collide.
-- If a bot is added in `grok-bot/bots.data.js`, add its crew item here and update the count. Keep it to at most three items, including the ghost.
-
-### 04 Shared on X `#shared` ✓ `home-desktop-06/07`, `home-mobile-06/07`
-- Head: "04 Shared on X · 5 QUOTE POSTS" / H2 "Shared by Greg Brockman." / the original intro.
-- **Stat tiles:** 5 posts by Greg (white) · 1.8M+ combined views (blue) · 10K+ likes (ink). These are the existing figures, unchanged.
-- **Five post cards**, original order, links, texts and figures:
-  - ≥1024: a 6-column grid, cards 1–3 span 2 and cards 4–5 span 3.
-  - <1024: a **horizontal scroll-snap carousel** (cards `min(84%, 22rem)`, bleeding to the screen edge, scrollbar hidden), so mobile doesn't scroll through five tall cards.
-- Note "Engagement figures checked on 23 September 2026."
-
-### 05 Stack `#stack` ✓ `home-desktop-08`, `home-mobile-07`
-- Head: "05 Stack · 12 TOOLS" / H2 "The stack." / lede "The languages, frameworks and tools behind these projects."
-- Twelve white tiles in the README order (C … Stripe): 6 columns ≥1024, 4 ≥768, 3 on mobile, so the grid is always balanced. Icons are the existing SVGs, recoloured per §2.
-
-### 06 Journey `#journey` ✓ `home-desktop-09`, `home-mobile-08`
-- The bar "06 Journey · 2023 — PRESENT" spans the full width. ≥1024 the section splits 5fr / 7fr.
-- **Left (sticky top 7rem):** H2 "The journey so far." and lede "Computer Science at Federico II, and building in public since October 2025."
-- **Right:** two entries. Each has a date badge, a role H3, the organisation, and the original three points as a dotted list with hairlines.
-- The "@Kappaemmedev" handle in the org line is now a link.
-
-### 07 Coffee `#coffee` ✓ `home-desktop-10`, `home-mobile-09`
-- White card, 2rem radius. ≥1024 it splits 1.1fr / 1fr.
-- **Left:** bar "07 Coffee · SUPPORT THE BUILD", H2 "Support the next build.", the original lede, and buttons: **Buy me a coffee** (ink, cup icon, Stripe link, new tab) · My work (`#products`) · Contact me (mailto). Fine print: "Donations go through Stripe. More on the coffee page." → `/coffee/`.
-- **Right:** the three Build / Learn / Repeat reasons from `coffee/index.html`, as a numbered hairline list. On mobile the label stacks above the text.
-
-### 08 Contact `#contact` (dark moment #2) ✓ `home-desktop-11`, `home-mobile-10`
-- Full-bleed black band with all corners rounded. It is the **last thing in `.site-content`**, so the page lifts off the footer here.
-- **Left:** H2 "Got a project or an idea? Let's talk." and the original sub-line.
-- **Right:** three big hairline rows: Email `misterokappa12@gmail.com` · X `@Kappaemmedev` · GitHub `Kappaemme-git`, each with a round arrow that fills white on hover.
-
-### Footer ✓ `home-desktop-12/13`, `home-mobile-11`
-- Wordmark "kappaemme.dev ↑" (→ `#top`), the rule, then the lead "I build small apps, tools and bots, try them in the real world and keep the ones that work." (the `/grok-bot` footer line without its second sentence).
-- Three link columns: Projects / Skills / Grok Bots / On X · Stack / Journey / Coffee / Contact · GitHub / X · @Kappaemmedev / Email.
-- Meta: "© 2026 Francesco Mistero · Made one commit at a time.", "Back to the top ↑" and the KM mark. Below 640 the made-line and the back link are hidden; the wordmark already goes to the top.
+Frames: `.shots/restyle-dark/home-scan-03…07-*`.
 
 ---
 
-## 8. `/coffee` (`coffee.html`) ✓ `coffee-desktop-*`, `coffee-mobile-*`
+## 6. The floor (footer)
 
-- **Chrome (sub-page variant):**
-  - back chip "← Kappaemme" → `/`;
-  - centred pill **Home · Grok Bots · Coffee · On X**, with the lamp resting on Coffee (`aria-current="page"`). Below 768 the items become icons only (home, bot, cup, X), right-aligned, as on `/grok-bot`;
-  - GitHub chip ≥640.
-- **Hero:** ≥1024 splits 1.4fr / 1fr.
-  - **Left:** a white pill with a green dot reading "CS student & indie hacker", H1 "Support the next build.", mono sub "A tiny backing page for Kappaemme", the original intro, and buttons **Donate with Stripe** (ink, cup) · My work · Contact me. The original `stripeDonationLink` fallback logic is kept.
-  - **Right:** a white donation panel. Its top half is the `km-logo.png` art on its own `#0B0B09` ground; the PNG's 1px border is hidden with `clip-path: inset(1px)`. Below: "Support page" badge, "Support my next project.", the original text, and the Stripe line ("● Stripe payment" / "Secure checkout").
-- **01 Why donate:** H2 "Why it helps." and three tiles: Build (blue), Learn (ink), Repeat (white). Each has a mono kicker; the H3 and text are anchored to the bottom.
-- **02 Contact me (dark band, the lift-off):** H2 "Write me directly." with two rows: Email ("Write me directly" / misterokappa12@gmail.com) and GitHub ("See the code" / github.com/Kappaemme-git).
-- **Footer:** the shared one. Wordmark → `/` with ↗ (as `/grok-bot`), lead with "Everything else I make is on kappaemme.dev.", meta "· Created by Kappaemme".
-- **Fonts:** Outfit, Space Mono and DM Sans are **dropped** in favour of Geist and Geist Mono. The radial purple glow and dot grid backgrounds are removed.
-
----
-
-## 9. Implementation checklist for Codex
-
-Work on a branch from `portfolio-restyle`. Do not touch `main` without Francesco's approval.
-
-### Shared setup
-- [ ] Recommended: create `assets/site.css` (the SHARED blocks of `prototype.html`: tokens, chrome, type, buttons, reveal, footer, cursor and reduced motion) and `assets/site.js` (reveal, grow, footer reveal, cursor and the rAF loop). Use them from `index.html` and `coffee/index.html`. Keeping everything inline, as today, is also fine; then copy the blocks verbatim. **Do not** load `site.css` in `grok-bot/index.html` (see below).
-- [ ] Google Fonts URL: Geist `400;500;600;700;800` + Geist Mono `400;500;600`.
-- [ ] Set `<meta name="theme-color" content="#F2F2EF">` and `color-scheme: light`. Keep all SEO, OG and Twitter tags and the Vercel Analytics snippet as they are.
-- [ ] Paths: replace `../../images/` → `/images/`, `../../grok-bot/` → `/grok-bot`, `../../grok-bot/assets/` → `/grok-bot/assets/`, `coffee.html` → `/coffee/`, `prototype.html` → `/`, and `../../coffee/km-logo.png` → `/coffee/km-logo.png`.
-
-### `index.html`: current → new
-- [ ] `<header class="topbar">` → `.k-skip`, `.k-cursor`, `.k-chip--brand`, `.k-nav` (eight links, `data-spy`, Grok Bots href `/grok-bot`), `.k-chip--right`, `.k-chip--menu`, `#k-sheet`.
-- [ ] `<main id="top">` → wrap in `<div class="site-content"><main id="main">`. The hero `<section>` takes `id="top"`.
-- [ ] Hero (`.hero`, `.hero-photo`, `.ascii-banner`, `.hero-tagline`, `.hero-lede`, `.icon-row`) → `.k-hero` markup. Remove the ASCII banner and its CRT CSS.
-- [ ] `#products`: `.gallery-grid` → `.k-features` (two `.k-tile`); `.more-work .board` → `.k-card.k-more` with three `.k-row`. Delete the `data-gallery-link` delayed-navigation script; the tile hover replaces it. Gallery links now open in the same tab, as before; rows open new tabs, as before.
-- [ ] `#skills`: `.board.board-scroll` → `.k-skills` with two `.k-card`s (rows 1–5 and 6–10). Keep `data-stars-repo` on rows 1–5 and point the star script at `[data-stars]`.
-- [ ] **New** `#grok-bots` teaser section between Skills and Shared, plus the wake-up CTA CSS and JS (`.gb-cta`, `.gb-bubble`).
-- [ ] `#shared`: `.proof-top/.proof-stats/.proof-grid` → `.k-head`, `.k-stats`, `.k-posts`. Keep all five URLs, texts, figures and the date note. Keep Greg's avatar URL.
-- [ ] `#stack`: `.stack-grid .tile` → `.k-stack .k-tech` (`<ul>`/`<li>`). Apply the C and React colours and switch GitHub and Railway to ink.
-- [ ] `#journey`: `.timeline .tl-entry` → `.k-journey` with `.k-entry` items.
-- [ ] `#coffee`: → `.k-coffee` card with the reasons list and the `/coffee/` link.
-- [ ] `#contact`: → `.k-contact` band. It must be the **last child of `.site-content`**.
-- [ ] `<footer class="site-footer">` → the shared fixed footer (home variant); add `body { padding-bottom: var(--footer-h) }`.
-- [ ] Scripts: replace the old reveal script with the prototype IIFE (stagger, reveal, grow, lamp and scroll-spy, menu, stars, cursor and parallax, wake CTA, footer reveal).
-- [ ] Update `README.md` §2–§5 and §8: light editorial style, eight sections, tokens, mobile menu.
-
-### `coffee/index.html`: current → new
-- [ ] `.nav` → sub-page chrome (back chip, `.k-nav--sub` with Coffee current, GitHub chip).
-- [ ] `.hero` + `.support-panel` → `.c-hero` (`.c-eyebrow`, h1, `.c-sub`, `.c-intro`, `.c-actions`) + `.c-panel`. Keep `#donateHero` and the `stripeDonationLink` logic.
-- [ ] `01 - Why donate` `.reasons` → `.k-section` with `.c-reasons` (blue / ink / white).
-- [ ] `02 - Contact me` `.contact-grid` → `.k-contact` band (the last element of `.site-content`).
-- [ ] `.footer` → the shared footer (sub-page variant). Favicon stays `km-logo.svg/png`.
-
-### `grok-bot/index.html`: consistency only (the page design is approved; don't restyle it)
-Allowed changes, nav and footer only:
-- [ ] **Nav pill:** go from `Home · Grok Bots · On X` to **`Home · Grok Bots · Coffee · On X`**. Add a cup icon for the mobile icon mode (`#i-cup` path in `coffee.html`). Grok Bots stays `aria-current`. The pill stays dark (`rgba(22,22,22,.72)`), because the page ground is black; the light pill is only for light pages.
-- [ ] **Footer link columns:** match the site, i.e. Projects / Skills / Grok Bots / On X · Stack / Journey / Coffee / Contact (root-relative `/#…`, `/coffee/`) · GitHub / X · @Kappaemmedev / Grok Bot ↗. Keep the bot project links (LimitNotch, First Customer Finder) by appending them to the second column, or keep the current data-driven column. Either is fine.
-- [ ] Keep its wordmark → `https://kappaemme.dev/` ↗, its Limit Coach footer mark, intro curtain, cursor and everything else untouched. Its footer `--footer-h`, maths and classes are already identical.
-- [ ] Optionally add `· Made one commit at a time.` to its footer meta ≥768.
-
-### QA before merge
-- [ ] At 390, 768, 1024, 1280 and 1440 there is no horizontal overflow (`scrollWidth == clientWidth`) and no orphan words in headings.
-- [ ] Keyboard path: skip link → chips → nav or menu (Esc closes) → every link has a visible blue focus ring → footer links scroll the footer into view.
-- [ ] Reduced motion: everything is visible at once, the footer sits in flow and the CTA navigates directly.
-- [ ] With the GitHub API blocked, the star fallbacks show.
-- [ ] Lighthouse: no CLS from the hero (images have width and height; the portrait is `fetchpriority="high"`, everything else is lazy).
+- **Placement:** `position: fixed` under the page; `body { padding-bottom: var(--floor-h) }`. `.site-content` has a rounded bottom (28/40px) and `box-shadow: 0 1px 0 var(--line-2)`, so the page reads as a sheet lifting off a slightly lighter floor.
+- **Reveal:** `--reveal` (0→1) is measured on scroll in rAF (same maths as before).
+  - Lead and link columns rise with `(r − .05 − .08i)·6`, 18px.
+  - **Wordmark letters** each reveal with `(r − .42 − .03i)·12` (opacity + .2em rise). It is typed left to right, ".dev" dimmed.
+  - The **caret** fades in at `(r − .86)·10`. At `r ≥ .92` the floor gets `.is-typed` and the caret blinks (1.1s steps).
+  - The top bar fades out while the floor is open.
+- **Content:**
+  - lead line;
+  - three mono columns: `index` · `more` · `elsewhere` (on /grok-bot: `index` · `bots` · `elsewhere`);
+  - the wordmark: home → `#top`, sub-pages → `/` (production: `https://kappaemme.dev/`);
+  - status line: `© 2026 Francesco Mistero · Made one commit at a time.` (coffee: `· Created by Kappaemme`) + `↑ back to top`.
+- **Reduced motion:** static, in flow, fully shown.
 
 ---
 
-## 10. Accessibility notes
-- Landmarks: skip link, `<nav aria-label>` for sections, the menu dialog and the footer, `<main id="main">`, and `aria-labelledby` on every section.
-- Contrast: ink-2 ≈6.7:1 and ink-3 ≈5.0:1 on paper; text-2 on black ≈9:1. White on `--lc` is ≈4.2:1, so it is used only for large or bold text (stat numbers, labels, tile headings), which passes AA large. Keep small body text off blue. White on the ZAC and VibeDesk tiles is above 8:1.
-- Focus: a 2px Limit Coach blue outline with 4px offset everywhere, including on dark tiles.
-- Avatars and decorative art are `alt=""` or `aria-hidden`; the portrait has a real alt. The verified badges carry `aria-label`. Project tiles have full `aria-label`s.
-- Scroll-spy uses `aria-current="true"`; the sub-page pill uses `aria-current="page"`.
-- The carousel is native scrolling and fully keyboard-reachable (cards are links); there are no hidden controls.
-- The menu sheet is `inert` when closed, moves focus to the first link on open and returns it on Esc.
+## 7. Home, section by section (`prototype.html`)
+
+Order: hero · projects · skills (teaser + list) · grok bots (teaser) · on x · stack · journey · coffee · contact · floor.
+
+1. **Hero** `#top` (`data-spy-none`):
+   - eyebrow "Francesco Mistero · aka Kappaemme";
+   - H1 "Building apps *and tools.*";
+   - lede "**CS student at Federico II.** I build iPhone apps, websites and open-source tools, and share what I learn through Codex skills.";
+   - keycap CTAs "See my work ↓" / "Get in touch @";
+   - mono links github / x / email;
+   - right: matted portrait (4:5 desktop, 5:4 mobile) with caption "● Building in public since October 2025 · @Kappaemmedev", parallax ×0.05.
+2. **`~/projects`** `#products`:
+   - "Selected work." + the original lede;
+   - spec cards **Metodo ZAC** (iPhone app → App Store) and **VibeDesk** (Web app → website), art parallax −0.04;
+   - "More work" hairline rows **metodo ZAC · website**, **pocketflow**, **glorydraw** (original capitalisation), each with a type tag and a live dot.
+3. **`~/skills`** `#skills`:
+   - **Teaser card**: "My Codex skills." Lede built only from existing skill descriptions: "Open-source skills for Codex, from finding first customers to auditing an iOS app before App Store submission. Recent releases and the ones developers have starred most."
+   - CTAs "See all ten ↓" (→ `#skill-list`) and "On GitHub" (→ repositories).
+   - The terminal lists the 5 most-starred skills (with live stars) and the 5 recent ones.
+   - **`#skill-list`**: two columns, Most starred (star tags) and Recent releases, with the original descriptions.
+4. **`~/grok-bots`** `#grok-bots`:
+   - **Teaser card**, flipped (stage left, copy right): "My Grok Bots." + the `/grok-bot` lede.
+   - "Meet the bots ↵" (scan, busy text `cd ~/grok-bots`) and "New ones land there first."
+   - Mini stage with **only Limit Coach and Crankobot**: eyes track, scroll sway, captions "Claude + Codex limits" / "First Customer Finder". No placeholder.
+5. **`~/on-x`** `#shared`:
+   - "Shared by Greg Brockman." + the original intro;
+   - inline stats 5 / **1.8M+** / 10K+;
+   - five dark post cards (grid ≥1024, scroll-snap carousel below);
+   - the date note.
+6. **`~/stack`**: "The stack." + hairline grid of 12 (6 / 4 / 3 columns).
+7. **`~/journey`**: "The journey so far." Two entries in a 4/8 grid (mono date | role, org, the original points with mono dashes).
+8. **`~/coffee`**: card with "Support the next build.", the original lede, "Buy me a coffee" (Stripe), "My work", "Contact me", "Donations go through Stripe · the coffee page →" (scan), and the Build / Learn / Repeat list.
+9. **`~/contact`** (last): "Got a project or an idea? *Let's talk.*", the original sub-line, and hairline rows for email / x / github.
 
 ---
 
-## 11. Content audit (what changed, what didn't)
+## 8. `/coffee` (`coffee.html`)
 
-**Kept verbatim:**
-- every project, link, description and image;
-- all ten skills with their descriptions and star fallbacks;
-- all five X posts: texts, figures, URLs and the date note;
-- the twelve stack items;
-- both journey entries and their bullets;
-- the coffee lede, the Stripe URL and the coffee page's three reasons and panel copy;
-- the contact line and sub-line, the email, X, GitHub, © and "Made one commit at a time."
+Black, unified with the rest:
+- **Chrome:** sub-page top bar.
+- **Hero:**
+  - left: "● CS Student & Indie Hacker", H1 "Support *the next build.*", mono sub "A tiny backing page for Kappaemme", the original intro, and **Donate with Stripe** (keycap cup, `#donateHero` + the original `stripeDonationLink` fallback), "My work" (scan → `/#products`), "Contact me".
+  - right: a card with the `km-logo.png` screen (`#0B0B09`, `clip-path: inset(1px)` hides the PNG's border), "support page" tag, "Support my next project.", the original text, and the Stripe line.
+- **`~/why-donate`:** "Why it helps." with three dark cards (build / learn / repeat, original copy).
+- **`~/contact-me`** (last): "Write me *directly.*" with rows Email ("Write me directly" / misterokappa12@gmail.com) and GitHub ("See the code" / github.com/Kappaemme-git).
+- **Floor:** wordmark → home.
 
-**New headings and small lines.** These are labels with no new claims; Francesco to approve:
+The old fonts (Outfit, Space Mono, DM Sans) and the purple glow / dot grid are removed.
 
-| Where | New text |
-|---|---|
-| Hero H1 | "Building apps and tools." (from the tagline) |
-| Projects | "Selected work." |
-| Skills | "Codex skills, open source." |
-| Stack | "The stack." + lede "The languages, frameworks and tools behind these projects." |
-| Journey | "The journey so far." + lede "Computer Science at Federico II, and building in public since October 2025." |
-| Coffee page | "Why it helps.", "Write me directly." (that one from the card title) |
-| Skills card titles | "Most starred" / "Recent releases" (from the lede and the "Recent" labels) |
-| Skills note | "Star counts refresh from GitHub on load." |
-| Portrait pills | "CS student", "Indie hacker" (both from the Journey roles) |
-| Hero fine print | "Follow the build on X, read the code on GitHub, or send an email." |
+---
 
-**Normalised:**
-- "metodo ZAC · website", "pocketflow" and "glorydraw" are now "Metodo ZAC · website", "Pocketflow" and "Glorydraw". Revert if the lowercase was intentional.
-- "Pocketflow" (home) and "PocketFlow" (coffee page copy) are both kept as written.
+## 9. Codex checklist
 
-**Removed:**
-- the ASCII CRT banner (style, not content);
-- the coffee page's decorative gradients and dot grid.
+Work on `portfolio-restyle`. Do not merge to `main` without Francesco's approval. Keep every SEO / OG / Twitter tag and the Vercel Analytics snippet.
+
+### Shared
+- [ ] Add `/assets/site.css` = `design/restyle/shared.css` and `/assets/site.js` = `design/restyle/shared.js`, verbatim. Load `site.css` in `<head>`, then `/grok-bot/bots.data.js` (home and grok-bot only), and `site.js` at the end of `<body>` followed by `KM.boot()` (grok-bot calls it after rendering, see its spec).
+- [ ] Fonts: `Geist:wght@400;500;600;700` + `Geist+Mono:wght@400;500;600`.
+- [ ] `<meta name="theme-color" content="#000000">`.
+- [ ] In `<head>`, before the stylesheet, add the inline script from `prototype.html`: it adds `html.js` and handles scan arrival. `/grok-bot` uses its boot variant instead.
+- [ ] Every page gets, right after `<body>`: the icon sprite, `.k-skip`, `.k-cursor` and `.k-scan` (fill + line).
+- [ ] Path mapping from the prototypes:
+
+  | Prototype path | Production path |
+  |---|---|
+  | `../../images/` | `/images/` |
+  | `../../coffee/km-logo.png` | `/coffee/km-logo.png` |
+  | `prototype.html` | `/` |
+  | `coffee.html` | `/coffee/` |
+  | `../grok-bot/prototype.html` | `/grok-bot` |
+  | `../restyle/…` (from grok-bot) | `/…` |
+  | footer wordmark on sub-pages | `https://kappaemme.dev/` |
+- [ ] Remove everything light from the previous restyle: `--paper` tokens, `.k-chip*`, `.k-nav` pill + lamp, `.k-bar` / `.k-index` numbered bars, `.site-footer` paper footer, `.gb-cta` wake-up CTA and `.gb-bubble`.
+
+### `index.html`
+- [ ] Header → `.k-top` (brand, `.k-links` with `data-spy`, `.k-caret`, `.k-top__gh`, `.k-menu`) + `#k-sheet`. The "grok bots" link and sheet item get `data-scan`.
+- [ ] Wrap content in `.site-content > main#main`. Each section becomes markup exactly as in `prototype.html`, in this order: hero (`#top`, `data-spy-none`), `#products`, `#skills` (teaser + `#skill-list`), `#grok-bots`, `#shared`, `#stack`, `#journey`, `#coffee`, `#contact`.
+- [ ] **Remove all numbered labels** (`01`–`08`, `k-index`). Use `.k-path` (`<b>~/</b>name` + optional `.k-count`).
+- [ ] Project names keep the original capitalisation: "Metodo ZAC", "VibeDesk", "metodo ZAC · website", "pocketflow", "glorydraw".
+- [ ] Skills: the terminal star cells use `data-stars-repo` + `data-stars` + `data-stars-short` (number only); list rows keep `data-stars-repo` with an inner `[data-stars]`. One fetch updates both (`KM.loadStars`). Fallbacks: 1k+, 900+, 900+, 150+, 70+.
+- [ ] Grok teaser: actor markup `<div class="k-actor" data-bot="…"><div class="k-actor__body"><span data-bot-slot="…"></span></div><span class="k-actor__ring"></span></div>`. Two actors only. `KM.paintBots` renders the SVGs from `bots.data.js`. The CTA is `<a class="k-btn" href="/grok-bot" data-scan data-busy-text="cd ~/grok-bots">`.
+- [ ] Footer → `.k-floor` (home variant: wordmark `href="#top"`). Delete the old footer script; the floor reveal lives in `site.js`.
+- [ ] Remove the old inline scripts (reveal, stars, wake CTA, lamp) and keep only `KM.boot()`.
+- [ ] Update `README.md` (dark system, caret motif, `~/` headers, scan, floor).
+
+### `coffee/index.html`
+- [ ] Chrome → `.k-top.k-top--sub`, with "coffee" current and home / grok bots links `data-scan`.
+- [ ] Hero, `#why`, `#contact` and floor markup as in `coffee.html`. Keep `#donateHero` and the `stripeDonationLink` script, then `KM.boot()`.
+- [ ] Drop the Outfit / Space Mono / DM Sans fonts and all the old CSS.
+
+### `grok-bot/index.html`
+Follow `design/grok-bot/SPEC.md` §9. In short:
+- [ ] replace the curtain with the boot + scan;
+- [ ] replace the floating pill + chips with `.k-top--sub`;
+- [ ] replace the hero crew, library tiles, ghost slots and sticky bar with the left-aligned hero + **stage**;
+- [ ] replace the paper footer with `.k-floor`;
+- [ ] remove the wake CTA everywhere.
+
+### QA
+- [ ] No horizontal overflow at 390 / 768 / 1024 / 1280 / 1440 (the prototypes pass at 390 and 1440). No orphan words in headings.
+- [ ] Keyboard: skip link → top bar → menu (Esc) → every link shows the blue focus ring → footer links scroll the floor into view.
+- [ ] Reduced motion:
+  - no scan, boot, rise, reveal, parallax, sway or blink;
+  - the floor is static and in flow;
+  - the terminal lines are visible immediately;
+  - scan links navigate directly.
+- [ ] GitHub API blocked → star fallbacks show.
+- [ ] Touch: bots react to taps (eyes look, boop), nothing is hover-only, and the info is always visible.
+- [ ] Performance: one rAF loop that pauses when the tab is hidden; actors update only while intersecting; transforms only.
+
+---
+
+## 10. Accessibility
+- Contrast on black: text ≈18:1, `--text-2` ≈8:1, `--text-3` ≈4.8:1 (meta only), `--lc-text` ≈7.8:1. White on the ZAC / VibeDesk screens is above 8:1.
+- Focus: 2px blue outline with 3px offset.
+- Landmarks: skip link, `nav[aria-label]`, `main#main`, `aria-labelledby` on every section, and the footer labelled.
+- Bot SVGs are `aria-hidden`; the names are real text. The terminal is `role="group"` with a label, and its decorative command lines are `aria-hidden`.
+- The scan and boot overlays are `aria-hidden` and never trap focus. The boot is skippable with any key, wheel, touch or click.
+- The menu sheet is `role="dialog"`, `aria-modal`, `inert` when closed, and returns focus on Esc.
+
+---
+
+## 11. Content audit
+- **Kept verbatim:**
+  - all projects, links, descriptions and images (with the original capitalisation);
+  - all ten skills, descriptions and star fallbacks;
+  - the five X posts, figures and date note;
+  - the 12 stack items;
+  - the journey entries;
+  - the coffee lede, Stripe URL, reasons and panel copy;
+  - the contact copy, email, X, GitHub, © and "Made one commit at a time."
+- **New labels (no new claims), for Francesco to approve:**
+  - Headings: "Building apps and tools." (from the tagline), "Selected work.", "My Codex skills.", "The stack.", "The journey so far.", "Why it helps."
+  - Path labels: the `~/…` labels.
+  - Small UI lines: "Building in public since October 2025" (from Journey); the terminal commands `ls --most-starred` / `ls --recent`, which are UI chrome, not claims; "stars refresh from GitHub"; "2 online".
+  - The skills teaser lede, built only from existing descriptions.
+- **Removed:**
+  - the dashed "Next bot / Soon" placeholders (no empty slots anywhere);
+  - the numbered section labels;
+  - the light paper base.

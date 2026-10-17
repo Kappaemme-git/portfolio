@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-intro="playing">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -7,780 +7,265 @@
 <meta name="description" content="A small library of Grok Bots by Francesco Mistero (Kappaemme): Limit Coach watches Claude and Codex limits for LimitNotch, Crankobot finds first customers from public demand.">
 <meta name="author" content="Francesco Mistero">
 <meta name="theme-color" content="#000000">
-<link rel="icon" type="image/svg+xml" href="assets/limit-coach.svg">
-
+<link rel="icon" type="image/svg+xml" href="../../grok-bot/assets/limit-coach.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
-
-<!-- Bot data: the only file to touch to add a bot. -->
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<!--
+  GROK BOT PAGE — dark, diversified prototype. Spec: design/grok-bot/SPEC.md
+  Shared system: ../restyle/shared.css + shared.js. Bot data: ../../grok-bot/bots.data.js
+-->
+<script>
+  /* Boot once per session, or whenever we arrive through the scan transition. */
+  (function () {
+    var d = document.documentElement; d.classList.add("js");
+    try {
+      var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var viaScan = sessionStorage.getItem("k-scan"); sessionStorage.removeItem("k-scan");
+      if (!reduce && (viaScan || !sessionStorage.getItem("kgb-booted"))) { d.setAttribute("data-boot", ""); sessionStorage.setItem("kgb-booted", "1"); }
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="../restyle/shared.css">
 <script src="../../grok-bot/bots.data.js"></script>
-
 <style>
-  /* ════════════════════════════════════════════════════════════════
-     Tokens
-     ════════════════════════════════════════════════════════════════ */
-  :root {
-    color-scheme: dark;
+  @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
 
-    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* ══════════════ Boot intro (replaces the 6-layer curtain) ══════════════
+     A short terminal log, then the scan line sweeps down and reveals the page. */
+  .gb-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: #000; }
+  html[data-boot] .gb-boot { display: block; animation: boot-out .8s var(--ease-io) 1s forwards; }
+  html[data-boot] { --enter: 1.15s; }
+  @keyframes boot-out { to { transform: translateY(100%); } }
+  .gb-boot__line { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--lc); box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); }
+  .gb-boot__log { position: absolute; left: 0; right: 0; bottom: max(16vh, 7rem); display: grid; gap: .7rem; font: 500 clamp(.95rem, 2.6vw, 1.15rem)/1.2 var(--font-mono); color: var(--text-2); }
+  .gb-boot__log p { opacity: 0; animation: boot-line .35s var(--ease-out) calc(.08s + var(--i) * .17s) both; }
+  .gb-boot__log p:first-child { color: var(--text); }
+  .gb-boot__log span { color: var(--lc-text); }
+  .gb-boot__log i { display: inline-block; width: .55em; height: .55em; margin-right: .6rem; border-radius: 50%; background: var(--text); vertical-align: .05em; }
+  .gb-boot__log i.lc { background: var(--lc); box-shadow: 0 0 10px var(--lc-glow); }
+  .gb-boot__log em { font-style: normal; color: var(--live); }
+  @keyframes boot-line { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .gb-boot.is-skip { animation: boot-skip .28s ease-out forwards !important; }
+  @keyframes boot-skip { to { opacity: 0; visibility: hidden; } }
 
-    /* Ground — black & white only */
-    --page:   #000000;   /* page ground, same as kappaemme.dev */
-    --ink:    #0A0A0A;   /* near-black panels / text on light */
-    --panel:  #161616;   /* Grok Bot app panel */
-    --panel-2:#1F1F1F;
-    --paper:  #F2F2EF;   /* light sections / footer */
-    --text:   #FFFFFF;
-    --text-2: rgba(255,255,255,.62);
-    --text-3: rgba(255,255,255,.40);
-    --ink-2:  rgba(10,10,10,.62);
-    --line:   rgba(255,255,255,.10);
-    --line-2: rgba(255,255,255,.22);
-
-    /* The one strong colour: Limit Coach */
-    --lc:      #2474F7;
-    --lc-glow: rgba(36,116,247,.45);
-
-    /* Motion — lifted 1:1 from the reference page */
-    --spring:      linear(0, .42 9%, .84 21%, 1.02 33%, 1.05 41%, 1.01 55%, .99 70%, 1);
-    --curtain-out: cubic-bezier(.7, 0, .2, 1);
-    --ease-out:    cubic-bezier(.22, 1, .36, 1);
-    --ease-soft:   cubic-bezier(.2, .8, .2, 1);
-    --pop:         cubic-bezier(.3, 1.7, .5, 1);
-
-    --intro-step: .9s;    /* one curtain layer */
-    --intro-end:  5.4s;   /* 6 layers × .9s */
-
-    --footer-h: 40rem;
-  }
-  @media (min-width: 768px) { :root { --footer-h: 36rem; } }
-
-  *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  html, body { margin: 0; background: var(--page); color: var(--text); overscroll-behavior-y: none; overflow-x: clip; }
-  body {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    letter-spacing: -.01em;
-    -webkit-font-smoothing: antialiased;
-    padding-bottom: var(--footer-h);
-    background: var(--paper);
-  }
-  a { color: inherit; }
-  img, svg { display: block; }
-  ul { margin: 0; padding: 0; list-style: none; }
-  h1, h2, h3, p { margin: 0; }
-  ::selection { background: var(--lc); color: #fff; }
-  :focus-visible { outline: 2px solid var(--lc); outline-offset: 4px; border-radius: 6px; }
-
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-  /* ════════════════════════════════════════════════════════════════
-     Bot avatar (shared by every instance)
-     ════════════════════════════════════════════════════════════════ */
-  .gbot { overflow: visible; }
-  .gbot__bob, .gbot__blink, .gbot__squash { transform-box: fill-box; transform-origin: 50% 50%; }
-  .gbot__squash { transform-origin: 50% 100%; }
-  .gbot__look { transition: none; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .gbot--alive .gbot__bob   { animation: bot-bob 3.4s ease-in-out infinite; animation-delay: var(--bob-delay, 0s); }
-    .gbot--alive .gbot__blink { animation: bot-blink 5.6s infinite; animation-delay: var(--blink-delay, 0s); }
-    .gbot.is-hop .gbot__squash { animation: bot-hop .62s var(--ease-out); }
-    .gbot.is-boop .gbot__squash { animation: bot-boop .8s var(--ease-out); }
-    .gbot.is-blink2 .gbot__blink { animation: bot-blink2 .42s ease-in-out; }
-  }
-  @keyframes bot-bob   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6%); } }
-  @keyframes bot-blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.12); } }
-  @keyframes bot-blink2 { 0%, 100% { transform: scaleY(1); } 25%, 30% { transform: scaleY(.1); } 50% { transform: scaleY(1); } 70%, 75% { transform: scaleY(.1); } }
-  /* hover: anticipation squash → stretch jump → land squash → settle */
-  @keyframes bot-hop {
-    0%   { transform: none; }
-    18%  { transform: scale(1.12, .86); }
-    42%  { transform: translateY(-16%) scale(.92, 1.1); }
-    66%  { transform: translateY(0) scale(1.06, .94); }
-    82%  { transform: scale(.98, 1.02); }
-    100% { transform: none; }
-  }
-  /* click: bigger jump with a little spin of joy */
-  @keyframes bot-boop {
-    0%   { transform: none; }
-    15%  { transform: scale(1.18, .8); }
-    45%  { transform: translateY(-30%) scale(.9, 1.12) rotate(-8deg); }
-    70%  { transform: translateY(0) scale(1.1, .9) rotate(0); }
-    85%  { transform: scale(.97, 1.03); }
-    100% { transform: none; }
-  }
-
-  /* ════════════════════════════════════════════════════════════════
-     Intro curtain — 6 full-bleed layers, .9s apart, then lifts away
-     ════════════════════════════════════════════════════════════════ */
-  .gb-intro {
-    position: fixed; inset: 0; z-index: 2000; overflow: hidden;
-    pointer-events: auto;
-    background-color: #0A0A0A;
-    animation:
-      intro-curtain .65s var(--curtain-out) var(--intro-end) forwards,
-      intro-tint var(--intro-end) step-end forwards;
-  }
-  .gb-intro[data-done] { animation: intro-curtain .45s var(--curtain-out) forwards; }
-  @keyframes intro-tint {
-    0%      { background-color: #0A0A0A; }
-    16.667% { background-color: #2474F7; }
-    33.333% { background-color: #F2F2EF; }
-    50%     { background-color: #161616; }
-    66.667% { background-color: #2474F7; }
-    83.333%, 100% { background-color: #F2F2EF; }
-  }
-  @keyframes intro-curtain { to { visibility: hidden; pointer-events: none; transform: translateY(-100%); } }
-
-  .gb-intro__layer {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    background: var(--bg); color: var(--fg);
-    visibility: hidden;
-    animation: intro-show 1ms linear calc(var(--i) * var(--intro-step)) forwards;
-  }
-  @keyframes intro-show { to { visibility: visible; } }
-  .gb-intro__stack { display: flex; flex-direction: column; align-items: center; gap: clamp(1rem, 3vw, 2rem); padding: 0 1.25rem; }
-  .gb-intro__bots { display: flex; gap: clamp(.8rem, 3vw, 2rem); }
-  .gb-intro__bot {
-    width: clamp(6rem, 22vw, 11rem); height: auto;
-    animation: intro-pop-bot .62s var(--spring) calc(var(--i) * var(--intro-step)) both;
-  }
-  .gb-intro__bots .gb-intro__bot { width: clamp(5rem, 17vw, 8.5rem); }
-  .gb-intro__bots .gb-intro__bot + .gb-intro__bot { animation-delay: calc(var(--i) * var(--intro-step) + 70ms); }
-  .gb-intro__word {
-    max-width: 11ch; text-align: center; text-wrap: balance;
-    font-size: clamp(2.9rem, 10.5vw, 8.5rem); font-weight: 800; line-height: .92; letter-spacing: -.045em;
-    animation: intro-pop .56s var(--spring) calc(var(--i) * var(--intro-step) + 90ms) both;
-  }
-  .gb-intro__name {
-    position: absolute; left: 0; right: 0; bottom: max(1.6rem, env(safe-area-inset-bottom));
-    text-align: center; font-size: .95rem; font-weight: 700; letter-spacing: -.01em; opacity: .7;
-  }
-  @keyframes intro-pop     { 0% { opacity: 0; transform: translateY(.14em) scale(.8); } 25% { opacity: 1; } 100% { opacity: 1; transform: none; } }
-  @keyframes intro-pop-bot { 0% { opacity: 0; transform: translateY(40%) scale(.4); } 30% { opacity: 1; } 100% { opacity: 1; transform: none; } }
-
-  /* ════════════════════════════════════════════════════════════════
-     Chrome — back link, pill nav with lamp, GitHub pill
-     ════════════════════════════════════════════════════════════════ */
-  .gb-chip {
-    position: fixed; top: max(1.25rem, env(safe-area-inset-top)); z-index: 40;
-    display: inline-flex; align-items: center; gap: .5rem; min-height: 44px;
-    padding: .75rem 1rem; border-radius: 999px;
-    font-size: 13px; line-height: 1; text-decoration: none; color: rgba(255,255,255,.8);
-    border: 1px solid var(--line-2); background: rgba(10,10,10,.7);
-    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-    transition: color .3s, border-color .3s, opacity .3s, translate .3s;
-  }
-  .gb-chip:hover { color: #fff; border-color: rgba(255,255,255,.45); }
-  .gb-chip svg { width: 16px; height: 16px; transition: transform .3s var(--ease-out); }
-  .gb-chip--back { left: 1.25rem; }
-  .gb-chip--back:hover svg { transform: translateX(-2px); }
-  .gb-chip--right { right: 1.25rem; }
-  .gb-chip--right:hover svg { transform: rotate(-8deg) scale(1.08); }
-  @media (min-width: 640px) { .gb-chip { top: 1.75rem; } .gb-chip--back { left: 1.75rem; } .gb-chip--right { right: 1.75rem; } }
-  body[data-footer-open] .gb-chip { opacity: 0; pointer-events: none; }
-
-  .gb-nav {
-    position: fixed; top: 0; z-index: 50; right: .75rem;
-    padding-top: max(.9rem, env(safe-area-inset-top));
-  }
-  @media (min-width: 640px) { .gb-nav { right: auto; left: 50%; transform: translateX(-50%); padding-top: 1.5rem; } }
-  @media (max-width: 639px) { .gb-chip--right { display: none; } }
-  .gb-nav__pill {
-    position: relative; display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 999px;
-    background: rgba(22,22,22,.72); border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,.6);
-  }
-  .gb-nav__link {
-    position: relative; padding: 6px 20px; border-radius: 999px;
-    font-size: 13px; font-weight: 500; text-decoration: none; color: rgba(255,255,255,.72);
-    transition: color .2s, background-color .2s;
-  }
-  .gb-nav__link::after { content: ""; position: absolute; inset: -7px 0; } /* bigger hit area */
-  .gb-nav__link:hover { color: #fff; }
-  .gb-nav__link[aria-current="page"] { color: #fff; background: rgba(255,255,255,.1); }
-  .gb-nav__link .i { display: none; }
-  @media (max-width: 767px) {
-    .gb-nav__link { padding: 8px 18px; }
-    .gb-nav__link .t { display: none; }
-    .gb-nav__link .i { display: block; width: 18px; height: 18px; }
-  }
-  /* the "lamp": a lit bar resting on the active item */
-  .gb-nav__lamp {
-    position: absolute; top: -5px; height: 5px; width: 32px; border-radius: 0 0 4px 4px;
-    background: #fff; left: var(--lamp-x, 50%); transform: translateX(-50%);
-    transition: left .5s var(--ease-out);
-  }
-  .gb-nav__lamp::after {
-    content: ""; position: absolute; left: 50%; top: 2px; width: 64px; height: 22px; transform: translateX(-50%);
-    background: radial-gradient(50% 100% at 50% 0, rgba(255,255,255,.32), transparent 70%);
-    pointer-events: none;
-  }
-  /* nav arrives as the curtain leaves */
-  .gb-nav, .gb-chip { animation: nav-in .4s ease-out calc(var(--intro-end) + .2s) backwards; }
-  html[data-intro="done"] .gb-nav, html[data-intro="done"] .gb-chip { animation: nav-in .3s ease-out backwards; }
-  @keyframes nav-in { 0% { opacity: 0; visibility: hidden; } }
-
-  /* ════════════════════════════════════════════════════════════════
-     Layout
-     ════════════════════════════════════════════════════════════════ */
-  .site-content { position: relative; z-index: 10; background: var(--page); }
-  .wrap { margin: 0 auto; padding: 0 1.25rem; }
-  @media (min-width: 640px) { .wrap { padding: 0 2rem; } }
-
-  .h-display { font-weight: 800; letter-spacing: -.05em; line-height: .95; text-wrap: balance; }
-  .lede { font-size: 1.15rem; line-height: 1.5; color: var(--text-2); text-wrap: balance; }
-
-  /* ── Hero ─────────────────────────────────────────────── */
-  .gb-hero { position: relative; }
-  .gb-hero__inner {
-    max-width: 72rem; min-height: 92svh; margin: 0 auto;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-    padding: 7rem 1.25rem 4rem;
-  }
-  @media (min-width: 768px) { .gb-hero__inner { padding-top: 8rem; } }
-
-  .gb-crew {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem .5rem;
-    width: 100%; max-width: 34rem;
-  }
-  @media (max-width: 639px) { .gb-crew { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 24rem; } .gb-crew__item:nth-child(n+4) { display: none; } }
-  @media (min-width: 640px) { .gb-crew { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; } }
-  .gb-crew__item {
-    display: flex; flex-direction: column; align-items: center; gap: .625rem;
-    animation: crew-in .56s var(--spring) calc(var(--intro-end) + .35s + var(--i) * 80ms) both;
-  }
-  html[data-intro="done"] .gb-crew__item { animation-delay: calc(var(--i) * 80ms); }
-  @keyframes crew-in { 0% { opacity: 0; transform: translateY(1.2rem) scale(.6); } 100% { opacity: 1; transform: none; } }
-  .gb-crew__bot { width: 3.6rem; height: 3.6rem; cursor: pointer; }
-  @media (min-width: 640px) { .gb-crew__bot { width: 4.4rem; height: 4.4rem; } }
-  .gb-label {
-    white-space: nowrap; border-radius: 999px; padding: .375rem .75rem;
-    font-size: .85rem; font-weight: 700; letter-spacing: -.01em;
-    background: var(--pill-bg); color: var(--pill-fg);
-    transition: transform .3s var(--pop), box-shadow .3s;
-  }
-  @media (min-width: 640px) { .gb-label { font-size: .92rem; } }
-  .gb-label--ghost { background: transparent; color: var(--text-3); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.18); }
-  .gb-crew__item:hover .gb-label { transform: translateY(-2px) scale(1.04); }
-  .gb-crew__item[data-bot="limit-coach"]:hover .gb-label { box-shadow: 0 8px 30px -6px var(--lc-glow); }
-
-  .gb-hero__title {
-    margin-top: 2.5rem;
-    font-size: clamp(3.4rem, 11vw, 9rem); font-weight: 800; line-height: .88; letter-spacing: -.055em; text-wrap: balance;
-  }
-  @media (min-width: 768px) { .gb-hero__title { margin-top: 3rem; } }
-  .gb-hero__sub {
-    margin-top: 1.75rem; font-size: 1.08rem; line-height: 1.45; color: rgba(255,255,255,.78);
-  }
+  /* ══════════════ Hero (left-aligned, two-column head) ══════════════ */
+  .gb-hero { padding-top: calc(var(--top-h) + 3rem); }
+  @media (min-width: 1024px) { .gb-hero { padding-top: calc(var(--top-h) + 4.25rem); } }
+  .gb-hero__grid { display: grid; gap: 1.5rem; }
+  @media (min-width: 1024px) { .gb-hero__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; align-items: end; } .gb-hero__grid > :first-child { grid-column: 1 / span 7; } .gb-hero__grid > :last-child { grid-column: 8 / -1; padding-bottom: .5rem; } }
+  .gb-hero h1 { margin-top: 1.4rem; font-size: clamp(3.3rem, 14vw, 7.5rem); font-weight: 600; line-height: .93; letter-spacing: -.058em; }
+  @media (min-width: 640px) { .gb-hero h1 { font-size: clamp(4.6rem, 9vw, 7.5rem); } }
+  .gb-hero__sub { font-size: 1.1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
   .gb-hero__sub span { display: block; }
-  @media (min-width: 640px) { .gb-hero__sub { font-size: 1.3rem; } }
-  @media (min-width: 768px) { .gb-hero__sub { font-size: 1.45rem; } }
-  .gb-hero__cta { margin-top: 2.5rem; }
-  .gb-hero__fine { margin-top: 1.5rem; font-size: .95rem; line-height: 1.5; color: var(--text-2); text-wrap: balance; }
-  .gb-hero__fine + .gb-hero__fine { margin-top: .9rem; color: var(--text-3); }
-  .u-link { text-decoration: underline; text-decoration-color: rgba(255,255,255,.5); text-underline-offset: 4px; text-decoration-thickness: 1px; transition: text-decoration-color .2s, text-underline-offset .26s var(--ease-out); color: #fff; }
-  .u-link:hover { text-decoration-color: #fff; text-underline-offset: 2px; }
+  @media (min-width: 768px) { .gb-hero__sub { font-size: 1.24rem; } }
+  .gb-hero__fine { margin-top: 1.1rem; font: 500 .78rem/1.6 var(--font-mono); color: var(--text-3); }
+  .gb-hero__fine a { color: var(--text-2); }
 
-  /* hero items also stagger in after the curtain (lighter than the crew pop) */
-  .gb-rise { animation: rise .7s var(--ease-out) calc(var(--intro-end) + .25s + var(--d, 0s)) both; }
-  html[data-intro="done"] .gb-rise { animation-delay: var(--d, 0s); }
-  @keyframes rise { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
+  /* ══════════════ The stage: two large bots side by side ══════════════ */
+  .gb-stage { padding-top: 2.5rem; scroll-margin-top: var(--top-h); }
+  @media (min-width: 1024px) { .gb-stage { padding-top: 3.5rem; } }
+  .gb-set { position: relative; padding: 3.5rem 1.1rem 1.75rem; border-radius: var(--r); background: #050505; box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+  @media (min-width: 768px) { .gb-set { padding: 4.25rem 2.5rem 2.75rem; } }
+  @media (min-width: 1100px) { .gb-set { padding: 4.75rem 3.75rem 3.5rem; } }
+  .gb-set__head { position: absolute; top: 1.15rem; left: 1.1rem; right: 1.1rem; display: flex; justify-content: space-between; gap: 1rem; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  @media (min-width: 768px) { .gb-set__head { left: 1.5rem; right: 1.5rem; } }
+  .gb-set__head .k-live { color: var(--text-3); }
+  .gb-cast { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: .75rem; row-gap: 2.5rem; grid-template-areas: "a b" "ia ia" "ib ib"; }
+  @media (min-width: 900px) { .gb-cast { grid-template-areas: "a b" "ia ib"; column-gap: 4rem; row-gap: 3rem; } }
+  .gb-cast > .k-actor { width: clamp(8.75rem, 36vw, 17.5rem); justify-self: center; }
+  .gb-cast > .k-actor[data-bot="limit-coach"] { grid-area: a; }
+  .gb-cast > .k-actor[data-bot="crankobot"] { grid-area: b; }
+  .gb-cast > .gb-info[data-bot="limit-coach"] { grid-area: ia; }
+  .gb-cast > .gb-info[data-bot="crankobot"] { grid-area: ib; }
+  .gb-cast > .k-actor { z-index: 1; }
+  .gb-horizon { grid-row: 1; grid-column: 1 / -1; align-self: end; height: 1px; margin-bottom: calc(clamp(8.75rem, 36vw, 17.5rem) * .07); background: linear-gradient(90deg, transparent, var(--line-2) 12%, var(--line-2) 88%, transparent); pointer-events: none; }
+  @media (max-width: 899px) { .gb-info + .gb-info { padding-top: 2.5rem; border-top: 1px solid var(--line); } }
 
-  /* ── CTA that wakes up into Crankobot ─────────────────────── */
-  .gb-cta {
-    position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center;
-    min-height: 3.5rem; padding: 0 1.75rem; border-radius: 999px;
-    font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; text-decoration: none; color: var(--ink);
-    background: none; border: 0; cursor: pointer;
-  }
-  .gb-cta::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; margin: auto; width: 100%;
-    border-radius: 999px; background: #fff;
-    transition: width .4s cubic-bezier(.6, 0, .25, 1) .18s, background-color .2s, box-shadow .3s;
-  }
-  .gb-cta:hover::before { background: #e9e9e6; box-shadow: 0 14px 40px -16px rgba(255,255,255,.35); }
-  .gb-cta[data-wake]::before { width: var(--h, 3.5rem); }
-  .gb-cta__letters { display: inline-flex; white-space: pre; }
-  .gb-cta__l {
-    display: inline-block;
-    transition: transform .36s cubic-bezier(.55, 0, .35, 1) calc(var(--i) * 10ms), opacity .22s ease-in calc(var(--i) * 10ms + .12s);
-  }
-  .gb-cta[data-wake] .gb-cta__l { transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(.15); opacity: 0; }
-  .gb-cta__face {
-    position: absolute; top: 50%; left: 50%; display: flex; gap: 6px;
-    transform: translate(-50%, -58%) scale(0); transition: transform .32s var(--pop) .3s;
-  }
-  .gb-cta[data-wake] .gb-cta__face { transform: translate(-30%, -64%) scale(1); }
-  .gb-cta__eye { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .gb-cta__pupil { width: 6px; height: 15px; border-radius: 3px; background: var(--ink); transform: rotate(18deg); transition: transform .2s ease-out; }
-  .gb-cta__eye:last-child .gb-cta__pupil { width: 5px; }
-  .gb-cta__brow { width: 11px; height: 3.5px; border-radius: 2px; background: var(--ink); opacity: 0; transform: translateY(-4px); transition: opacity .15s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
-  .gb-cta[data-grumpy] .gb-cta__eye:first-child .gb-cta__brow { opacity: 1; transform: translateY(1px) rotate(28deg); }
-  .gb-cta[data-grumpy] .gb-cta__eye:last-child  .gb-cta__brow { opacity: 1; transform: translateY(1px) rotate(-28deg); }
-  .gb-cta[data-grumpy] .gb-cta__pupil { transform: rotate(18deg) scaleY(.78); }
-  .gb-cta[data-grumpy] { animation: huff .42s ease-in-out; }
-  @keyframes huff { 0%, 100% { translate: 0; } 20% { translate: -3px; } 40% { translate: 3px; } 60% { translate: -2px; } 80% { translate: 2px; } }
-  .gb-cta--ring::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -2; }
+  .gb-info { display: grid; align-content: start; gap: 1rem; scroll-margin-top: calc(var(--top-h) + 1rem); }
+  .gb-who { gap: .6rem; font-size: .86rem; }
+  .gb-who .gbot { width: 1.6rem; flex: none; }
+  .gb-info__who { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; }
+  .gb-info h3 { max-width: 17ch; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 600; line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
+  .gb-info .body { max-width: 46ch; font-size: 1.04rem; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+  .gb-handles li { position: relative; display: flex; gap: .65rem; padding: .62rem 0; font: 500 .8rem/1.35 var(--font-mono); color: var(--text-2); }
+  .gb-handles li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+  .gb-handles li span { color: var(--text-3); }
+  .gb-links { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: .4rem; }
+  .gb-proof { font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
+  .gb-info[data-bot="limit-coach"] .gb-who + .k-tag { color: var(--lc-text); box-shadow: inset 0 0 0 1px rgba(36,116,247,.45); }
+
+  /* examples (the Grok Bot app panels, now as a quiet row under the stage) */
+  .gb-examples { display: grid; gap: 1rem; margin-top: 1rem; }
+  @media (min-width: 900px) { .gb-examples { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+  .gb-ex { padding: 1.25rem; }
+  .gb-ex__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; font: 500 .74rem/1 var(--font-mono); color: var(--text-3); }
+  .gb-ex__head .k-who { font-size: .76rem; }
+  /* LimitNotch: the notch is the bot's face */
+  .gb-screen { position: relative; height: 12rem; border-radius: 10px; overflow: hidden; background: #151515; box-shadow: inset 0 0 0 1px var(--line); }
+  .gb-screen__bar { position: absolute; inset: 0 0 auto; height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 .8rem; font: 500 .62rem/1 var(--font-mono); color: var(--text-3); }
+  .gb-notch { position: absolute; top: 0; left: 50%; width: 15rem; height: 8.6rem; margin-left: -7.5rem; border-radius: 0 0 1.5rem 1.5rem; background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,.04); }
+  .gb-notch__eyes { position: absolute; top: .75rem; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 5.2rem; }
+  .gb-notch__eye { width: .5rem; height: 1rem; border-radius: .3rem; background: var(--lc); box-shadow: 0 0 8px 1px var(--lc-glow); }
+  @media (prefers-reduced-motion: no-preference) { .gb-notch__eye { animation: bot-blink 4.8s infinite; } }
+  .gb-notch__read { position: absolute; inset: 2.5rem 0 0; display: flex; flex-direction: column; align-items: center; }
+  .gb-notch__value { font-size: 2.3rem; font-weight: 600; letter-spacing: -.04em; line-height: 1; }
+  .gb-notch__cap { margin-top: .4rem; font: 500 .64rem/1 var(--font-mono); color: var(--text-3); }
+  .gb-notch__switch { display: flex; gap: 2px; margin-top: .65rem; padding: 2px; border-radius: 7px; background: rgba(255,255,255,.07); font: 500 .6rem/1 var(--font-mono); }
+  .gb-notch__switch span { padding: .3rem .5rem; border-radius: 5px; color: var(--text-3); }
+  .gb-notch__switch span:first-child { background: rgba(255,255,255,.14); color: var(--text); }
   @media (prefers-reduced-motion: no-preference) {
-    .gb-cta--ring::after { animation: ring 2.8s ease-out infinite; }
+    html.js .gb-notch__read { opacity: 0; transform: translateY(-6px); transition: opacity .4s var(--ease-out) .2s, transform .6s var(--ease-out) .2s; }
+    html.js .is-in .gb-notch__read { opacity: 1; transform: none; }
   }
-  @keyframes ring { 0%, 55% { box-shadow: 0 0 0 0 rgba(255,255,255,.28); } 100% { box-shadow: 0 0 0 14px rgba(255,255,255,0); } }
-
-  .gb-bubble {
-    position: absolute; z-index: 60; pointer-events: none; white-space: nowrap;
-    max-width: min(16rem, calc(100vw - 24px));
-    padding: .55rem .9rem; border-radius: 1rem;
-    background: #fff; color: var(--ink); border: 2px solid var(--ink);
-    font-size: .98rem; font-weight: 700; line-height: 1.25; letter-spacing: -.01em;
-    box-shadow: 0 12px 28px -14px rgba(0,0,0,.6);
-    transform-origin: var(--tail, 50%) 120%;
-    animation: bubble 1.8s ease-out forwards;
-  }
-  .gb-bubble::after {
-    content: ""; position: absolute; top: 100%; left: var(--tail, 50%); width: 12px; height: 12px; margin: -6px 0 0 -6px;
-    background: #fff; border: 2px solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg);
-  }
-  @keyframes bubble {
-    0%   { opacity: 0; transform: scale(.4) rotate(-6deg); }
-    12%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
-    20%  { transform: scale(1) rotate(0); }
-    82%  { opacity: 1; translate: 0 -3px; }
-    100% { opacity: 0; translate: 0 -10px; }
-  }
-
-  /* ── Library ─────────────────────────────────────────── */
-  .gb-library { max-width: 76rem; margin: 0 auto; padding: 2rem 1rem 6rem; }
-  @media (min-width: 640px) { .gb-library { padding: 3rem 2rem 8rem; } }
-  .gb-library > h2 { margin: 0 auto; max-width: 13ch; text-align: center; font-size: clamp(2.5rem, 7vw, 5rem); }
-  .gb-library > .lede { margin: 1.25rem auto 0; max-width: 40ch; text-align: center; }
-  .gb-tiles { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 3rem; }
-  @media (min-width: 640px) { .gb-tiles { gap: 1.25rem; } }
-  @media (min-width: 1024px) { .gb-tiles { grid-template-columns: 1fr 1fr; margin-top: 4rem; } .gb-tile--wide { grid-column: 1 / -1; } }
-
-  .gb-tile {
-    position: relative; overflow: hidden; display: flex; flex-direction: column;
-    border-radius: 2rem; scroll-margin-top: 6rem;
-  }
-  .gb-tile--blue  { background: var(--lc); color: #fff; }
-  .gb-tile--light { background: var(--paper); color: var(--ink); }
-  .gb-tile--dark  { background: var(--panel); color: #fff; box-shadow: inset 0 0 0 1px var(--line); }
-  .gb-tile--slot  { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.14); }
-  .gb-tile__copy { position: relative; padding: 2rem 1.75rem 2rem; }
-  @media (min-width: 640px) { .gb-tile__copy { padding: 2.5rem 2.25rem 2rem; } }
-  .gb-tile__label { display: flex; align-items: center; gap: .625rem; font-size: .95rem; font-weight: 600; }
-  .gb-tile__label span { opacity: .78; }
-  .gb-tile__chip { width: 1.9rem; height: 1.9rem; padding: .2rem; border-radius: .55rem; background: var(--panel); flex: none; }
-  .gb-tile__chip .gbot { width: 100%; height: 100%; }
-  .gb-tile h3 { margin-top: .75rem; max-width: 17ch; font-size: clamp(2rem, 4.4vw, 2.9rem); font-weight: 800; line-height: .98; letter-spacing: -.045em; text-wrap: balance; }
-  .gb-tile p.body { margin-top: 1rem; max-width: 44ch; font-size: 1.06rem; line-height: 1.5; opacity: .9; text-wrap: pretty; }
-  .gb-tile__links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: 1.4rem; }
-  .gb-tile__link {
-    display: inline-flex; align-items: center; gap: .45rem; min-height: 2.6rem; padding: 0 1rem; border-radius: 999px;
-    font-size: .92rem; font-weight: 600; text-decoration: none;
-    background: rgba(255,255,255,.16); color: inherit;
-    transition: background-color .2s, transform .3s var(--pop);
-  }
-  .gb-tile__link:hover { background: rgba(255,255,255,.26); transform: translateY(-1px); }
-  .gb-tile--light .gb-tile__link { background: var(--ink); color: #fff; }
-  .gb-tile--light .gb-tile__link:hover { background: #000; }
-  .gb-tile__link svg { width: 15px; height: 15px; transition: transform .3s var(--ease-out); }
-  .gb-tile__link:hover svg { transform: translate(2px, -2px); }
-  .gb-tile__proof { font-size: .85rem; font-weight: 600; opacity: .62; }
-  .gb-tile__stage { position: relative; display: flex; flex: 1; align-items: flex-end; justify-content: center; padding: .5rem 1rem 1.5rem; }
-  @media (min-width: 640px) { .gb-tile__stage { padding: 0 2rem 2.25rem; } }
-
-  /* featured tile: copy + stage side by side on desktop */
-  @media (min-width: 1024px) {
-    .gb-tile--wide.gb-tile--feature { display: grid; grid-template-columns: 1.05fr 1fr; align-items: stretch; min-height: 38rem; }
-    .gb-tile--feature .gb-tile__copy { display: flex; flex-direction: column; padding: 3rem 3rem 3rem; }
-    .gb-tile--feature .gb-tile__stage { align-items: center; padding: 2.5rem 3rem 2.5rem 0; }
-    .gb-tile--feature h3 { font-size: clamp(2.6rem, 4.6vw, 3.9rem); }
-  }
-  .gb-badge {
-    display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .6rem; border-radius: 999px;
-    font: 600 .66rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase;
-    background: rgba(255,255,255,.1); color: var(--text-2);
-  }
-  .gb-tile__badge-feature { background: rgba(255,255,255,.18); color: #fff; }
-
-  /* handles list: hairlines that draw in on scroll */
-  .gb-handles { margin-top: auto; padding-top: 2rem; display: grid; gap: 0; max-width: 30rem; }
-  .gb-handles li { position: relative; display: flex; align-items: center; gap: .65rem; padding: .7rem 0; font-size: .98rem; font-weight: 600; }
-  .gb-handles li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .75; flex: none; }
-  .gb-handles li::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; opacity: .22; transform-origin: 0 50%; }
-  @media (prefers-reduced-motion: no-preference) {
-    .gb-grow::after { transform: scaleX(0); transition: transform 1.1s var(--ease-soft) calc(var(--i, 0) * 90ms); }
-    .is-in .gb-grow::after, .gb-grow.is-in::after { transform: scaleX(1); }
-  }
-
-  /* ── Grok Bot app panel replica ─────────────────────────── */
-  .gb-panel {
-    position: relative; width: 100%; max-width: 30rem;
-    border-radius: 1.6rem; background: var(--panel); color: #fff;
-    padding: 2rem 1.5rem 1.5rem; text-align: center;
-    box-shadow: 0 30px 60px -28px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.05);
-  }
-  .gb-panel__badge { position: absolute; top: 1rem; right: 1rem; }
-  .gb-panel__avatar { width: 5.5rem; height: 5.5rem; margin: 0 auto; cursor: pointer; }
-  .gb-panel__name { margin-top: 1rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -.01em; }
-  .gb-panel__sub { margin-top: .35rem; font-size: .82rem; font-weight: 400; color: #8a8a8a; }
-  .gb-panel__body { margin-top: 1.4rem; text-align: left; }
-  .gb-panel__head { font-size: .8rem; color: #8a8a8a; margin: 0 .25rem .5rem; }
-
-  /* LimitNotch mock: the notch is the bot's face */
-  .gb-screen {
-    position: relative; height: 11.5rem; border-radius: 1rem 1rem .6rem .6rem; overflow: hidden;
-    background: linear-gradient(#232323, #1b1b1b);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
-  }
-  .gb-screen__bar { position: absolute; inset: 0 0 auto; height: 22px; display: flex; align-items: center; justify-content: space-between; padding: 0 .8rem; font: 500 .62rem/1 var(--font-mono); color: rgba(255,255,255,.35); }
-  .gb-notch {
-    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 9.6rem; height: 1.45rem; border-radius: 0 0 .7rem .7rem; background: #000;
-    transition: width .55s var(--spring), height .55s var(--spring), border-radius .55s var(--spring);
-  }
-  .gb-notch.is-open { width: 15rem; height: 8.6rem; border-radius: 0 0 1.6rem 1.6rem; }
-  .gb-notch__eyes { position: absolute; left: 0; right: 0; top: .36rem; display: flex; justify-content: space-between; padding: 0 .5rem; transition: padding .55s var(--spring), top .55s var(--spring); }
-  .gb-notch.is-open .gb-notch__eyes { padding: 0 5.2rem; top: .7rem; }
-  .gb-notch__eye {
-    width: .42rem; height: .78rem; border-radius: .3rem; background: var(--lc);
-    box-shadow: 0 0 8px 1px var(--lc-glow), 0 0 2px var(--lc);
-    transform-origin: 50% 50%;
-    transition: transform .4s var(--spring);
-  }
-  .gb-notch.is-open .gb-notch__eye { transform: translateY(2px) scale(1.25, 1.35); }
-  @media (prefers-reduced-motion: no-preference) { .gb-notch__eye { animation: bot-blink 4.8s infinite; } .gb-notch__eye + .gb-notch__eye { animation-delay: .04s; } }
-  .gb-notch__read { position: absolute; inset: 2.3rem 0 0; display: flex; flex-direction: column; align-items: center; opacity: 0; transform: translateY(-6px); transition: opacity .25s ease-out, transform .45s var(--ease-out); }
-  .gb-notch.is-open .gb-notch__read { opacity: 1; transform: none; transition-delay: .18s; }
-  .gb-notch__value { font-size: 2.35rem; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
-  .gb-notch__cap { margin-top: .35rem; font-size: .66rem; color: rgba(255,255,255,.55); }
-  .gb-notch__switch { margin-top: .6rem; display: flex; gap: 2px; padding: 2px; border-radius: 999px; background: rgba(255,255,255,.08); font-size: .6rem; }
-  .gb-notch__switch span { padding: .22rem .5rem; border-radius: 999px; color: rgba(255,255,255,.55); }
-  .gb-notch__switch span:first-child { background: rgba(255,255,255,.16); color: #fff; }
-
-  /* Crankobot files list */
-  .gb-files { border-radius: 1rem; background: var(--panel-2); padding: .35rem; }
-  .gb-file { display: flex; align-items: center; gap: .7rem; padding: .62rem .7rem; border-radius: .7rem; font-size: .9rem; font-weight: 400; color: rgba(255,255,255,.9); }
-  .gb-file + .gb-file { box-shadow: 0 -1px 0 rgba(255,255,255,.05); }
-  .gb-file svg { width: 16px; height: 16px; color: rgba(255,255,255,.5); flex: none; }
-  .gb-file time { margin-left: auto; font: 400 .7rem/1 var(--font-mono); color: rgba(255,255,255,.3); }
-  .gb-msg { margin: .9rem 0 0 auto; width: fit-content; max-width: 85%; padding: .6rem .85rem; border-radius: 1rem 1rem .3rem 1rem; background: #fff; color: var(--ink); font-size: .9rem; font-weight: 500; }
-  .gb-typing { display: flex; gap: 4px; margin: .7rem 0 0 .35rem; }
-  .gb-typing i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.4); }
-  @media (prefers-reduced-motion: no-preference) {
-    .gb-typing i { animation: typing 1.2s ease-in-out infinite; }
-    .gb-typing i:nth-child(2) { animation-delay: .15s; }
-    .gb-typing i:nth-child(3) { animation-delay: .3s; }
-  }
+  /* Crankobot: files in its Grok Bot library */
+  .gb-files { border-radius: 10px; background: var(--raise-2); padding: .3rem; }
+  .gb-file { display: flex; align-items: center; gap: .7rem; padding: .62rem .7rem; font: 500 .8rem/1 var(--font-mono); color: var(--text-2); }
+  .gb-file + .gb-file { box-shadow: 0 -1px 0 var(--line); }
+  .gb-file svg { width: 15px; height: 15px; color: var(--text-3); flex: none; }
+  .gb-msg { margin: .85rem 0 0 auto; width: fit-content; max-width: 85%; padding: .6rem .85rem; border-radius: 12px 12px 4px 12px; background: var(--text); color: #000; font-size: .9rem; font-weight: 500; }
+  .gb-typing { display: flex; gap: 4px; margin: .7rem 0 0 .3rem; }
+  .gb-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); }
+  @media (prefers-reduced-motion: no-preference) { .gb-typing i { animation: typing 1.2s ease-in-out infinite; } .gb-typing i:nth-child(2) { animation-delay: .15s; } .gb-typing i:nth-child(3) { animation-delay: .3s; } }
   @keyframes typing { 0%, 60%, 100% { transform: none; opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
 
-  /* open slot */
-  .gb-slot { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 3rem 2rem; text-align: center; min-height: 22rem; }
-  .gb-slot .gbot { width: 5rem; height: 5rem; color: rgba(255,255,255,.28); }
-  .gb-slot h3 { margin: 0; font-size: 1.6rem; color: #fff; }
-  .gb-slot p { max-width: 26ch; font-size: 1rem; line-height: 1.5; }
+  /* ══════════════ Under the hood ══════════════ */
+  .gb-hood { display: grid; gap: 2.5rem; }
+  @media (min-width: 1024px) { .gb-hood { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; align-items: end; } }
+  .gb-hood .k-h2 { margin-top: 1.4rem; }
+  .gb-hood .k-lede { margin-top: 1.1rem; }
+  .gb-hood .k-btn { margin-top: 1.9rem; }
+  .gb-runs li:last-child a { box-shadow: 0 1px 0 var(--line); }
+  .gb-runs a { position: relative; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; align-items: center; gap: .25rem 1rem; padding: 1.1rem 0; text-decoration: none; }
+  .gb-runs a::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+  .gb-runs .gbot { grid-row: 1 / span 2; width: 2.4rem; }
+  .gb-runs b { font-weight: 500; font-size: 1.15rem; letter-spacing: -.02em; }
+  .gb-runs small { grid-column: 2; font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
+  .gb-runs .k-go { grid-column: 3; grid-row: 1 / span 2; }
+  .gb-note { margin-top: 2rem; font: 500 .8rem/1.5 var(--font-mono); color: var(--text-3); }
 
-  /* runs-on tile */
-  .gb-runs { display: grid; gap: 1rem; padding: 0 1rem 1rem; }
-  @media (min-width: 768px) { .gb-runs { grid-template-columns: 1fr 1fr; padding: 0 2rem 2rem; } }
-  .gb-runs__card { border-radius: 1.4rem; background: var(--panel-2); padding: 1.4rem 1.5rem 1rem; }
-  .gb-runs__card header { display: flex; align-items: center; gap: .6rem; font: 600 .78rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
-  .gb-runs__card header .gbot { width: 1.4rem; height: 1.4rem; }
-  .gb-runs__card .gb-handles { padding-top: .6rem; max-width: none; }
+  /* ══════════════ Closing ══════════════ */
+  .gb-close { padding-bottom: 6rem; }
+  @media (min-width: 768px) { .gb-close { padding-bottom: 8rem; } }
+  .gb-close__grid { display: grid; gap: 2.75rem; margin-top: 1.5rem; }
+  @media (min-width: 1024px) { .gb-close__grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 4rem; align-items: end; margin-top: 2rem; } }
+  .gb-close h2 { max-width: 10ch; font-size: clamp(3rem, 7.4vw, 6rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; text-wrap: balance; }
+  .gb-close .k-lede { margin-top: 1.6rem; max-width: 36ch; }
+  .gb-steps li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 1rem; padding: 1.25rem 0; border-top: 1px solid var(--line); font-size: 1.06rem; line-height: 1.5; color: var(--text-2); }
+  .gb-steps li:last-child { border-bottom: 1px solid var(--line); }
+  .gb-steps li > span:first-child { font: 500 .78rem/1.9 var(--font-mono); color: var(--lc-text); }
+  .gb-steps b { font-weight: 600; color: var(--text); }
+  .gb-close__cta { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.25rem; margin-top: 2rem; }
+  .gb-close__fine { font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
+  .gb-close__fine a { color: var(--text-2); }
 
-  .gb-note { max-width: 40ch; margin: 2rem auto 0; text-align: center; font-size: .95rem; line-height: 1.5; color: var(--text-3); text-wrap: balance; }
-
-  /* ── Closing ─────────────────────────────────────────── */
-  .gb-close { border-top: 1px solid var(--line); }
-  .gb-close__inner { display: grid; gap: 3.5rem; max-width: 72rem; margin: 0 auto; padding: 6rem 1.25rem 8rem; }
-  @media (min-width: 640px) { .gb-close__inner { padding: 7rem 2rem 9rem; } }
-  @media (min-width: 1024px) { .gb-close__inner { grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; } }
-  .gb-close h2 { font-size: clamp(3rem, 7.5vw, 5.8rem); line-height: .92; letter-spacing: -.055em; max-width: 9ch; }
-  .gb-close .lede { margin-top: 2rem; max-width: 34ch; text-wrap: pretty; }
-  .gb-close__crew { display: flex; gap: .9rem; margin-top: 2.5rem; }
-  .gb-close__crew .gbot { width: 2.9rem; height: 2.9rem; cursor: pointer; }
-  .gb-steps { border-top: 1px solid var(--line); }
-  .gb-steps li { display: flex; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); font-size: 1.12rem; line-height: 1.45; color: var(--text-2); }
-  .gb-steps b { font-weight: 700; color: #fff; }
-  .gb-steps li > span:first-child { flex: none; width: 1rem; font-weight: 700; color: #fff; }
-  .gb-steps a { color: #fff; }
-  .gb-close__cta { margin-top: 2.5rem; }
-  .gb-close__fine { margin-top: 1.25rem; font-size: .95rem; color: var(--text-3); }
-
-  /* ════════════════════════════════════════════════════════════════
-     Scroll reveal (fade-up 26px, svg inside lags with a tilt)
-     ════════════════════════════════════════════════════════════════ */
-  .reveal--armed { opacity: 0; transform: translateY(26px); }
-  .reveal--armed, .reveal--armed .reveal__art {
-    transition: opacity .85s var(--ease-out), transform .9s var(--ease-out);
-  }
-  .reveal--armed .reveal__art { opacity: 0; transform: translateY(16px) rotate(-3.5deg) scale(.94); transition-delay: .12s; }
-  .reveal--in, .reveal--in .reveal__art { opacity: 1; transform: none; }
-
-  /* parallax targets get their own layer */
-  [data-parallax] { will-change: transform; }
-
-  /* ════════════════════════════════════════════════════════════════
-     Footer — fixed underneath, revealed by the page lifting off it
-     ════════════════════════════════════════════════════════════════ */
-  .site-footer {
-    position: fixed; inset: auto 0 0; z-index: 0; height: var(--footer-h); overflow: hidden;
-    background: var(--paper); color: var(--ink);
-  }
-  .site-footer__inner { display: flex; flex-direction: column; height: 100%; }
-  .site-footer__top { display: flex; flex: 1; align-items: center; width: 100%; max-width: 96rem; margin: 0 auto; padding: 3rem 1.5rem 1.75rem; }
-  @media (min-width: 768px) { .site-footer__top { padding: 3.5rem 2.5rem 1.75rem; } }
-  .site-footer h2 {
-    width: 100%;
-    font-size: clamp(2.25rem, 11.3vw, 9rem); font-weight: 500; line-height: .88; letter-spacing: -.045em;
-  }
-  .footer-wordmark { display: inline-flex; align-items: center; white-space: nowrap; color: var(--ink); text-decoration: none; }
-  .footer-wordmark:hover, .footer-wordmark:focus-visible { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .12em; }
-  .footer-word { --p: clamp(0, calc((var(--reveal, 1) - .6) * 3), 1); opacity: var(--p); transform: translateX(calc((var(--p) - 1) * 5vw)); }
-  .footer-word-b { --p: clamp(0, calc((var(--reveal, 1) - .66) * 3), 1); transform: translateX(calc((1 - var(--p)) * 5vw)); }
-  .footer-wordmark__arrow { --p: clamp(0, calc((var(--reveal, 1) - .72) * 3), 1); width: .25em; height: .25em; margin-left: .12em; flex: none; opacity: var(--p); transform: translateX(calc((1 - var(--p)) * 5vw)); transition: translate .3s var(--ease-out); }
-  .footer-wordmark:hover .footer-wordmark__arrow, .footer-wordmark:focus-visible .footer-wordmark__arrow { translate: 2px -2px; }
-  .footer-rule { height: 1px; width: 100%; background: rgba(10,10,10,.28); transform-origin: 0 50%; transform: scaleX(clamp(0, calc((var(--reveal, 1) - .56) * 3.4), 1)); }
-  .site-footer__bottom { width: 100%; max-width: 96rem; margin: 0 auto; padding: 1.75rem 1.5rem 5.5rem; }
-  @media (min-width: 768px) { .site-footer__bottom { padding: 2.25rem 2.5rem 2.25rem; } }
-  .footer-rise { --p: clamp(0, calc((var(--reveal, 1) - .04 - .09 * var(--i, 0)) * 6), 1); opacity: var(--p); transform: translateY(calc((1 - var(--p)) * 20px)); }
-  .site-footer:focus-within .footer-rise { opacity: 1; transform: none; }
-  .site-footer p.lead { max-width: 58ch; font-size: .98rem; line-height: 1.5; }
-  @media (min-width: 768px) { .site-footer p.lead { font-size: 1.12rem; line-height: 1.45; } }
-  .footer-nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 2rem; max-width: 64rem; margin-top: 2rem; }
-  @media (min-width: 640px) { .footer-nav { grid-template-columns: repeat(3, 1fr); margin-top: 2.5rem; gap: 0 3rem; } }
-  .footer-link {
-    display: inline-block; padding: .26rem 0; white-space: nowrap;
-    font-size: .78rem; font-weight: 500; letter-spacing: .11em; text-transform: uppercase;
-    text-decoration: underline; text-decoration-color: rgba(10,10,10,.32); text-decoration-thickness: 1px; text-underline-offset: 6px;
-    transition: text-decoration-color .2s, text-underline-offset .26s var(--ease-out);
-  }
-  @media (min-width: 768px) { .footer-link { font-size: .82rem; } }
-  .footer-link:hover, .footer-link:focus-visible { text-decoration-color: var(--ink); text-underline-offset: 4px; }
-  .footer-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; font-size: .75rem; font-weight: 500; letter-spacing: .11em; text-transform: uppercase; }
-  .footer-mark { --p: clamp(0, calc((var(--reveal, 1) - .62) * 4), 1); opacity: var(--p); transform: scale(calc(.8 + var(--p) * .2)); width: 2.6rem; height: 2.6rem; cursor: pointer; }
-  .footer-meta__right { display: flex; align-items: center; gap: 1.25rem; }
-
-  /* ── Mobile sticky bar ─────────────────────────────── */
-  .gb-sticky {
-    position: fixed; z-index: 40; left: .75rem; right: .75rem; bottom: calc(env(safe-area-inset-bottom) + .9rem);
-    max-width: 26rem; margin: 0 auto;
-    transition: transform .5s var(--ease-out), opacity .5s var(--ease-out);
-    transform: translateY(1.5rem); opacity: 0; pointer-events: none;
-  }
-  .gb-sticky.is-on { transform: none; opacity: 1; pointer-events: auto; }
-  .gb-sticky__in {
-    display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .375rem .375rem .375rem .6rem;
-    border-radius: 999px; border: 1px solid var(--line); background: rgba(22,22,22,.9);
-    -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
-    box-shadow: 0 18px 44px -18px rgba(0,0,0,.8);
-  }
-  .gb-sticky__who { display: flex; align-items: center; gap: .6rem; min-width: 0; }
-  .gb-sticky__who .gbot { width: 2rem; height: 2rem; flex: none; }
-  .gb-sticky__who p { font-size: .95rem; line-height: 1.15; }
-  .gb-sticky__who small { display: block; font-size: .8rem; color: var(--text-2); }
-  .gb-sticky a.btn { flex: none; display: inline-flex; align-items: center; min-height: 2.9rem; padding: 0 1.25rem; border-radius: 999px; background: #fff; color: var(--ink); font-size: .95rem; font-weight: 600; text-decoration: none; }
-  @media (min-width: 768px) { .gb-sticky { display: none; } }
-
-  /* ── Custom cursor (fine pointers only) ─────────────────── */
-  .gb-cursor {
-    position: fixed; left: 0; top: 0; z-index: 3000; pointer-events: none;
-    width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%;
-    background: #fff; border: 1px solid #fff; opacity: 0;
-    transition: width .18s var(--ease-out), height .18s var(--ease-out), margin .18s var(--ease-out), background-color .18s, border-color .18s, opacity .2s;
-  }
-  .gb-cursor.is-on { opacity: 1; }
-  .gb-cursor.is-hot { width: 48px; height: 48px; margin: -24px 0 0 -24px; background: rgba(255,255,255,.22); }
-  .gb-cursor.is-ink { background: var(--ink); border-color: var(--ink); }
-  .gb-cursor.is-ink.is-hot { background: rgba(10,10,10,.2); }
-  .gb-cursor.is-blue { background: var(--lc); border-color: var(--lc); box-shadow: 0 0 24px var(--lc-glow); }
-  .gb-cursor.is-blue.is-hot { background: rgba(36,116,247,.28); }
-  @media (pointer: fine) { html.has-cursor, html.has-cursor * { cursor: none !important; } }
-
-  /* ════════════════════════════════════════════════════════════════
-     Reduced motion — everything still reads, nothing moves
-     ════════════════════════════════════════════════════════════════ */
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .gb-intro { animation-name: intro-curtain-fade, intro-tint; }
-    .gb-intro[data-done] { animation-name: intro-curtain-fade; }
-    .gb-intro__word, .gb-intro__bot { animation-name: fade; animation-timing-function: ease-out; }
-    .gb-crew__item, .gb-rise { animation: none; }
-    .reveal--armed, .reveal--armed .reveal__art { opacity: 1; transform: none; transition: none; }
-    .gb-cta::before, .gb-cta__l, .gb-cta__face, .gb-cta__pupil, .gb-cta__brow, .gb-notch, .gb-notch * { transition: none; }
-    .gb-cta[data-grumpy] { animation: none; }
-    .gb-bubble { animation-name: bubble-still; }
-    body { padding-bottom: 0; }
-    .site-footer { position: static; height: auto; }
-    .footer-wordmark:hover .footer-wordmark__arrow, .footer-wordmark:focus-visible .footer-wordmark__arrow { translate: none; }
-  }
-  @keyframes fade { 0% { opacity: 0; } 100% { opacity: 1; } }
-  @keyframes intro-curtain-fade { to { opacity: 0; visibility: hidden; pointer-events: none; } }
-  @keyframes bubble-still { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .gb-boot { display: none !important; } }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ Intro curtain ═══════════
-     Layers: bot + headline. Limit Coach only on light/dark grounds, Crankobot
-     only on blue/dark grounds, so both avatars are always shown as they are. -->
-<div class="gb-intro" aria-hidden="true" data-cursor-quiet>
-  <div class="gb-intro__layer" style="--i:0;--bg:#0A0A0A;--fg:#FFFFFF">
-    <div class="gb-intro__stack"><span data-bot-slot="limit-coach" data-class="gb-intro__bot"></span><span class="gb-intro__word">Watches my limits.</span></div>
-    <span class="gb-intro__name">Kappaemme · Grok Bots</span>
-  </div>
-  <div class="gb-intro__layer" style="--i:1;--bg:#2474F7;--fg:#FFFFFF">
-    <div class="gb-intro__stack"><span data-bot-slot="crankobot" data-class="gb-intro__bot"></span><span class="gb-intro__word">Finds first customers.</span></div>
-    <span class="gb-intro__name">Kappaemme · Grok Bots</span>
-  </div>
-  <div class="gb-intro__layer" style="--i:2;--bg:#F2F2EF;--fg:#0A0A0A">
-    <div class="gb-intro__stack"><span data-bot-slot="limit-coach" data-class="gb-intro__bot"></span><span class="gb-intro__word">Lives in the notch.</span></div>
-    <span class="gb-intro__name">Kappaemme · Grok Bots</span>
-  </div>
-  <div class="gb-intro__layer" style="--i:3;--bg:#161616;--fg:#FFFFFF">
-    <div class="gb-intro__stack"><div class="gb-intro__bots"><span data-bot-slot="limit-coach" data-class="gb-intro__bot"></span><span data-bot-slot="crankobot" data-class="gb-intro__bot"></span></div><span class="gb-intro__word">Runs on Grok Bot.</span></div>
-    <span class="gb-intro__name">Kappaemme · Grok Bots</span>
-  </div>
-  <div class="gb-intro__layer" style="--i:4;--bg:#2474F7;--fg:#FFFFFF">
-    <div class="gb-intro__stack"><span data-bot-slot="crankobot" data-class="gb-intro__bot"></span><span class="gb-intro__word">Reads public demand.</span></div>
-    <span class="gb-intro__name">Kappaemme · Grok Bots</span>
-  </div>
-  <div class="gb-intro__layer" style="--i:5;--bg:#F2F2EF;--fg:#0A0A0A">
-    <div class="gb-intro__stack"><span data-bot-slot="limit-coach" data-class="gb-intro__bot"></span><span class="gb-intro__word">Built in public.</span></div>
-    <span class="gb-intro__name">Kappaemme · Grok Bots</span>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.76.12 3.05.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.2.67.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
+</svg>
+
+<!-- ═══════════ Boot intro ═══════════ -->
+<div class="gb-boot" aria-hidden="true">
+  <div class="gb-boot__line"></div>
+  <div class="wrap gb-boot__log">
+    <p style="--i:0"><span>$</span> cd ~/grok-bots</p>
+    <p style="--i:1"><i class="lc"></i>limit-coach &nbsp;<em>online</em></p>
+    <p style="--i:2"><i></i>crankobot &nbsp;&nbsp;&nbsp;<em>online</em></p>
   </div>
 </div>
-<script>
-  /* Paint the intro bots synchronously so their pop stays in sync with the CSS clock. */
-  (function () {
-    var BLOB = "M50 8.5C76.5 8.5 96.5 27.5 96.5 51.5C96.5 75.5 77 94 50.5 94C24 94 3.5 76 3.5 52C3.5 28 23.5 8.5 50 8.5Z";
-    window.__GB_BLOB = BLOB;
-    var uid = 0;
-    window.gbAvatar = function (bot, cls) {
-      var a = bot.avatar, id = "gbc" + (++uid);
-      var shape = a.shape === "blob"
-        ? '<path d="' + BLOB + '" fill="' + a.body + '"/>'
-        : '<circle cx="50" cy="50" r="45" fill="' + a.body + '"/>';
-      var clip = a.shape === "blob" ? '<path d="' + BLOB + '"/>' : '<circle cx="50" cy="50" r="45"/>';
-      var eyes = a.eyes.map(function (e) {
-        return '<rect x="' + (e.cx - e.w / 2) + '" y="' + (e.cy - e.h / 2) + '" width="' + e.w + '" height="' + e.h + '" rx="' + e.w / 2 + '" fill="' + a.eye + '" transform="rotate(' + e.rot + ' ' + e.cx + ' ' + e.cy + ')"/>';
-      }).join("");
-      return '<svg viewBox="0 0 100 100" class="gbot ' + (cls || "") + '" data-bot="' + bot.id + '" aria-hidden="true">' +
-        '<defs><clipPath id="' + id + '">' + clip + '</clipPath></defs>' +
-        '<g class="gbot__squash"><g class="gbot__bob">' + shape +
-        '<g clip-path="url(#' + id + ')"><g class="gbot__look"><g class="gbot__blink">' + eyes + '</g></g></g>' +
-        '</g></g></svg>';
-    };
-    window.gbGhost = function (cls) {
-      return '<svg viewBox="0 0 100 100" class="gbot ' + (cls || "") + '" aria-hidden="true"><g class="gbot__squash"><g class="gbot__bob">' +
-        '<circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="5 6" vector-effect="non-scaling-stroke"/>' +
-        '<g class="gbot__look"><g class="gbot__blink" opacity=".55">' +
-        '<rect x="52" y="27" width="6" height="14" rx="3" fill="currentColor" transform="rotate(-30 55 34)"/>' +
-        '<rect x="66" y="23" width="5" height="13" rx="2.5" fill="currentColor" transform="rotate(-30 68.5 29.5)"/>' +
-        '</g></g></g></g></svg>';
-    };
-    var byId = {};
-    (window.GROK_BOTS || []).forEach(function (b) { byId[b.id] = b; });
-    window.__GB_BY_ID = byId;
-    document.querySelectorAll(".gb-intro [data-bot-slot]").forEach(function (slot) {
-      var b = byId[slot.getAttribute("data-bot-slot")];
-      if (b) slot.outerHTML = gbAvatar(b, slot.getAttribute("data-class"));
-    });
-  })();
-</script>
 
-<div class="gb-cursor" aria-hidden="true"></div>
+<a class="k-skip" href="#main">Skip to content</a>
+<div class="k-cursor" aria-hidden="true"></div>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
 
-<a class="gb-chip gb-chip--back" href="/" data-cursor>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-  Kappaemme
-</a>
-
-<nav class="gb-nav" aria-label="Site">
-  <div class="gb-nav__pill">
-    <span class="gb-nav__lamp" aria-hidden="true"></span>
-    <a class="gb-nav__link" href="/"><span class="t">Home</span><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="sr-only">Home</span></a>
-    <a class="gb-nav__link" href="#library" aria-current="page"><span class="t">Grok Bots</span><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M13 8v4M16 7v4"/></svg><span class="sr-only">Grok Bots</span></a>
-    <a class="gb-nav__link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="t">On X</span><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg><span class="sr-only">On X</span></a>
+<!-- ═══════════ Top bar (sub-page) ═══════════ -->
+<header class="k-top k-top--sub">
+  <div class="wrap k-top__in">
+    <a class="k-brand" href="../restyle/prototype.html" data-scan aria-label="Kappaemme home"><svg class="k-brand__back" aria-hidden="true"><use href="#i-back"/></svg><span class="k-brand__mark"><img src="../../images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+    <nav class="k-links" aria-label="Site">
+      <a href="../restyle/prototype.html" data-scan><span class="t">home</span><span class="s">home</span></a>
+      <a href="#library" aria-current="page"><span class="t">grok bots</span><span class="s">bots</span></a>
+      <a href="../restyle/coffee.html" data-scan><span class="t">coffee</span><span class="s">coffee</span></a>
+      <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="t">on x</span><span class="s">x</span><svg class="ic" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      <span class="k-caret" aria-hidden="true"></span>
+    </nav>
+    <a class="k-top__gh" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>Kappaemme-git</a>
   </div>
-</nav>
-
-<a class="gb-chip gb-chip--right" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener" data-cursor>
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.76.12 3.05.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.2.67.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></svg>
-  Kappaemme-git
-</a>
+</header>
 
 <div class="site-content">
-<main class="gb-page">
+<main id="main">
 
   <!-- ═══════════ Hero ═══════════ -->
   <section class="gb-hero" id="top" aria-labelledby="gb-title">
-    <div class="gb-hero__inner">
-      <ul class="gb-crew" aria-label="Bots in the library" data-parallax="0.12" id="gb-crew"></ul>
-
-      <div data-parallax="0.06"><h1 class="gb-hero__title gb-rise" id="gb-title" style="--d:.05s">My Grok Bots</h1></div>
-      <p class="gb-hero__sub gb-rise" style="--d:.15s">
-        <span>Small bots I build and run inside Grok Bot.</span>
-        <span>Each one does one job. The code is on GitHub.</span>
-      </p>
-
-      <div class="gb-hero__cta gb-rise" style="--d:.25s">
-        <a class="gb-cta gb-cta--ring" href="#library" data-wakeable data-cursor-quiet>Meet the bots</a>
+    <div class="wrap gb-hero__grid">
+      <div>
+        <p class="k-path k-rise" style="--d:.02s"><b>~/</b>grok-bots</p>
+        <h1 class="k-rise" id="gb-title" style="--d:.08s">My Grok <span class="k-dim">Bots.</span></h1>
       </div>
-      <p class="gb-hero__fine gb-rise" style="--d:.32s">Built by Francesco Mistero. Follow the build <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on X</a>, or read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>.</p>
-      <p class="gb-hero__fine gb-rise" style="--d:.38s">Two bots so far. New ones land here first.</p>
-
+      <div>
+        <p class="gb-hero__sub k-rise" style="--d:.16s"><span>Small bots I build and run inside Grok Bot.</span><span>Each one does one job. The code is on GitHub.</span></p>
+        <p class="gb-hero__fine k-rise" style="--d:.24s">Built by Francesco Mistero. Follow the build <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on X</a>, or read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>. <span id="gb-hero-count">Two bots so far. New ones land here first.</span></p>
+      </div>
     </div>
   </section>
 
-  <!-- ═══════════ Library ═══════════ -->
-  <section class="gb-library" id="library" aria-labelledby="gb-library-title">
-    <h2 class="h-display reveal" id="gb-library-title">The library.</h2>
-    <p class="lede reveal">Every bot lives in Grok Bot and does one thing well. The first one is the one I use every day.</p>
-
-    <div class="gb-tiles" id="gb-tiles"><!-- rendered from GROK_BOTS --></div>
-
-    <!-- Under the hood -->
-    <div class="gb-tiles" style="margin-top:1.25rem">
-      <article class="gb-tile gb-tile--dark gb-tile--wide reveal" aria-labelledby="gb-runs-title">
-        <div class="gb-tile__copy">
-          <p class="gb-tile__label"><span class="gb-tile__chip" id="gb-runs-chip"></span><span>Under the hood</span></p>
-          <h3 id="gb-runs-title">They run on Grok Bot.</h3>
-          <p class="body">Each bot gets its own space in Grok Bot, with a library for the files it makes. I give it one job, it works on it, and the results land where I can open them.</p>
-          <div class="gb-tile__links">
-            <a class="gb-tile__link" href="https://x.ai/bot" target="_blank" rel="noopener">Get Grok Bot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-          </div>
-        </div>
-        <div class="gb-runs" id="gb-runs"><!-- rendered from GROK_BOTS --></div>
-      </article>
+  <!-- ═══════════ The stage (the library) ═══════════ -->
+  <section class="gb-stage" id="library" aria-labelledby="gb-library-title">
+    <div class="wrap">
+      <h2 class="sr-only" id="gb-library-title">The library</h2>
+      <div class="gb-set k-rise" style="--d:.3s">
+        <p class="gb-set__head" aria-hidden="true"><span>grok bot · library</span><span class="k-live"><i></i><span id="gb-hint">2 online</span></span></p>
+        <div class="gb-cast" id="gb-cast"><!-- rendered from GROK_BOTS --></div>
+      </div>
+      <div class="gb-examples" id="gb-examples" data-stagger><!-- rendered from GROK_BOTS --></div>
     </div>
-    <p class="gb-note reveal">Want one of your own? Start from the code. Both bots are built on public repositories.</p>
+  </section>
+
+  <!-- ═══════════ Under the hood ═══════════ -->
+  <section class="k-section" id="hood" aria-labelledby="gb-runs-title">
+    <div class="wrap">
+      <div class="gb-hood">
+        <div>
+          <p class="k-path"><b>~/</b>under-the-hood</p>
+          <h2 class="k-h2 reveal" id="gb-runs-title">They run on Grok Bot.</h2>
+          <p class="k-lede reveal">Each bot gets its own space in Grok Bot, with a library for the files it makes. I give it one job, it works on it, and the results land where I can open them.</p>
+          <a class="k-btn k-btn--ghost reveal" href="https://x.ai/bot" target="_blank" rel="noopener"><span class="k-btn__label">Get Grok Bot</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a>
+        </div>
+        <ul class="gb-runs reveal" id="gb-runs" data-grow><!-- rendered from GROK_BOTS --></ul>
+      </div>
+      <p class="gb-note reveal">Want one of your own? Start from the code. <span id="gb-note-count">Both bots</span> are built on public repositories.</p>
+    </div>
   </section>
 
   <!-- ═══════════ Closing ═══════════ -->
-  <section class="gb-close" aria-labelledby="gb-close-title">
-    <div class="gb-close__inner">
-      <div>
-        <h2 class="h-display reveal" id="gb-close-title">Small bots, built in the open.</h2>
-        <p class="lede reveal">I build each bot around a job I actually have, put the code on GitHub and share what works on X. This page grows every time a new one ships.</p>
-        <div class="gb-close__crew reveal" id="gb-close-crew"></div>
-      </div>
-      <div>
-        <ol class="gb-steps reveal" style="list-style:none;margin:0;padding:0">
-          <li><span>1</span><span><b>Read the code.</b> <a class="u-link" href="https://github.com/Kappaemme-git/limit-notch" target="_blank" rel="noopener">limit-notch</a> and <a class="u-link" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener">codex-first-customer-finder-skill</a> are public.</span></li>
-          <li><span>2</span><span><b>Get Grok Bot</b> from <a class="u-link" href="https://x.ai/bot" target="_blank" rel="noopener">x.ai/bot</a> to run bots like these.</span></li>
-          <li><span>3</span><span><b>Follow @Kappaemmedev</b> to see the next one ship.</span></li>
-        </ol>
-        <div class="gb-close__cta reveal">
-          <a class="gb-cta" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener" data-wakeable data-cursor-quiet>Follow on X</a>
+  <section class="k-section gb-close" aria-labelledby="gb-close-title">
+    <div class="wrap">
+      <p class="k-path"><b>~/</b>next</p>
+      <div class="gb-close__grid">
+        <div>
+          <h2 class="reveal" id="gb-close-title">Small bots, <span class="k-dim">built in the open.</span></h2>
+          <p class="k-lede reveal">I build each bot around a job I actually have, put the code on GitHub and share what works on X. This page grows every time a new one ships.</p>
         </div>
-        <p class="gb-close__fine reveal">More of my work at <a class="u-link" href="/">kappaemme.dev</a>.</p>
+        <div>
+          <ol class="gb-steps reveal">
+            <li><span>1</span><span><b>Read the code.</b> <span id="gb-code-links"></span> are public.</span></li>
+            <li><span>2</span><span><b>Get Grok Bot</b> from <a class="u-link" href="https://x.ai/bot" target="_blank" rel="noopener">x.ai/bot</a> to run bots like these.</span></li>
+            <li><span>3</span><span><b>Follow @Kappaemmedev</b> to see the next one ship.</span></li>
+          </ol>
+          <div class="gb-close__cta reveal">
+            <a class="k-btn" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="k-btn__label">Follow on X</span><span class="k-key"><svg aria-hidden="true"><use href="#i-x"/></svg></span></a>
+            <p class="gb-close__fine">More of my work at <a href="../restyle/prototype.html" data-scan>kappaemme.dev</a>.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -788,424 +273,103 @@
 </main>
 </div>
 
-<!-- Mobile sticky bar -->
-<div class="gb-sticky" id="gb-sticky" aria-hidden="true" inert>
-  <div class="gb-sticky__in">
-    <div class="gb-sticky__who"><span id="gb-sticky-bot"></span><p>My Grok Bots<small>Two bots, more soon</small></p></div>
-    <a class="btn" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">Follow on X</a>
-  </div>
-</div>
-
-<footer class="site-footer" aria-label="Site footer" data-cursor-ink>
-  <div class="site-footer__inner">
-    <div class="site-footer__top">
-      <h2><a class="footer-wordmark" href="https://kappaemme.dev/" aria-label="kappaemme.dev, back to the main site"><span class="footer-word">kappaemme</span><span class="footer-word footer-word-b">.dev</span><svg class="footer-wordmark__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></h2>
-    </div>
-    <div class="footer-rule" aria-hidden="true"></div>
-    <div class="site-footer__bottom">
-      <p class="lead footer-rise" style="--i:4">I build small apps, tools and bots, try them in the real world and keep the ones that work. Everything else I make is on kappaemme.dev.</p>
-      <nav class="footer-nav" aria-label="Footer">
-        <ul class="footer-rise" style="--i:1">
-          <li><a class="footer-link" href="/">Home</a></li>
-          <li><a class="footer-link" href="/#products">Projects</a></li>
-          <li><a class="footer-link" href="/#skills">Skills</a></li>
-        </ul>
-        <ul class="footer-rise" style="--i:2">
-          <li><a class="footer-link" href="#library">Grok Bots</a></li>
-          <li><a class="footer-link" href="https://github.com/Kappaemme-git/limit-notch" target="_blank" rel="noopener">LimitNotch</a></li>
-          <li><a class="footer-link" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener">First Customer Finder</a></li>
-        </ul>
-        <ul class="footer-rise" style="--i:3">
-          <li><a class="footer-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a class="footer-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">X · @Kappaemmedev</a></li>
-          <li><a class="footer-link" href="https://x.ai/bot" target="_blank" rel="noopener">Grok Bot ↗</a></li>
-        </ul>
+<!-- ═══════════ The floor (shared footer) ═══════════ -->
+<footer class="k-floor" aria-label="Site footer">
+  <div class="wrap k-floor__in">
+    <div class="k-floor__top">
+      <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work. Everything else I make is on kappaemme.dev.</p>
+      <nav class="k-floor__nav" aria-label="Footer">
+        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="../restyle/prototype.html" data-scan>home</a></li><li><a href="../restyle/prototype.html#products" data-scan>projects</a></li><li><a href="../restyle/prototype.html#skills" data-scan>skills</a></li><li><a href="../restyle/coffee.html" data-scan>coffee</a></li></ul></div>
+        <div class="k-rise-f" style="--i:2"><p>bots</p><ul id="gb-floor-bots"><li><a href="#library">grok bots</a></li></ul></div>
+        <div class="k-rise-f" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li><li><a href="https://x.ai/bot" target="_blank" rel="noopener">grok bot ↗</a></li></ul></div>
       </nav>
-      <div class="footer-meta">
-        <span>© 2026 Francesco Mistero</span>
-        <span class="footer-meta__right"><a class="footer-link" href="#top">Back to the top ↑</a><span id="gb-footer-mark"></span></span>
-      </div>
     </div>
+    <a class="k-mark" href="../restyle/prototype.html" data-scan aria-label="kappaemme.dev, back to the main site"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
+    <p class="k-floor__status"><span>© 2026 Francesco Mistero<span class="k-floor__made"> · Made one commit at a time.</span></span><a href="#top">↑ back to top</a></p>
   </div>
 </footer>
 
+<script src="../restyle/shared.js"></script>
 <script>
 (function () {
   "use strict";
-  var BOTS = window.GROK_BOTS || [];
-  var SLOTS = window.GROK_BOT_SLOTS || 0;
-  var byId = window.__GB_BY_ID || {};
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer = window.matchMedia("(pointer: fine)").matches;
-  var $ = function (s, r) { return (r || document).querySelector(s); };
-  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
-  var ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>';
-  var FILE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
-  var lead = BOTS.filter(function (b) { return b.featured; })[0] || BOTS[0];
+  var $ = KM.$, $$ = KM.$$, esc = KM.esc;
+  var BOTS = (KM.bots || []).slice().sort(function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0); });
+  var ARROW = '<svg aria-hidden="true"><use href="#i-ne"/></svg>';
+  var FILE = '<svg aria-hidden="true"><use href="#i-file"/></svg>';
+  var count = BOTS.length === 1 ? "One" : BOTS.length === 2 ? "Two" : String(BOTS.length);
+  var noun = BOTS.length === 1 ? "bot" : "bots";
 
-  /* ───────────── Render from data ───────────── */
-
-  // Hero crew: real bots, then empty slots
-  var crew = $("#gb-crew");
-  var crewHTML = BOTS.map(function (b, i) {
-    return '<li class="gb-crew__item" style="--i:' + i + '" data-bot="' + b.id + '"' + (b.id === lead.id ? " data-cursor-blue" : "") + '>' +
-      '<a href="#bot-' + b.id + '" aria-label="' + esc(b.name) + '" data-cursor>' + gbAvatar(b, "gb-crew__bot gbot--alive") + '</a>' +
-      '<span class="gb-label" style="--pill-bg:' + b.pill.bg + ';--pill-fg:' + b.pill.fg + '">' + esc(b.name) + '</span></li>';
-  });
-  for (var s = 0; s < SLOTS; s++) {
-    crewHTML.push('<li class="gb-crew__item" style="--i:' + (BOTS.length + s) + ';color:rgba(255,255,255,.3)">' +
-      gbGhost("gb-crew__bot gbot--alive") + '<span class="gb-label gb-label--ghost">' + (s === 0 ? "Next bot" : "Soon") + '</span></li>');
-  }
-  crew.innerHTML = crewHTML.join("");
-
-  // Library tiles
-  function mockHTML(b) {
-    var m = b.mock || {}, badge = m.example ? '<span class="gb-badge gb-panel__badge">Example</span>' : "";
-    var head = badge + '<span class="reveal__art" style="display:block">' + gbAvatar(b, "gb-panel__avatar gbot--alive") + '</span>' +
-      '<p class="gb-panel__name">' + esc(b.name) + '</p><p class="gb-panel__sub">' + esc(b.subtitle) + '</p>';
-    if (m.type === "notch") {
-      return '<div class="gb-panel" data-parallax="-0.05">' + head +
-        '<div class="gb-panel__body"><p class="gb-panel__head">LimitNotch, in the MacBook notch</p>' +
-        '<div class="gb-screen" data-cursor-blue><div class="gb-screen__bar"><span>Finder</span><span>9:41</span></div>' +
-        '<div class="gb-notch" data-notch><div class="gb-notch__eyes"><i class="gb-notch__eye"></i><i class="gb-notch__eye"></i></div>' +
-        '<div class="gb-notch__read"><span class="gb-notch__value">' + esc(m.value) + '</span><span class="gb-notch__cap">' + esc(m.caption) + '</span>' +
-        '<span class="gb-notch__switch">' + m.switch.map(function (x) { return "<span>" + esc(x) + "</span>"; }).join("") + '</span></div></div></div></div></div>';
-    }
-    if (m.type === "files") {
-      return '<div class="gb-panel" data-parallax="-0.05">' + head +
-        '<div class="gb-panel__body"><p class="gb-panel__head">Library</p><div class="gb-files">' +
-        m.files.map(function (f) { return '<div class="gb-file">' + FILE + '<span>' + esc(f) + '</span></div>'; }).join("") +
-        '</div><p class="gb-msg">' + esc(m.message) + '</p><div class="gb-typing" aria-hidden="true"><i></i><i></i><i></i></div></div></div>';
-    }
-    return '<div class="gb-panel">' + head + '</div>';
-  }
-  function tileHTML(b, i) {
-    var wide = b.featured;
-    var cls = "gb-tile gb-tile--" + b.tile + (wide ? " gb-tile--wide gb-tile--feature" : "");
-    return '<article class="' + cls + ' reveal" id="bot-' + b.id + '" data-bot="' + b.id + '"' + (b.tile === "light" ? " data-cursor-ink" : "") + (b.id === lead.id ? " data-cursor-blue" : "") + ' style="transition-delay:' + (wide ? 0 : i * 80) + 'ms" aria-labelledby="t-' + b.id + '">' +
-      '<div class="gb-tile__copy">' +
-        '<p class="gb-tile__label"><span class="gb-tile__chip">' + gbAvatar(b, "gbot--alive") + '</span><span>' + esc(b.featured ? b.name : b.label) + '</span>' +
-        (b.featured ? '<span class="gb-badge gb-tile__badge-feature">' + esc(b.label) + '</span>' : "") + '</p>' +
-        '<h3 id="t-' + b.id + '">' + esc(b.headline) + '</h3>' +
-        '<p class="body">' + esc(b.body) + '</p>' +
-        '<div class="gb-tile__links">' + b.links.map(function (l) { return '<a class="gb-tile__link" href="' + l.url + '" target="_blank" rel="noopener">' + esc(l.label) + ARROW + '</a>'; }).join("") +
-        (b.proof ? '<span class="gb-tile__proof">' + esc(b.proof) + '</span>' : "") + '</div>' +
-        (wide ? '<ul class="gb-handles" data-grow>' + b.handles.map(function (h, k) { return '<li class="gb-grow" style="--i:' + k + '">' + esc(h) + '</li>'; }).join("") + '</ul>' : "") +
-      '</div>' +
-      '<div class="gb-tile__stage">' + mockHTML(b) + '</div>' +
-    '</article>';
-  }
-  var tiles = BOTS.map(tileHTML);
-  if (SLOTS > 0) {
-    tiles.push('<article class="gb-tile gb-tile--slot reveal" style="transition-delay:160ms" aria-label="Open slot"><div class="gb-slot">' +
-      '<span class="reveal__art" style="color:rgba(255,255,255,.28)">' + gbGhost("gbot--alive") + '</span>' +
-      '<h3>Next bot</h3><p>This slot is open. The next bot lands here when it ships.</p>' +
-      '<a class="gb-tile__link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">Follow on X' + ARROW + '</a></div></article>');
-  }
-  $("#gb-tiles").innerHTML = tiles.join("");
-
-  // Under-the-hood cards
-  $("#gb-runs").innerHTML = BOTS.map(function (b) {
-    return '<div class="gb-runs__card"><header>' + gbAvatar(b, "gbot--alive") + esc(b.name) + '</header>' +
-      '<ul class="gb-handles" data-grow>' + b.handles.map(function (h, k) { return '<li class="gb-grow" style="--i:' + k + '">' + esc(h) + '</li>'; }).join("") + '</ul></div>';
+  /* ── copy that depends on the data ── */
+  $("#gb-hero-count").textContent = count + " " + noun + " so far. New ones land here first.";
+  $("#gb-note-count").textContent = BOTS.length === 2 ? "Both bots" : "All bots";
+  var repos = BOTS.map(function (b) { return b.links[0]; }).filter(Boolean);
+  $("#gb-code-links").innerHTML = repos.map(function (l, i) {
+    return (i ? (i === repos.length - 1 ? " and " : ", ") : "") + '<a class="u-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.url.split("/").filter(Boolean).pop()) + "</a>";
   }).join("");
-  $("#gb-runs-chip").innerHTML = gbAvatar(byId.crankobot || lead, "gbot--alive");
+  $("#gb-floor-bots").insertAdjacentHTML("beforeend", BOTS.map(function (b) {
+    return '<li><a href="' + esc(b.links[0].url) + '" target="_blank" rel="noopener">' + esc(b.projectName.toLowerCase()) + " ↗</a></li>";
+  }).join(""));
 
-  $("#gb-close-crew").innerHTML = BOTS.map(function (b) { return gbAvatar(b, "gbot--alive"); }).join("") +
-    '<span style="color:rgba(255,255,255,.28)">' + gbGhost("gbot--alive") + '</span>';
-  $("#gb-sticky-bot").innerHTML = gbAvatar(lead, "gbot--alive");
-  $("#gb-footer-mark").innerHTML = gbAvatar(lead, "footer-mark gbot--alive");
+  /* ── the stage: actors + info, side by side ── */
+  function who(b) { return '<span class="k-who' + (b.id === "limit-coach" ? " k-who--lc" : "") + '"><i></i>' + esc(b.name) + "</span>"; }
+  function whoMini(b) { return '<span class="k-who gb-who"><span data-bot-slot="' + b.id + '" data-class="gb-mini"></span>' + esc(b.name) + "</span>"; }
+  $("#gb-cast").innerHTML = BOTS.map(function (b) {
+    return '<div class="k-actor" data-bot="' + b.id + '" data-lift="-0.05"' + (b.id === "limit-coach" ? " data-cursor-blue" : "") + '>' +
+        '<div class="k-actor__body" role="button" tabindex="-1" aria-label="' + esc(b.name) + '"><span data-bot-slot="' + b.id + '"></span></div><span class="k-actor__ring"></span></div>';
+  }).join("") + '<span class="gb-horizon" aria-hidden="true"></span>' + BOTS.map(function (b) {
+    return '<article class="gb-info" id="bot-' + b.id + '" data-bot="' + b.id + '" aria-labelledby="t-' + b.id + '">' +
+      '<p class="gb-info__who">' + whoMini(b) + '<span class="k-tag">' + esc(b.subtitle) + "</span></p>" +
+      '<h3 id="t-' + b.id + '">' + esc(b.headline) + "</h3>" +
+      '<p class="body">' + esc(b.body) + "</p>" +
+      '<ul class="gb-handles" data-grow>' + b.handles.map(function (h, k) { return '<li class="k-grow" style="--i:' + k + '"><span>▸</span>' + esc(h) + "</li>"; }).join("") + "</ul>" +
+      '<div class="gb-links">' + b.links.map(function (l) {
+        return '<a class="k-btn k-btn--ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener"><span class="k-btn__label">' + esc(l.label) + '</span><span class="k-key">' + ARROW + "</span></a>";
+      }).join("") + (b.proof ? '<span class="gb-proof">' + esc(b.proof) + "</span>" : "") + "</div></article>";
+  }).join("");
 
-  // Stagger blink / bob so no two bots move in lockstep
-  $$(".gbot").forEach(function (el, i) {
-    el.style.setProperty("--blink-delay", ((i * 1.3) % 5.6).toFixed(2) + "s");
-    el.style.setProperty("--bob-delay", (-(i * 1.1) % 3.4).toFixed(2) + "s");
-  });
-
-  /* ───────────── Intro curtain ───────────── */
-  var intro = $(".gb-intro");
-  var themeMeta = $('meta[name="theme-color"]');
-  var layers = $$(".gb-intro__layer");
-  function setTheme(c) { if (themeMeta) themeMeta.content = c; }
-  function restartCrew() {
-    $$(".gb-crew__item, .gb-rise, .gb-nav, .gb-chip").forEach(function (el) { el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
-  }
-  function skipIntro() {
-    if (!intro || intro.hasAttribute("data-done")) return;
-    var running = getComputedStyle(intro).visibility !== "hidden";
-    intro.setAttribute("data-done", "");
-    document.documentElement.setAttribute("data-intro", "done");
-    if (running) restartCrew();
-  }
-  if (intro) {
-    intro.addEventListener("animationstart", function (e) {
-      var k = layers.indexOf(e.target);
-      if (e.animationName === "intro-show" && k > -1) setTheme(getComputedStyle(e.target).getPropertyValue("--bg").trim());
-    });
-    intro.addEventListener("animationend", function (e) {
-      if (e.target !== intro) return;
-      if (e.animationName === "intro-curtain" || e.animationName === "intro-curtain-fade") {
-        setTheme("#000000");
-        document.documentElement.setAttribute("data-intro", "done");
-        intro.style.display = "none";
-      }
-    });
-    ["wheel", "touchmove", "keydown", "pointerdown"].forEach(function (ev) {
-      window.addEventListener(ev, skipIntro, { once: true, passive: true });
-    });
-    // Safety net if animation events never fire
-    setTimeout(function () { setTheme("#000000"); }, 5400 + 1400);
-  }
-
-  /* ───────────── Scroll reveal ───────────── */
-  var revealEls = $$(".reveal");
-  if (!reduce && "IntersectionObserver" in window) {
-    revealEls.forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      if (r.top > window.innerHeight * .92) el.classList.add("reveal--armed");
-    });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var el = en.target;
-        el.classList.add("reveal--in"); io.unobserve(el);
-        // once settled, drop the reveal transition so hovers stay snappy
-        setTimeout(function () { el.classList.remove("reveal--armed", "reveal--in"); el.style.transitionDelay = ""; }, 1100 + (parseFloat(el.style.transitionDelay) || 0));
-      });
-    }, { rootMargin: "0px 0px -12% 0px", threshold: .15 });
-    revealEls.forEach(function (el) { io.observe(el); });
-  }
-
-  // Hairlines in lists draw in as they enter
-  var growIO = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); growIO.unobserve(en.target); } });
-  }, { rootMargin: "0px 0px -15% 0px" }) : null;
-  $$("[data-grow]").forEach(function (el) { growIO ? growIO.observe(el) : el.classList.add("is-in"); });
-
-  // LimitNotch mock opens when in view, re-springs on hover
-  $$("[data-notch]").forEach(function (n) {
-    var screen = n.parentElement;
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (en) {
-        en.forEach(function (x) { n.classList.toggle("is-open", x.isIntersecting); });
-      }, { threshold: .9 }).observe(screen);
-    } else n.classList.add("is-open");
-    screen.addEventListener("pointerenter", function () { n.classList.remove("is-open"); void n.offsetWidth; setTimeout(function () { n.classList.add("is-open"); }, 180); });
-  });
-
-  /* ───────────── Bots: eyes follow the cursor, hop on hover ───────────── */
-  var mouse = { x: window.innerWidth / 2, y: window.innerHeight * .3, t: 0 };
-  var bots = $$(".gbot").map(function (svg) {
-    return { svg: svg, look: svg.querySelector(".gbot__look"), x: 0, y: 0, tx: 0, ty: 0, vis: true };
-  });
-  if ("IntersectionObserver" in window) {
-    var visIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { en.target.__gb.vis = en.isIntersecting; });
-    });
-    bots.forEach(function (b) { b.svg.__gb = b; visIO.observe(b.svg); });
-  }
-  window.addEventListener("pointermove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.t = performance.now(); }, { passive: true });
-
-  function hop(svg, kind) {
-    if (reduce) return;
-    var c = kind === "boop" ? "is-boop" : "is-hop";
-    svg.classList.remove("is-hop", "is-boop", "is-blink2"); void svg.getBoundingClientRect();
-    svg.classList.add(c, "is-blink2");
-    clearTimeout(svg.__hopT);
-    svg.__hopT = setTimeout(function () { svg.classList.remove(c, "is-blink2"); }, 820);
-  }
-  document.addEventListener("pointerover", function (e) {
-    var svg = e.target.closest && e.target.closest(".gbot");
-    if (svg && !(e.relatedTarget && svg.contains(e.relatedTarget))) hop(svg, "hop");
-  });
-  document.addEventListener("click", function (e) {
-    var svg = e.target.closest && e.target.closest(".gbot");
-    if (svg) hop(svg, "boop");
-  });
-
-  // Idle glance: when the pointer is still (or on touch), eyes look around
-  var glance = { x: 0, y: 0, next: 0 };
-
-  /* ───────────── Custom cursor (spring) ───────────── */
-  var cursor = $(".gb-cursor");
-  var cur = { x: -100, y: -100, vx: 0, vy: 0 };
-  var useCursor = finePointer && !reduce;
-  if (useCursor) {
-    document.documentElement.classList.add("has-cursor");
-    window.addEventListener("pointermove", function (e) {
-      cursor.classList.add("is-on");
-      var t = e.target;
-      if (!t || !t.closest) return;
-      cursor.classList.toggle("is-hot", !t.closest("[data-cursor-quiet]") && !!t.closest("a[href], button, [role='button'], [data-cursor], .gbot"));
-      cursor.classList.toggle("is-ink", !!t.closest("[data-cursor-ink]"));
-      cursor.classList.toggle("is-blue", !!t.closest("[data-cursor-blue], [data-bot='limit-coach']"));
-    }, { passive: true });
-    document.documentElement.addEventListener("pointerleave", function () { cursor.classList.remove("is-on"); });
-  } else if (cursor) cursor.remove();
-
-  /* ───────────── Parallax ───────────── */
-  var para = $$("[data-parallax]").map(function (el) {
-    return { el: el, k: parseFloat(el.getAttribute("data-parallax")) || 0, hero: !!el.closest(".gb-hero"), y: 0, last: null };
-  });
-
-  /* ───────────── Single rAF loop ───────────── */
-  var last = performance.now(), running = true;
-  document.addEventListener("visibilitychange", function () { running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(tick); } });
-
-  function tick(now) {
-    if (!running) return;
-    var dt = Math.min(.05, (now - last) / 1000); last = now;
-
-    if (!reduce) {
-      // eyes
-      var idle = now - mouse.t > 3500;
-      if (idle && now > glance.next) {
-        glance.x = (Math.random() * 2 - 1) * 4; glance.y = (Math.random() * 2 - 1) * 3;
-        if (Math.random() < .35) { glance.x = 0; glance.y = 0; }
-        glance.next = now + 1400 + Math.random() * 2200;
-      }
-      // read phase: all layout reads before any style write (no thrash)
-      var i, b, sy = window.scrollY, vh = window.innerHeight;
-      for (i = 0; i < bots.length; i++) {
-        b = bots[i];
-        if (!b.vis || !b.look) continue;
-        if (idle) { b.tx = glance.x; b.ty = glance.y; continue; }
-        var r = b.svg.getBoundingClientRect();
-        var dx = mouse.x - (r.left + r.width / 2), dy = mouse.y - (r.top + r.height / 2);
-        var d = Math.sqrt(dx * dx + dy * dy) || 1, f = Math.min(1, d / 320);
-        b.tx = dx / d * 6 * f; b.ty = dy / d * 5 * f;
-      }
-      for (var q = 0; q < para.length; q++) {
-        var pq = para[q];
-        if (pq.hero) pq.y = sy < vh * 1.2 ? sy * pq.k : pq.y;
-        else { var rr = pq.el.parentElement.getBoundingClientRect(); pq.y = (rr.top + rr.height / 2 - vh / 2) * pq.k; }
-      }
-      // write phase
-      var ease = 1 - Math.pow(.0009, dt);             // frame-rate independent lerp
-      for (i = 0; i < bots.length; i++) {
-        b = bots[i];
-        if (!b.vis || !b.look) continue;
-        b.x += (b.tx - b.x) * ease; b.y += (b.ty - b.y) * ease;
-        b.look.style.transform = "translate(" + b.x.toFixed(2) + "px," + b.y.toFixed(2) + "px)";
-      }
-      // cursor spring (stiffness 1100, damping 52, mass .3 — same feel as the reference)
-      if (useCursor) {
-        var k = 1100, c = 52, m = .3, steps = 2, h = dt / steps;
-        for (var sI = 0; sI < steps; sI++) {
-          cur.vx += ((mouse.x - cur.x) * k - cur.vx * c) / m * h;
-          cur.vy += ((mouse.y - cur.y) * k - cur.vy * c) / m * h;
-          cur.x += cur.vx * h; cur.y += cur.vy * h;
-        }
-        cursor.style.transform = "translate3d(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px,0)";
-      }
-      for (var p = 0; p < para.length; p++) {
-        var it = para[p];
-        if (it.y !== it.last) { it.el.style.transform = "translate3d(0," + it.y.toFixed(1) + "px,0)"; it.last = it.y; }
-      }
+  /* ── examples: the Grok Bot app panels (values from the READMEs, tagged example) ── */
+  $("#gb-examples").innerHTML = BOTS.map(function (b) {
+    var m = b.mock || {}, body = "";
+    if (m.type === "notch") {
+      body = '<div class="gb-screen" data-grow><div class="gb-screen__bar"><span>Finder</span><span>9:41</span></div>' +
+        '<div class="gb-notch"><div class="gb-notch__eyes"><i class="gb-notch__eye"></i><i class="gb-notch__eye"></i></div>' +
+        '<div class="gb-notch__read"><span class="gb-notch__value">' + esc(m.value) + '</span><span class="gb-notch__cap">' + esc(m.caption) + "</span>" +
+        '<span class="gb-notch__switch">' + m.switch.map(function (x) { return "<span>" + esc(x) + "</span>"; }).join("") + "</span></div></div></div>";
+    } else if (m.type === "files") {
+      body = '<div class="gb-files">' + m.files.map(function (f) { return '<div class="gb-file">' + FILE + "<span>" + esc(f) + "</span></div>"; }).join("") + "</div>" +
+        '<p class="gb-msg">' + esc(m.message) + '</p><div class="gb-typing" aria-hidden="true"><i></i><i></i><i></i></div>';
     }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
+    var label = m.type === "notch" ? "LimitNotch, in the MacBook notch" : "Library";
+    return '<div class="gb-ex k-card reveal"><p class="gb-ex__head">' + who(b) + "<span>" + esc(label) + '</span><span class="k-tag">example</span></p>' + body + "</div>";
+  }).join("");
 
-  /* ───────────── CTA wakes up into Crankobot ───────────── */
-  var LINES = ["Hey, I was reading replies.", "Shh. Scanning for demand.", "Five more prospects, then I'm yours.", "You woke me mid-search.", "Fine. I'm up.", "Easy. I'm counting tokens."];
-  var WAKE_MS = 700, BUBBLE_MS = 1800, said = 0;
-  $$("[data-wakeable]").forEach(function (cta) {
-    var label = cta.textContent;
-    cta.setAttribute("aria-label", label);
-    cta.innerHTML = '<span class="gb-cta__letters" aria-hidden="true">' + label.split("").map(function (ch, i) {
-      return '<span class="gb-cta__l" style="--i:' + i + '">' + (ch === " " ? "&nbsp;" : esc(ch)) + "</span>";
-    }).join("") + '</span><span class="gb-cta__face" aria-hidden="true"><span class="gb-cta__eye"><span class="gb-cta__brow"></span><span class="gb-cta__pupil"></span></span><span class="gb-cta__eye"><span class="gb-cta__brow"></span><span class="gb-cta__pupil"></span></span></span>';
-    cta.addEventListener("click", function () {
-      if (reduce) return;
-      var first = !cta.hasAttribute("data-wake");
-      if (first) {
-        var r = cta.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        $$(".gb-cta__l", cta).forEach(function (l) {
-          var lr = l.getBoundingClientRect();
-          l.style.setProperty("--dx", (cx - (lr.left + lr.width / 2)).toFixed(1) + "px");
-          l.style.setProperty("--dy", (cy - (lr.top + lr.height / 2)).toFixed(1) + "px");
-        });
-        cta.style.setProperty("--h", r.height + "px");
-        cta.setAttribute("data-wake", "");
-      }
-      cta.removeAttribute("data-grumpy"); void cta.offsetWidth;
-      var delay = first ? WAKE_MS : 0;
-      setTimeout(function () {
-        cta.setAttribute("data-grumpy", "");
-        $$(".gb-bubble").forEach(function (x) { x.remove(); });
-        var r = cta.getBoundingClientRect(), b = document.createElement("div");
-        b.className = "gb-bubble"; b.setAttribute("aria-hidden", "true");
-        b.textContent = LINES[said++ % LINES.length];
-        b.style.animationDuration = (BUBBLE_MS - delay) + "ms";
-        document.body.appendChild(b);
-        var w = b.offsetWidth, mid = r.left + r.width / 2, left = Math.min(Math.max(mid - w / 2, 12), window.innerWidth - w - 12);
-        b.style.left = left + window.scrollX + "px";
-        b.style.top = r.top + window.scrollY - b.offsetHeight - 16 + "px";
-        b.style.setProperty("--tail", Math.min(Math.max(mid - left, 16), w - 16) + "px");
-        setTimeout(function () { b.remove(); cta.removeAttribute("data-grumpy"); }, BUBBLE_MS - delay);
-      }, delay);
-    });
-  });
-  // Wake the hero CTA but keep the page from jumping before the face appears
-  $$('a.gb-cta[href^="#"]').forEach(function (a) {
-    a.addEventListener("click", function (e) {
-      if (reduce) return;
-      e.preventDefault();
-      var target = $(a.getAttribute("href"));
-      setTimeout(function () { target && target.scrollIntoView({ behavior: "smooth", block: "start" }); }, WAKE_MS + 250);
-    });
-  });
+  /* ── under the hood: one row per bot → its public repository ── */
+  $("#gb-runs").innerHTML = BOTS.map(function (b, i) {
+    return '<li><a class="k-grow" style="--i:' + i + '" href="' + esc(b.links[0].url) + '" target="_blank" rel="noopener">' +
+      '<span data-bot-slot="' + b.id + '"></span><b>' + esc(b.name) + "</b><small>runs " + esc(b.projectName) + '</small><span class="k-go">' + ARROW + "</span></a></li>";
+  }).join("");
 
-  /* ───────────── Footer reveal ───────────── */
-  var footer = $(".site-footer"), content = $(".site-content");
-  if (reduce) footer.style.setProperty("--reveal", "1");
-  else {
-    var fr = 0, prev = -1;
-    var measure = function () {
-      fr = 0;
-      var h = footer.offsetHeight || 1;
-      var v = Math.round(100 * Math.max(0, Math.min(1, (window.scrollY + window.innerHeight - content.offsetHeight - content.offsetTop) / h))) / 100;
-      if (v !== prev) {
-        prev = v; footer.style.setProperty("--reveal", String(v));
-        if (v > .01) document.body.setAttribute("data-footer-open", ""); else document.body.removeAttribute("data-footer-open");
-      }
+  /* stage hint adapts to the input */
+  $("#gb-hint").textContent = window.matchMedia("(pointer: fine)").matches ? "they follow your cursor" : "tap a bot";
+
+  KM.boot();
+
+  /* ── boot intro: skippable; bots wake with a hop as the scan passes ── */
+  var boot = $(".gb-boot"), root = document.documentElement;
+  function wake() { $$(".gb-cast .gbot").forEach(function (svg, i) { setTimeout(function () { KM.hop(svg, "hop"); }, 120 + i * 140); }); }
+  if (boot && root.hasAttribute("data-boot")) {
+    var done = false;
+    var finish = function () { if (done) return; done = true; boot.style.display = "none"; wake(); };
+    boot.addEventListener("animationend", function (e) { if (e.target === boot) finish(); });
+    var skip = function () {
+      if (done) return;
+      boot.classList.add("is-skip"); root.style.setProperty("--enter", "0s");
+      setTimeout(finish, 300);
     };
-    var schedule = function () { if (!fr) fr = requestAnimationFrame(measure); };
-    measure();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    footer.addEventListener("focusin", function () {
-      var max = document.scrollingElement.scrollHeight;
-      if (window.scrollY + window.innerHeight < max - 2) window.scrollTo({ top: max, behavior: "instant" });
-    });
-  }
-
-  /* ───────────── Mobile sticky bar ───────────── */
-  var sticky = $("#gb-sticky"), hero = $(".gb-hero"), close = $(".gb-close");
-  if ("IntersectionObserver" in window) {
-    var heroGone = false, closeOn = false;
-    var upd = function () {
-      var on = heroGone && !closeOn;
-      sticky.classList.toggle("is-on", on);
-      sticky.setAttribute("aria-hidden", on ? "false" : "true");
-      if (on) sticky.removeAttribute("inert"); else sticky.setAttribute("inert", "");
-    };
-    new IntersectionObserver(function (en) { heroGone = !en[0].isIntersecting && en[0].boundingClientRect.top < 0; upd(); }).observe(hero);
-    new IntersectionObserver(function (en) { closeOn = en[0].isIntersecting || en[0].boundingClientRect.top < 0; upd(); }).observe(close);
-  }
-
-  /* ───────────── Nav lamp sits on the active item ───────────── */
-  var pill = $(".gb-nav__pill"), lamp = $(".gb-nav__lamp"), active = $('.gb-nav__link[aria-current="page"]');
-  function placeLamp() {
-    if (!active) return;
-    var pr = pill.getBoundingClientRect(), ar = active.getBoundingClientRect();
-    lamp.style.setProperty("--lamp-x", (ar.left - pr.left + ar.width / 2) + "px");
-  }
-  placeLamp();
-  window.addEventListener("resize", placeLamp, { passive: true });
-  document.fonts && document.fonts.ready.then(placeLamp);
+    ["keydown", "wheel", "touchstart", "pointerdown"].forEach(function (ev) { window.addEventListener(ev, skip, { once: true, passive: true }); });
+    setTimeout(finish, 2600);
+  } else setTimeout(wake, 600);
 })();
 </script>
 </body>

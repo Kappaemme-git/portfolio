@@ -6,485 +6,139 @@
 <title>Kappaemme — Francesco Mistero · CS student & indie hacker</title>
 <meta name="description" content="Francesco Mistero, aka Kappaemme. CS student and indie developer building iPhone apps, websites, open-source tools and Codex skills.">
 <meta name="author" content="Francesco Mistero">
-<meta name="theme-color" content="#F2F2EF">
+<meta name="theme-color" content="#000000">
 <link rel="icon" type="image/svg+xml" href="../../images/kappaemme-favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <!--
-  RESTYLE PROTOTYPE — home (index.html).
-  Design hand-off only. Spec: design/restyle/SPEC.md.
-  Paths are relative so the file renders from the repo:
-  python3 -m http.server → /design/restyle/prototype.html
+  RESTYLE PROTOTYPE (dark) — home (index.html). Spec: design/restyle/SPEC.md
+  Shared system: shared.css + shared.js (→ /assets/site.css, /assets/site.js).
+  Serve the repo root: python3 -m http.server → /design/restyle/prototype.html
 -->
+<script>
+  document.documentElement.classList.add("js");
+  try { if (sessionStorage.getItem("k-scan")) { sessionStorage.removeItem("k-scan"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.setAttribute("data-scan", "in"); } } catch (e) {}
+</script>
+<link rel="stylesheet" href="shared.css">
+<script src="../../grok-bot/bots.data.js"></script>
 <style>
-  /* ════════════════════════════════════════════════════════════════
-     SHARED — tokens (identical in coffee.html; see SPEC §2–§4)
-     ════════════════════════════════════════════════════════════════ */
-  :root {
-    color-scheme: light;
+  /* ══════════════ Hero ══════════════ */
+  .k-hero { padding-top: calc(var(--top-h) + 3rem); }
+  @media (min-width: 1024px) { .k-hero { padding-top: calc(var(--top-h) + 4.5rem); } }
+  .k-hero__grid { display: grid; gap: 3rem; }
+  @media (min-width: 1024px) { .k-hero__grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 4.5rem; align-items: end; } }
+  .k-hero h1 { margin-top: 1.5rem; font-size: clamp(3.3rem, 13.6vw, 7.75rem); font-weight: 600; line-height: .93; letter-spacing: -.058em; text-wrap: balance; }
+  @media (min-width: 640px) { .k-hero h1 { font-size: clamp(4.6rem, 9.6vw, 7.75rem); } }
+  .k-hero__lede { margin-top: 1.75rem; max-width: 37ch; font-size: 1.1rem; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+  .k-hero__lede strong { font-weight: 500; color: var(--text); }
+  @media (min-width: 768px) { .k-hero__lede { margin-top: 2rem; font-size: 1.28rem; line-height: 1.5; } }
+  .k-hero__cta { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2.25rem; }
+  @media (max-width: 479px) { .k-hero__cta .k-btn { flex: 1 1 auto; } }
+  .k-hero__links { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin-top: 1.75rem; font: 500 .8rem/1 var(--font-mono); }
+  .k-hero__links a { display: inline-flex; align-items: center; gap: .3rem; min-height: 28px; color: var(--text-2); text-decoration: none; transition: color .2s; }
+  .k-hero__links a:hover { color: var(--text); }
+  .k-hero__links svg { width: 11px; height: 11px; color: var(--text-3); }
 
-    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  .k-fig__frame { padding: 7px; border-radius: 22px; box-shadow: inset 0 0 0 1px var(--line-2); }
+  .k-fig__img { position: relative; overflow: hidden; border-radius: 15px; background: var(--me); aspect-ratio: 5 / 4; }
+  @media (min-width: 640px) and (max-width: 1023px) { .k-fig__img { aspect-ratio: 16 / 10; } }
+  @media (min-width: 1024px) { .k-fig__img { aspect-ratio: 4 / 5; } }
+  .k-fig__img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .k-rise .k-fig__img img { animation: settle 1.5s var(--ease-out) calc(var(--enter) + .2s) both; }
+  @keyframes settle { from { transform: scale(1.07); } }
+  .k-fig figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: .85rem; padding: 0 .3rem; font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
 
-    /* Light base */
-    --paper:   #F2F2EF;              /* page ground = grok-bot footer */
-    --paper-2: #E8E8E3;              /* sunken chips, quote boxes on white */
-    --card:    #FFFFFF;              /* cards and tiles on paper */
-    --ink:     #0A0A0A;
-    --ink-2:   rgba(10,10,10,.68);
-    --ink-3:   rgba(10,10,10,.60);
-    --line:    rgba(10,10,10,.10);
-    --line-2:  rgba(10,10,10,.20);
+  /* ══════════════ Projects: spec-sheet cards ══════════════ */
+  .k-projects { display: grid; gap: 1rem; }
+  @media (min-width: 768px) { .k-projects { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+  .k-proj { display: flex; flex-direction: column; padding: 8px; color: inherit; text-decoration: none; transition: box-shadow .3s; }
+  .k-proj:hover { box-shadow: inset 0 0 0 1px var(--line-3); }
+  .k-proj__screen { position: relative; display: grid; place-items: center; overflow: hidden; aspect-ratio: 16 / 10.5; border-radius: 10px; background: var(--tint); }
+  .k-proj__screen img { height: auto; aspect-ratio: 1; border-radius: 22.5%; box-shadow: 0 30px 50px -24px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.1); transition: transform .7s var(--ease-out); }
+  .k-proj--vibe .k-proj__screen img { border-radius: 50%; box-shadow: none; }
+  .k-proj:hover .k-proj__screen img { transform: translateY(-5px) scale(1.03); }
+  .k-proj__screen .k-tag { position: absolute; top: 12px; left: 12px; color: rgba(255,255,255,.86); background: rgba(0,0,0,.22); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+  .k-proj__body { display: grid; gap: .55rem; padding: 1.3rem 1rem 1rem; }
+  .k-proj__name { font-size: 1.6rem; font-weight: 600; letter-spacing: -.035em; line-height: 1.1; }
+  .k-proj__desc { max-width: 40ch; font-size: 1.04rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .k-spec { margin-top: .8rem; }
+  .k-spec div { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid var(--line); font: 500 .76rem/1.2 var(--font-mono); }
+  .k-spec dt { color: var(--text-3); }
+  .k-spec dd { color: var(--text-2); text-align: right; transition: color .2s; }
+  .k-proj:hover .k-spec__go { color: var(--text); }
 
-    /* Dark contrast moments */
-    --night:   #000000;              /* same ground as /grok-bot */
-    --panel:   #161616;              /* Grok Bot app panel */
-    --text:    #FFFFFF;
-    --text-2:  rgba(255,255,255,.68);
-    --text-3:  rgba(255,255,255,.50);
-    --line-d:  rgba(255,255,255,.14);
+  .k-more { margin-top: 3.5rem; }
+  .k-more__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem 1rem; padding-bottom: 1rem; }
+  .k-more__head h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: -.03em; }
+  .k-more__head a { margin-left: auto; font: 500 .8rem var(--font-mono); }
+  .k-more li:last-child .k-row { box-shadow: 0 1px 0 var(--line); }
 
-    /* Accents — used sparingly */
-    --lc:      #2474F7;              /* Limit Coach blue, the one strong colour */
-    --lc-glow: rgba(36,116,247,.45);
-    --live:    #0E9F7A;              /* "Live" dot (was #10a37f on black) */
-    --zac:     #0B193E;              /* sampled from metodo-zac-app-icon.jpg */
-    --vibe:    #613F6D;              /* sampled from vibedesk-gallery.png */
-    --me:      #8D85C0;              /* sampled from me.jpg backdrop */
-    --stripe:  #635BFF;
-
-    /* Radii */
-    --r-tile: 2rem;
-    --r-card: 1.5rem;
-    --r-sm:   1.1rem;
-
-    /* Motion — same tokens as /grok-bot */
-    --spring:    linear(0, .42 9%, .84 21%, 1.02 33%, 1.05 41%, 1.01 55%, .99 70%, 1);
-    --ease-out:  cubic-bezier(.22, 1, .36, 1);
-    --ease-soft: cubic-bezier(.2, .8, .2, 1);
-    --pop:       cubic-bezier(.3, 1.7, .5, 1);
-
-    /* Layout */
-    --wrap:      76rem;
-    --gutter:    1.25rem;
-    --section-y: 5.5rem;
-    --footer-h:  37rem;
-  }
-  @media (min-width: 640px)  { :root { --gutter: 2rem; } }
-  @media (min-width: 768px)  { :root { --section-y: 7rem; --footer-h: 36rem; } }
-  @media (min-width: 1024px) { :root { --section-y: 8.5rem; } }
-
-  *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; -webkit-text-size-adjust: 100%; }
-  html, body { margin: 0; background: var(--paper); color: var(--ink); overscroll-behavior-y: none; overflow-x: clip; }
-  body {
-    font-family: var(--font-sans); font-weight: 500; letter-spacing: -.01em; line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    padding-bottom: var(--footer-h);
-  }
-  html.menu-open { overflow: hidden; }
-  a { color: inherit; }
-  img, svg { display: block; }
-  ul, ol { margin: 0; padding: 0; list-style: none; }
-  h1, h2, h3, p { margin: 0; }
-  button { font: inherit; color: inherit; }
-  ::selection { background: var(--lc); color: #fff; }
-  :focus-visible { outline: 2px solid var(--lc); outline-offset: 4px; border-radius: 6px; }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .k-skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; padding: .7rem 1rem; border-radius: 999px; background: var(--ink); color: #fff; font-size: .9rem; text-decoration: none; }
-  .k-skip:focus { top: 1rem; }
-
-  .wrap { width: 100%; max-width: calc(var(--wrap) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
-  .site-content { position: relative; z-index: 10; background: var(--paper); }
-
-  .u-link {
-    text-decoration: underline; text-decoration-color: currentColor; text-decoration-thickness: 1px; text-underline-offset: 4px;
-    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
-    transition: text-decoration-color .2s, text-underline-offset .26s var(--ease-out);
-    color: inherit; font-weight: 600;
-  }
-  .u-link:hover { text-decoration-color: currentColor; text-underline-offset: 2px; }
-
-  .ic { width: 1em; height: 1em; flex: none; }
-
-  /* ════════════════════════════════════════════════════════════════
-     SHARED — chrome: brand chip, pill nav with lamp, GitHub chip, menu
-     ════════════════════════════════════════════════════════════════ */
-  .k-chip {
-    position: fixed; top: max(1rem, env(safe-area-inset-top)); z-index: 40;
-    display: inline-flex; align-items: center; gap: .55rem; min-height: 44px;
-    padding: .7rem 1rem; border-radius: 999px;
-    font-size: 13px; font-weight: 500; line-height: 1; text-decoration: none; color: var(--ink);
-    border: 1px solid var(--line-2); background: rgba(242,242,239,.78);
-    -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
-    transition: border-color .3s, opacity .3s, background-color .3s;
-    cursor: pointer;
-  }
-  .k-chip:hover { border-color: rgba(10,10,10,.45); }
-  .k-chip svg { width: 16px; height: 16px; transition: transform .3s var(--ease-out); }
-  .k-chip--brand { left: 1rem; padding-left: .85rem; font-weight: 600; }
-  .k-chip--brand img { width: 27px; height: 16px; transition: transform .35s var(--pop); }
-  .k-chip--brand:hover img { transform: rotate(-6deg) scale(1.06); }
-  .k-chip--right { right: 1rem; display: none; }
-  .k-chip--right:hover svg { transform: rotate(-8deg) scale(1.08); }
-  .k-chip--menu { right: 1rem; background: var(--ink); color: #fff; border-color: var(--ink); font-weight: 600; }
-  .k-chip--menu:hover { border-color: var(--ink); }
-  .k-chip--menu .k-burger { position: relative; width: 14px; height: 8px; }
-  .k-chip--menu .k-burger::before, .k-chip--menu .k-burger::after {
-    content: ""; position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 2px; background: currentColor;
-    transition: transform .35s var(--ease-out), top .35s var(--ease-out);
-  }
-  .k-chip--menu .k-burger::before { top: 0; }
-  .k-chip--menu .k-burger::after { top: 6.5px; }
-  .k-chip--menu[aria-expanded="true"] .k-burger::before { top: 3.25px; transform: rotate(45deg); }
-  .k-chip--menu[aria-expanded="true"] .k-burger::after { top: 3.25px; transform: rotate(-45deg); }
-  @media (min-width: 640px) {
-    .k-chip { top: 1.75rem; }
-    .k-chip--brand { left: 1.75rem; }
-    .k-chip--menu, .k-chip--right { right: 1.75rem; }
-  }
-  body[data-footer-open] .k-chip, body[data-footer-open] .k-nav { opacity: 0; pointer-events: none; }
-
-  .k-nav { position: fixed; top: 0; left: 50%; z-index: 50; transform: translateX(-50%); padding-top: 1.5rem; display: none; transition: opacity .3s; }
+  /* ══════════════ Teasers (skills + bots): sibling cards ══════════════ */
+  .k-teaser { display: grid; gap: 2rem; padding: 1.5rem 1.25rem 1.25rem; overflow: hidden; }
+  @media (min-width: 640px) { .k-teaser { padding: 2.25rem; } }
   @media (min-width: 1024px) {
-    .k-nav { display: block; }
-    .k-chip--menu { display: none; }
+    .k-teaser { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 3.5rem; align-items: center; padding: 3.5rem; }
+    .k-teaser--flip { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); }
+    .k-teaser--flip > :first-child { order: 2; }
   }
-  @media (min-width: 1280px) { .k-chip--right { display: inline-flex; } }
-  .k-nav__pill {
-    position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px;
-    background: rgba(242,242,239,.8); border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
-    box-shadow: 0 10px 30px -14px rgba(10,10,10,.28);
-  }
-  .k-nav__link {
-    position: relative; padding: 6px 13px; border-radius: 999px; white-space: nowrap;
-    font-size: 13px; font-weight: 500; text-decoration: none; color: rgba(10,10,10,.66);
-    transition: color .2s, background-color .2s;
-  }
-  @media (min-width: 1280px) { .k-nav__link { padding: 6px 16px; } }
-  .k-nav__link::after { content: ""; position: absolute; inset: -7px 0; }
-  .k-nav__link:hover { color: var(--ink); }
-  .k-nav__link[aria-current] { color: var(--ink); background: rgba(10,10,10,.075); }
-  .k-nav__lamp {
-    position: absolute; top: -5px; left: var(--lamp-x, 50%); width: 32px; height: 5px; border-radius: 0 0 4px 4px;
-    background: var(--ink); transform: translateX(-50%); opacity: 0;
-    transition: left .5s var(--ease-out), opacity .3s;
-  }
-  .k-nav__lamp.is-on { opacity: 1; }
-  .k-nav__lamp::after {
-    content: ""; position: absolute; left: 50%; top: 2px; width: 64px; height: 22px; transform: translateX(-50%);
-    background: radial-gradient(50% 100% at 50% 0, rgba(10,10,10,.16), transparent 70%); pointer-events: none;
-  }
-  .k-nav, .k-chip { animation: nav-in .45s ease-out .1s backwards; }
-  @keyframes nav-in { 0% { opacity: 0; visibility: hidden; } }
+  .k-teaser .k-h2 { margin-top: 1.4rem; }
+  .k-teaser .k-lede { margin-top: 1.1rem; }
+  .k-teaser__cta { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; margin-top: 2rem; }
+  .k-teaser__fine { font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
 
-  /* Mobile menu sheet */
-  .k-sheet {
-    position: fixed; inset: 0; z-index: 38; display: flex; flex-direction: column; overflow-y: auto;
-    padding: calc(max(1rem, env(safe-area-inset-top)) + 5rem) var(--gutter) calc(env(safe-area-inset-bottom) + 2rem);
-    background: var(--paper);
-    opacity: 0; visibility: hidden; transform: translateY(-1rem);
-    transition: opacity .35s var(--ease-out), transform .5s var(--ease-out), visibility 0s linear .5s;
-  }
-  .k-sheet.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-  .k-sheet__list li { opacity: 0; transform: translateY(12px); transition: opacity .5s var(--ease-out), transform .6s var(--ease-out); transition-delay: calc(.06s + var(--i) * 35ms); }
-  .k-sheet.is-open .k-sheet__list li { opacity: 1; transform: none; }
-  .k-sheet__list a {
-    display: flex; align-items: baseline; gap: .9rem; padding: .7rem 0; border-bottom: 1px solid var(--line);
-    font-size: clamp(2rem, 9.4vw, 2.9rem); font-weight: 800; line-height: 1; letter-spacing: -.045em; text-decoration: none;
-  }
-  .k-sheet__list a span { min-width: 1.6rem; font: 600 .72rem/1 var(--font-mono); letter-spacing: .06em; color: var(--ink-3); }
-  .k-sheet__list a[aria-current] span { color: var(--ink); }
-  .k-sheet__foot { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: auto; padding-top: 2rem; font-size: .8rem; font-weight: 500; letter-spacing: .11em; text-transform: uppercase; }
-
-  /* ════════════════════════════════════════════════════════════════
-     SHARED — type, section head, buttons, pills
-     ════════════════════════════════════════════════════════════════ */
-  .k-h2 { font-size: clamp(2.6rem, 6.6vw, 5.4rem); font-weight: 800; line-height: .95; letter-spacing: -.05em; text-wrap: balance; }
-  .k-lede { font-size: 1.12rem; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; max-width: 40ch; }
-  @media (min-width: 768px) { .k-lede { font-size: 1.22rem; } }
-
-  .k-section { padding-top: var(--section-y); }
-  .k-head { display: grid; gap: 1.1rem; margin-bottom: 2.25rem; }
-  .k-bar { position: relative; display: flex; align-items: center; gap: .7rem; padding-top: 1.1rem; font-size: .95rem; font-weight: 600; }
-  .k-bar::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line-2); transform-origin: 0 50%;
-  }
-  .k-index { padding: .36rem .55rem; border-radius: 999px; background: var(--ink); color: var(--paper); font: 600 .68rem/1 var(--font-mono); letter-spacing: .06em; }
-  .k-count { margin-left: auto; font: 500 .72rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  @media (min-width: 1024px) {
-    .k-head { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; row-gap: 1.5rem; align-items: end; margin-bottom: 3.5rem; }
-    .k-head .k-bar { grid-column: 1 / -1; }
-    .k-head .k-h2 { grid-column: 1 / span 7; }
-    .k-head .k-lede { grid-column: 8 / -1; padding-bottom: .35rem; }
-  }
-
-  .k-btn {
-    position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
-    min-height: 3.5rem; padding: 0 1.6rem; border-radius: 999px; border: 0; cursor: pointer;
-    font-size: 1.02rem; font-weight: 600; letter-spacing: -.01em; text-decoration: none; white-space: nowrap;
-    background: var(--ink); color: #fff;
-    transition: background-color .2s, box-shadow .3s, transform .3s var(--pop);
-  }
-  .k-btn:hover { background: #262626; box-shadow: 0 14px 34px -16px rgba(10,10,10,.55); }
-  .k-btn svg { width: 17px; height: 17px; transition: transform .3s var(--ease-out); }
-  .k-btn:hover svg.ic-ne { transform: translate(2px, -2px); }
-  .k-btn:hover svg.ic-down { transform: translateY(2px); }
-  .k-btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line-2); }
-  .k-btn--ghost:hover { background: rgba(10,10,10,.05); box-shadow: inset 0 0 0 1.5px rgba(10,10,10,.5); }
-  .k-btn--light { background: #fff; color: var(--ink); }
-  .k-btn--light:hover { background: #e9e9e6; box-shadow: 0 14px 40px -16px rgba(255,255,255,.35); }
-
-  .k-badge {
-    display: inline-flex; align-items: center; gap: .35rem; padding: .32rem .6rem; border-radius: 999px; white-space: nowrap;
-    font: 600 .66rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase;
-    background: var(--paper-2); color: var(--ink-2);
-  }
-  .k-badge--on-dark { background: rgba(255,255,255,.14); color: rgba(255,255,255,.88); }
-
-  .k-mono { font: 600 .66rem/1.2 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-
-  /* hairlines that draw in (same as .gb-grow) */
+  /* terminal motif — skills */
+  .k-term { border-radius: var(--r-sm); background: #050505; box-shadow: inset 0 0 0 1px var(--line); font: 500 .8rem/1 var(--font-mono); overflow: hidden; }
+  .k-term__bar { display: flex; justify-content: space-between; padding: .85rem 1rem; border-bottom: 1px solid var(--line); color: var(--text-3); font-size: .72rem; }
+  .k-term__body { padding: .7rem .35rem .9rem; }
+  .k-term__body li > a, .k-term__cmd { display: flex; align-items: center; gap: .7rem; min-height: 2.1rem; padding: 0 .65rem; border-radius: 6px; color: var(--text-2); text-decoration: none; }
+  .k-term__body li > a { transition: background-color .2s, color .2s; }
+  .k-term__body li > a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+  .k-term__ok { color: var(--live); flex: none; }
+  .k-term__n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .k-term__s { margin-left: auto; flex: none; color: var(--text-3); }
+  .k-term__s b { font-weight: 500; color: var(--text-2); }
+  .k-term__cmd { color: var(--text); margin-top: .35rem; }
+  .k-term__body li:first-child.k-term__cmd { margin-top: 0; }
+  .k-term__cmd span { color: var(--lc-text); }
+  .k-term__caret { display: inline-block; width: .55em; height: 1.1em; background: var(--text); }
   @media (prefers-reduced-motion: no-preference) {
-    .k-grow::before { transform: scaleX(0); transition: transform 1.1s var(--ease-soft) calc(var(--i, 0) * 90ms); }
-    .is-in .k-grow::before, .k-grow.is-in::before { transform: scaleX(1); }
+    .k-term__caret { animation: caret-blink 1s steps(1) infinite; }
+    html.js [data-term] .k-term__body li { opacity: 0; transform: translateX(-8px); }
+    html.js [data-term].is-in .k-term__body li { animation: term-in .45s var(--ease-out) calc(.15s + var(--i) * 70ms) both; }
   }
+  @keyframes term-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 420px) { .k-term { font-size: .74rem; } .k-term__body li > a, .k-term__cmd { gap: .5rem; padding: 0 .5rem; } }
 
-  /* ════════════════════════════════════════════════════════════════
-     Hero
-     ════════════════════════════════════════════════════════════════ */
-  .k-hero { padding: 7rem 0 0; }
-  @media (min-width: 1024px) { .k-hero { padding-top: 8rem; } }
-  .k-hero__grid { display: grid; gap: 2.75rem; }
-  @media (min-width: 1024px) {
-    .k-hero__grid { grid-template-columns: minmax(0, 1.72fr) minmax(0, 1fr); gap: 4rem; align-items: center; min-height: min(calc(100svh - 11rem), 46rem); }
-  }
-  .k-hello {
-    display: inline-flex; align-items: center; gap: .6rem; padding: .3rem 1rem .3rem .3rem; border-radius: 999px;
-    background: var(--card); box-shadow: inset 0 0 0 1px var(--line); font-size: .92rem; font-weight: 600;
-  }
-  .k-hello img { width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; background: var(--me); }
-  .k-hello span { color: var(--ink-2); font-weight: 500; }
-  .k-hero h1 {
-    margin-top: 1.75rem;
-    font-size: clamp(3.25rem, 13.6vw, 7.4rem); font-weight: 800; line-height: .88; letter-spacing: -.058em; text-wrap: balance;
-  }
-  @media (min-width: 640px) { .k-hero h1 { font-size: clamp(4.5rem, 9.2vw, 7.4rem); } }
-  .k-hero__lede { margin-top: 1.6rem; max-width: 36ch; font-size: 1.12rem; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
-  .k-hero__lede strong { color: var(--ink); font-weight: 600; }
-  @media (min-width: 768px) { .k-hero__lede { margin-top: 2rem; font-size: 1.32rem; line-height: 1.45; } }
-  .k-hero__cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
-  @media (min-width: 768px) { .k-hero__cta { margin-top: 2.5rem; } }
-  .k-hero__fine { margin-top: 1.4rem; font-size: .95rem; color: var(--ink-2); text-wrap: balance; }
-  @media (max-width: 479px) {
-    .k-hero__cta .k-btn { flex: 1 1 auto; padding: 0 1.25rem; }
-  }
+  /* mini stage — bots */
+  .k-stage { position: relative; border-radius: var(--r-sm); background: #050505; box-shadow: inset 0 0 0 1px var(--line); padding: 3rem 1rem 1.75rem; }
+  .k-stage__head { position: absolute; top: 1rem; left: 1rem; right: 1rem; display: flex; justify-content: space-between; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .k-stage__cast { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .k-stage figure { display: grid; justify-items: center; gap: 1rem; text-align: center; }
+  .k-stage .k-actor { width: clamp(6.75rem, 26vw, 10.5rem); }
+  .k-stage figcaption { display: grid; justify-items: center; gap: .45rem; }
+  .k-stage figcaption small { font: 500 .74rem/1.35 var(--font-mono); color: var(--text-3); }
 
-  .k-portrait { position: relative; border-radius: var(--r-tile); overflow: hidden; background: var(--me); aspect-ratio: 5 / 4; }
-  @media (min-width: 640px) and (max-width: 1023px) { .k-portrait { aspect-ratio: 16 / 10; } }
-  @media (min-width: 1024px) { .k-portrait { aspect-ratio: 4 / 5; } }
-  .k-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; }
-  .k-portrait__tags { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; display: flex; flex-wrap: wrap; gap: .45rem; }
-  .k-pill {
-    display: inline-flex; align-items: center; padding: .42rem .8rem; border-radius: 999px; white-space: nowrap;
-    font-size: .88rem; font-weight: 700; letter-spacing: -.01em; background: #fff; color: var(--ink);
-  }
-  .k-pill--ink { background: var(--ink); color: #fff; }
-  .k-pill--blue { background: var(--lc); color: #fff; }
+  /* skill list */
+  .k-skilllist { display: grid; gap: 2.5rem; margin-top: 3rem; scroll-margin-top: calc(var(--top-h) + 1.5rem); }
+  @media (min-width: 1024px) { .k-skilllist { grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem; } }
+  .k-skilllist h3 { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 1rem; font-size: 1.35rem; font-weight: 600; letter-spacing: -.03em; }
+  .k-skilllist h3 span { font: 500 .74rem/1 var(--font-mono); letter-spacing: 0; color: var(--text-3); }
+  .k-skilllist .k-row { grid-template-columns: minmax(0, 1fr) 2.5rem; grid-template-areas: "main go" "meta go"; }
+  .k-skilllist li:last-child .k-row { box-shadow: 0 1px 0 var(--line); }
+  .k-skilllist .k-row__name { font-family: var(--font-mono); font-size: .95rem; font-weight: 500; letter-spacing: 0; }
+  .k-skilllist .k-row__meta:empty { display: none; }
 
-  /* entrance (same rise + crew pop as /grok-bot, without the curtain) */
-  .k-rise { animation: rise .7s var(--ease-out) var(--d, 0s) both; }
-  @keyframes rise { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
-  .k-portrait.k-rise { animation-duration: .9s; }
-  .k-portrait.k-rise img { animation: settle 1.4s var(--ease-out) var(--d, 0s) both; }
-  @keyframes settle { 0% { transform: scale(1.06); } 100% { transform: none; } }
-  .k-pop { animation: crew-in .56s var(--spring) calc(.55s + var(--i) * 80ms) both; }
-  @keyframes crew-in { 0% { opacity: 0; transform: translateY(1rem) scale(.6); } 100% { opacity: 1; transform: none; } }
+  /* ══════════════ On X ══════════════ */
+  .k-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 1.5rem; border-block: 1px solid var(--line); }
+  .k-stat { padding: 1.3rem .75rem 1.3rem 0; }
+  .k-stat + .k-stat { padding-left: 1rem; border-left: 1px solid var(--line); }
+  @media (min-width: 768px) { .k-stat { padding: 1.75rem 1.5rem 1.75rem 0; } .k-stat + .k-stat { padding-left: 1.75rem; } }
+  .k-stat strong { display: block; font-size: clamp(1.9rem, 5.6vw, 4.25rem); font-weight: 600; line-height: 1; letter-spacing: -.05em; }
+  .k-stat--lc strong { color: var(--lc-text); }
+  .k-stat span { display: block; margin-top: .55rem; font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
 
-  /* ════════════════════════════════════════════════════════════════
-     01 Projects
-     ════════════════════════════════════════════════════════════════ */
-  .k-features { display: grid; gap: 1rem; }
-  @media (min-width: 768px) { .k-features { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
-  .k-tile {
-    position: relative; display: flex; flex-direction: column; overflow: hidden; isolation: isolate;
-    border-radius: var(--r-tile); color: #fff; text-decoration: none; min-height: 28rem;
-  }
-  @media (min-width: 768px) { .k-tile { min-height: 32rem; } }
-  @media (min-width: 1024px) { .k-tile { min-height: 38rem; } }
-  .k-tile--zac  { background: var(--zac); }
-  .k-tile--vibe { background: var(--vibe); }
-  .k-tile__copy { padding: 1.75rem 1.5rem 0; }
-  @media (min-width: 640px) { .k-tile__copy { padding: 2.5rem 2.25rem 0; } }
-  .k-tile__label { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; font-size: .95rem; font-weight: 600; }
-  .k-tile__chip { width: 1.9rem; height: 1.9rem; border-radius: .55rem; object-fit: cover; box-shadow: 0 0 0 1px rgba(255,255,255,.2); }
-  .k-tile h3 { margin-top: .9rem; max-width: 17ch; font-size: clamp(1.9rem, 3.3vw, 2.8rem); font-weight: 800; line-height: 1; letter-spacing: -.045em; text-wrap: balance; }
-  .k-pill-link {
-    display: inline-flex; align-items: center; gap: .45rem; min-height: 2.6rem; margin-top: 1.4rem; padding: 0 1rem; border-radius: 999px;
-    font-size: .92rem; font-weight: 600; background: rgba(255,255,255,.16);
-    transition: background-color .2s, transform .3s var(--pop);
-  }
-  .k-pill-link svg { width: 15px; height: 15px; transition: transform .3s var(--ease-out); }
-  .k-tile:hover .k-pill-link { background: rgba(255,255,255,.26); transform: translateY(-1px); }
-  .k-tile:hover .k-pill-link svg { transform: translate(2px, -2px); }
-  .k-tile__stage { position: relative; flex: 1; display: grid; place-items: center; padding: 2.25rem 1.5rem 2.75rem; }
-  .k-tile__art { width: clamp(9.5rem, 20vw, 13rem); aspect-ratio: 1; height: auto; border-radius: 22.5%; object-fit: cover;
-    box-shadow: 0 34px 60px -26px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.1);
-    transition: transform .6s var(--ease-out); }
-  .k-tile--vibe .k-tile__art { width: clamp(13rem, 27vw, 18.5rem); border-radius: 50%; box-shadow: none; }
-  .k-tile:hover .k-tile__art { transform: translateY(-6px) scale(1.03); }
-
-  .k-card { background: var(--card); border-radius: var(--r-tile); padding: 1.5rem 1.25rem .5rem; }
-  @media (min-width: 768px) { .k-card { padding: 2rem 2.25rem .75rem; } }
-  .k-card__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .4rem 1rem; padding-bottom: 1.1rem; }
-  .k-card__head h3 { font-size: 1.45rem; font-weight: 800; letter-spacing: -.035em; }
-  .k-card__head .u-link { margin-left: auto; font-size: .95rem; }
-  .k-card__note { font: 500 .72rem/1.4 var(--font-mono); letter-spacing: .04em; color: var(--ink-3); }
-  .k-more { margin-top: 1.25rem; }
-
-  .k-row {
-    position: relative; display: grid; align-items: center; column-gap: 1rem; row-gap: .55rem; padding: 1.15rem 0;
-    grid-template-columns: 1.6rem minmax(0, 1fr) 2.5rem; grid-template-areas: "n main go" ". meta go";
-    color: inherit; text-decoration: none;
-  }
-  .k-row::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
-  @media (min-width: 768px) {
-    .k-row { grid-template-columns: 2.5rem minmax(0, 1fr) auto 2.5rem; grid-template-areas: "n main meta go"; padding: 1.35rem 0; column-gap: 1.5rem; }
-  }
-  .k-row__n { grid-area: n; align-self: start; padding-top: .3rem; font: 600 .78rem/1 var(--font-mono); color: var(--ink-3); }
-  .k-row__main { grid-area: main; min-width: 0; }
-  .k-row__name { display: block; font-size: 1.15rem; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; overflow-wrap: anywhere; }
-  @media (min-width: 768px) { .k-row__name { font-size: 1.28rem; } }
-  .k-row__desc { display: block; margin-top: .25rem; font-size: .98rem; line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
-  .k-row__meta { grid-area: meta; display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
-  .k-row__go {
-    grid-area: go; justify-self: end; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%;
-    box-shadow: inset 0 0 0 1.5px var(--line-2); transition: background-color .25s, color .25s, box-shadow .25s;
-  }
-  .k-row__go svg { width: 15px; height: 15px; transition: transform .3s var(--ease-out); }
-  .k-row:hover .k-row__go { background: var(--ink); color: #fff; box-shadow: none; }
-  .k-row:hover .k-row__go svg { transform: translate(1px, -1px); }
-  .k-live { display: inline-flex; align-items: center; gap: .45rem; font: 600 .72rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
-  .k-live i { width: 7px; height: 7px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 3px rgba(14,159,122,.16); }
-  @media (prefers-reduced-motion: no-preference) { .k-live i { animation: live 2.4s ease-in-out infinite; } }
-  @keyframes live { 50% { opacity: .4; } }
-
-  /* ════════════════════════════════════════════════════════════════
-     02 Skill library
-     ════════════════════════════════════════════════════════════════ */
-  .k-skills { display: grid; gap: 1rem; }
-  @media (min-width: 1024px) { .k-skills { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
-  .k-skills .k-card { display: flex; flex-direction: column; }
-  .k-card__title { display: flex; align-items: center; gap: .6rem; padding-bottom: 1.1rem; font-size: 1.45rem; font-weight: 800; letter-spacing: -.035em; }
-  .k-skills .k-row { grid-template-columns: 1.6rem minmax(0, 1fr) 2.5rem; grid-template-areas: "n main go" ". meta go"; }
-  @media (min-width: 768px) { .k-skills .k-row { grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem; } }
-  .k-skills .k-row__meta:empty { display: none; }
-  .k-skills .k-row__name { font-size: 1.08rem; letter-spacing: -.02em; }
-  @media (min-width: 768px) { .k-skills .k-row__name { font-size: 1.15rem; } }
-  .k-stars { display: inline-flex; align-items: center; gap: .35rem; padding: .36rem .62rem; border-radius: 999px; background: var(--paper-2); font: 600 .72rem/1 var(--font-mono); white-space: nowrap; }
-  .k-stars svg { width: 12px; height: 12px; }
-  .k-skills .k-row:first-child .k-stars { background: var(--ink); color: #fff; }
-  .k-skills__foot { margin-top: auto; padding: 1rem 0 1.25rem; border-top: 1px solid var(--line); }
-
-  /* ════════════════════════════════════════════════════════════════
-     03 Grok Bots teaser — dark contrast moment #1
-     ════════════════════════════════════════════════════════════════ */
-  .k-grok {
-    position: relative; overflow: hidden; display: grid; gap: 2.5rem;
-    border-radius: var(--r-tile); background: var(--night); color: var(--text);
-    padding: 2.25rem 1.5rem 1.5rem;
-  }
-  @media (min-width: 640px) { .k-grok { padding: 3rem 2.5rem 2.5rem; } }
-  @media (min-width: 1024px) { .k-grok { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3.5rem; align-items: center; padding: 4rem; min-height: 32rem; } }
-  .k-grok .k-bar { color: var(--text); }
-  .k-grok .k-bar::before { background: var(--line-d); }
-  .k-grok .k-index { background: #fff; color: var(--ink); }
-  .k-grok .k-count { color: var(--text-3); }
-  .k-grok .k-h2 { margin-top: 1.5rem; font-size: clamp(2.6rem, 5.4vw, 4.6rem); }
-  .k-grok .k-lede { margin-top: 1.25rem; color: var(--text-2); }
-  .k-grok__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 2.25rem; }
-  .k-grok__fine { font-size: .95rem; color: var(--text-3); }
-
-  .k-gpanel { border-radius: 1.6rem; background: var(--panel); padding: 1.25rem 1rem 1.75rem; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
-  @media (min-width: 640px) { .k-gpanel { padding: 1.5rem 1.5rem 2.25rem; } }
-  .k-gpanel__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; font-size: .82rem; color: #8a8a8a; }
-  .k-crew { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem .25rem; }
-  @media (max-width: 479px) { .k-crew { grid-template-columns: repeat(2, minmax(0, 1fr)); } .k-crew > li:nth-child(n+3) { display: none; } }
-  .k-crew__item { display: flex; flex-direction: column; align-items: center; gap: .7rem; text-align: center; text-decoration: none; color: inherit; }
-  .k-crew__bot { width: clamp(4.2rem, 17vw, 7.25rem); aspect-ratio: 1; transform-origin: 50% 100%; }
-  .k-crew__bot img { width: 100%; height: 100%; object-fit: contain; }
-  .k-crew__bot--ghost img { transform: translateY(6%) scale(.86); }
-  .k-crew__item small { max-width: 13ch; font-size: .82rem; line-height: 1.35; color: #8a8a8a; }
-  .k-label { border-radius: 999px; padding: .375rem .75rem; white-space: nowrap; font-size: .85rem; font-weight: 700; letter-spacing: -.01em; transition: transform .3s var(--pop), box-shadow .3s; }
-  @media (min-width: 640px) { .k-label { font-size: .92rem; } }
-  .k-label--blue { background: var(--lc); color: #fff; }
-  .k-label--white { background: #fff; color: var(--ink); }
-  .k-label--ghost { color: var(--text-3); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.18); }
-  .k-crew__item:hover .k-label { transform: translateY(-2px) scale(1.04); }
-  .k-crew__item:hover .k-label--blue { box-shadow: 0 8px 30px -6px var(--lc-glow); }
-  @media (prefers-reduced-motion: no-preference) {
-    .k-crew__item:hover .k-crew__bot { animation: bot-hop .62s var(--ease-out); }
-  }
-  @keyframes bot-hop {
-    0% { transform: none; } 18% { transform: scale(1.12, .86); } 42% { transform: translateY(-16%) scale(.92, 1.1); }
-    66% { transform: translateY(0) scale(1.06, .94); } 82% { transform: scale(.98, 1.02); } 100% { transform: none; }
-  }
-
-  /* CTA that wakes up into Crankobot — copied from /grok-bot (.gb-cta) */
-  .gb-cta {
-    position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center;
-    min-height: 3.5rem; padding: 0 1.75rem; border-radius: 999px; border: 0; background: none; cursor: pointer;
-    font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; text-decoration: none; color: var(--ink);
-  }
-  .gb-cta::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; margin: auto; width: 100%; border-radius: 999px; background: #fff;
-    transition: width .4s cubic-bezier(.6, 0, .25, 1) .18s, background-color .2s, box-shadow .3s;
-  }
-  .gb-cta:hover::before { background: #e9e9e6; box-shadow: 0 14px 40px -16px rgba(255,255,255,.35); }
-  .gb-cta[data-wake]::before { width: var(--h, 3.5rem); }
-  .gb-cta__letters { display: inline-flex; white-space: pre; }
-  .gb-cta__l { display: inline-block; transition: transform .36s cubic-bezier(.55, 0, .35, 1) calc(var(--i) * 10ms), opacity .22s ease-in calc(var(--i) * 10ms + .12s); }
-  .gb-cta[data-wake] .gb-cta__l { transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(.15); opacity: 0; }
-  .gb-cta__face { position: absolute; top: 50%; left: 50%; display: flex; gap: 6px; transform: translate(-50%, -58%) scale(0); transition: transform .32s var(--pop) .3s; }
-  .gb-cta[data-wake] .gb-cta__face { transform: translate(-30%, -64%) scale(1); }
-  .gb-cta__eye { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .gb-cta__pupil { width: 6px; height: 15px; border-radius: 3px; background: var(--ink); transform: rotate(18deg); }
-  .gb-cta__eye:last-child .gb-cta__pupil { width: 5px; }
-  .gb-cta__brow { width: 11px; height: 3.5px; border-radius: 2px; background: var(--ink); opacity: 0; transform: translateY(-4px); transition: opacity .15s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
-  .gb-cta[data-grumpy] .gb-cta__eye:first-child .gb-cta__brow { opacity: 1; transform: translateY(1px) rotate(28deg); }
-  .gb-cta[data-grumpy] .gb-cta__eye:last-child .gb-cta__brow { opacity: 1; transform: translateY(1px) rotate(-28deg); }
-  .gb-bubble {
-    position: absolute; z-index: 60; pointer-events: none; white-space: nowrap; padding: .55rem .9rem; border-radius: 1rem;
-    background: #fff; color: var(--ink); border: 2px solid var(--ink); font-size: .98rem; font-weight: 700; line-height: 1.25;
-    box-shadow: 0 12px 28px -14px rgba(0,0,0,.6); transform-origin: var(--tail, 50%) 120%; animation: bubble 1.8s ease-out forwards;
-  }
-  .gb-bubble::after { content: ""; position: absolute; top: 100%; left: var(--tail, 50%); width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #fff; border: 2px solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  @keyframes bubble { 0% { opacity: 0; transform: scale(.4) rotate(-6deg); } 12% { opacity: 1; transform: scale(1.08) rotate(2deg); } 20% { transform: scale(1) rotate(0); } 82% { opacity: 1; translate: 0 -3px; } 100% { opacity: 0; translate: 0 -10px; } }
-
-  /* ════════════════════════════════════════════════════════════════
-     04 Shared on X
-     ════════════════════════════════════════════════════════════════ */
-  .k-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin-bottom: 1rem; }
-  @media (min-width: 768px) { .k-stats { gap: 1rem; margin-bottom: 1.25rem; } }
-  .k-stat {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 6.75rem; padding: 1rem .5rem;
-    border-radius: 1.1rem; text-align: center; transition: transform .3s var(--pop);
-  }
-  @media (min-width: 768px) { .k-stat { min-height: 8.5rem; border-radius: 1.25rem; } }
-  .k-stat:hover { transform: translateY(-3px) rotate(-1deg); }
-  .k-stat strong { font-size: clamp(1.75rem, 5vw, 3.6rem); font-weight: 800; line-height: 1; letter-spacing: -.05em; }
-  .k-stat span { margin-top: .45rem; font-size: .8rem; font-weight: 600; line-height: 1.25; }
-  @media (min-width: 768px) { .k-stat span { font-size: .95rem; } }
-  .k-stat--card { background: var(--card); }
-  .k-stat--blue { background: var(--lc); color: #fff; }
-  .k-stat--ink  { background: var(--ink); color: #fff; }
-
-  .k-posts {
-    display: flex; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    margin: 0 calc(-1 * var(--gutter)); padding: .25rem var(--gutter) 1rem; scroll-padding: 0 var(--gutter);
-  }
+  .k-posts { display: flex; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: .25rem var(--gutter) 1rem; scroll-padding: 0 var(--gutter); }
   .k-posts::-webkit-scrollbar { display: none; }
   .k-posts > * { flex: 0 0 min(84%, 22rem); scroll-snap-align: start; }
   @media (min-width: 1024px) {
@@ -492,254 +146,130 @@
     .k-posts > * { grid-column: span 2; }
     .k-posts > :nth-child(n+4) { grid-column: span 3; }
   }
-  .k-post {
-    display: flex; flex-direction: column; padding: 1.35rem; border-radius: var(--r-card); background: var(--card); color: inherit; text-decoration: none;
-    transition: transform .4s var(--ease-out), box-shadow .4s var(--ease-out);
-  }
-  .k-post:hover { transform: translateY(-3px); box-shadow: 0 26px 50px -30px rgba(10,10,10,.4); }
-  .k-who { display: flex; align-items: center; gap: .65rem; min-width: 0; }
-  .k-avatar { width: 2.5rem; height: 2.5rem; flex: none; border-radius: 50%; object-fit: cover; background: var(--paper-2); }
-  .k-who b { display: flex; align-items: center; gap: .25rem; font-size: .95rem; font-weight: 700; line-height: 1.2; white-space: nowrap; }
-  .k-who small { display: block; font-size: .85rem; color: var(--ink-3); line-height: 1.25; }
-  .k-verified { width: 15px; height: 15px; }
-  .k-post__x { width: 17px; height: 17px; margin-left: auto; align-self: flex-start; color: var(--ink); }
-  .k-post__text { margin: 1.1rem 0 1.25rem; font-size: 1.2rem; font-weight: 700; line-height: 1.25; letter-spacing: -.025em; text-wrap: pretty; }
-  .k-quote { margin-top: auto; padding: 1rem; border-radius: 1rem; background: var(--paper); }
-  .k-quote .k-avatar { width: 1.6rem; height: 1.6rem; }
-  .k-quote .k-who b { font-size: .84rem; }
-  .k-quote .k-who small { font-size: .78rem; }
-  .k-quote p { margin: .7rem 0 .6rem; font-size: .84rem; font-weight: 600; line-height: 1.4; }
-  .k-post__meta { display: flex; align-items: center; gap: .9rem; margin-top: 1.1rem; font: 500 .78rem/1 var(--font-mono); color: var(--ink-3); }
-  .k-post__open { margin-left: auto; display: inline-flex; align-items: center; gap: .3rem; font: 600 .9rem/1 var(--font-sans); color: var(--ink); }
-  .k-post__open svg { width: 13px; height: 13px; transition: transform .3s var(--ease-out); }
-  .k-post:hover .k-post__open svg { transform: translate(2px, -2px); }
-  .k-note { margin-top: 1rem; font: 500 .72rem/1.4 var(--font-mono); letter-spacing: .04em; color: var(--ink-3); }
+  .k-post { display: flex; flex-direction: column; padding: 1.3rem; color: inherit; text-decoration: none; transition: box-shadow .3s, transform .4s var(--ease-out); }
+  .k-post:hover { box-shadow: inset 0 0 0 1px var(--line-3); transform: translateY(-2px); }
+  .k-au { display: flex; align-items: center; gap: .65rem; min-width: 0; }
+  .k-av { width: 2.4rem; height: 2.4rem; flex: none; border-radius: 50%; object-fit: cover; background: var(--raise-2); }
+  .k-au b { display: flex; align-items: center; gap: .25rem; font-size: .94rem; font-weight: 600; line-height: 1.2; white-space: nowrap; }
+  .k-au small { display: block; font-size: .84rem; line-height: 1.25; color: var(--text-3); }
+  .k-check { width: 15px; height: 15px; }
+  .k-post__x { width: 16px; height: 16px; margin-left: auto; align-self: flex-start; color: var(--text-2); }
+  .k-post__text { margin: 1.1rem 0 1.2rem; font-size: 1.16rem; font-weight: 500; line-height: 1.3; letter-spacing: -.02em; text-wrap: pretty; }
+  .k-quote { margin-top: auto; padding: 1rem; border-radius: 10px; background: var(--raise-2); }
+  .k-quote .k-av { width: 1.6rem; height: 1.6rem; }
+  .k-quote .k-au b { font-size: .84rem; } .k-quote .k-au small { font-size: .78rem; }
+  .k-quote p { margin: .7rem 0 .6rem; font-size: .84rem; font-weight: 500; line-height: 1.4; }
+  .k-mono { font: 500 .68rem/1.2 var(--font-mono); letter-spacing: .04em; color: var(--text-3); }
+  .k-post__meta { display: flex; align-items: center; gap: .9rem; margin-top: 1.1rem; font: 500 .76rem/1 var(--font-mono); color: var(--text-3); }
+  .k-post__open { margin-left: auto; color: var(--text); }
+  .k-note { margin-top: 1rem; font: 500 .72rem/1.4 var(--font-mono); color: var(--text-3); }
 
-  /* ════════════════════════════════════════════════════════════════
-     05 Stack
-     ════════════════════════════════════════════════════════════════ */
-  .k-stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
-  @media (min-width: 768px)  { .k-stack { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; } }
+  /* ══════════════ Stack: hairline grid ══════════════ */
+  .k-stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  @media (min-width: 768px)  { .k-stack { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
   @media (min-width: 1024px) { .k-stack { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-  .k-tech {
-    display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-height: 7rem; padding: 1rem;
-    border-radius: var(--r-sm); background: var(--card); transition: transform .3s var(--pop);
-  }
-  @media (min-width: 768px) { .k-tech { min-height: 9rem; padding: 1.25rem; border-radius: 1.25rem; } }
-  .k-tech:hover { transform: translateY(-3px) rotate(-1deg); }
-  .k-tech svg { width: 28px; height: 28px; }
-  .k-tech b { display: block; font-size: .98rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
-  @media (min-width: 768px) { .k-tech b { font-size: 1.08rem; } }
-  .k-tech small { display: block; margin-top: .3rem; font: 600 .62rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .k-tech { display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; min-height: 7.25rem; padding: 1rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background-color .25s; }
+  @media (min-width: 768px) { .k-tech { min-height: 9rem; padding: 1.25rem; } }
+  .k-tech:hover { background: rgba(255,255,255,.03); }
+  .k-tech svg { width: 26px; height: 26px; transition: transform .35s var(--ease-out); }
+  .k-tech:hover svg { transform: translateY(-3px); }
+  .k-tech b { display: block; font-size: .98rem; font-weight: 500; letter-spacing: -.01em; }
+  .k-tech small { display: block; margin-top: .3rem; font: 500 .68rem/1 var(--font-mono); color: var(--text-3); }
 
-  /* ════════════════════════════════════════════════════════════════
-     06 Journey
-     ════════════════════════════════════════════════════════════════ */
-  .k-journey { display: grid; gap: 2.25rem; }
-  @media (min-width: 1024px) {
-    .k-journey { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 2rem; }
-    .k-journey__intro { position: sticky; top: 7rem; align-self: start; padding-right: 2rem; }
-  }
-  .k-journey__intro .k-lede { margin-top: 1.25rem; }
-  .k-entry { position: relative; padding: 1.75rem 0 2rem; }
+  /* ══════════════ Journey ══════════════ */
+  .k-entry { position: relative; display: grid; gap: .9rem; padding: 2rem 0; }
   .k-entry::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line-2); transform-origin: 0 50%; }
-  .k-entry:first-child { padding-top: 0; }
-  .k-entry:first-child::before { display: none; }
-  .k-entry h3 { margin-top: 1rem; font-size: clamp(1.9rem, 3.4vw, 2.75rem); font-weight: 800; line-height: 1; letter-spacing: -.045em; }
-  .k-entry__org { margin-top: .55rem; font-size: 1.05rem; color: var(--ink-2); }
-  .k-points { margin-top: 1.25rem; }
-  .k-points li { position: relative; display: flex; gap: .75rem; padding: .8rem 0; font-size: 1.02rem; line-height: 1.45; }
-  .k-points li::before { content: ""; width: 6px; height: 6px; margin-top: .5rem; border-radius: 50%; background: currentColor; opacity: .7; flex: none; }
-  .k-points li::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line); }
+  @media (min-width: 1024px) { .k-entry { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; padding: 2.5rem 0; } .k-entry__when { grid-column: 1 / span 4; } .k-entry__what { grid-column: 5 / -1; } }
+  .k-entry__when { font: 500 .8rem/1.6 var(--font-mono); color: var(--text-3); }
+  .k-entry h3 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; }
+  .k-entry__org { margin-top: .5rem; font-size: 1.04rem; color: var(--text-2); }
+  .k-points { margin-top: 1.1rem; }
+  .k-points li { display: flex; gap: .75rem; padding: .7rem 0; border-top: 1px solid var(--line); font-size: 1rem; line-height: 1.45; color: var(--text-2); }
+  .k-points li::before { content: "—"; color: var(--text-3); font-family: var(--font-mono); flex: none; }
 
-  /* ════════════════════════════════════════════════════════════════
-     07 Coffee
-     ════════════════════════════════════════════════════════════════ */
-  .k-coffee { display: grid; gap: 2.5rem; padding: 2rem 1.5rem 1.5rem; border-radius: var(--r-tile); background: var(--card); }
-  @media (min-width: 640px) { .k-coffee { padding: 2.75rem 2.5rem 2.25rem; } }
-  @media (min-width: 1024px) { .k-coffee { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 4rem; padding: 3.5rem 3.5rem 3rem; } }
-  .k-coffee .k-bar::before { background: var(--line); }
-  .k-coffee .k-h2 { margin-top: 1.5rem; font-size: clamp(2.5rem, 5.6vw, 4.6rem); }
-  .k-coffee .k-lede { margin-top: 1.25rem; }
+  /* ══════════════ Coffee ══════════════ */
+  .k-coffee { display: grid; gap: 2.5rem; padding: 1.75rem 1.25rem 1.5rem; }
+  @media (min-width: 640px) { .k-coffee { padding: 2.5rem 2.25rem 2rem; } }
+  @media (min-width: 1024px) { .k-coffee { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 4rem; padding: 3.5rem; } }
+  .k-coffee .k-h2 { margin-top: 1.4rem; font-size: clamp(2.3rem, 5vw, 4.1rem); }
+  .k-coffee .k-lede { margin-top: 1.1rem; }
   .k-coffee__cta { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem; }
-  .k-coffee__fine { margin-top: 1.25rem; font-size: .92rem; color: var(--ink-2); }
-  .k-steps li { position: relative; display: flex; gap: 1.25rem; padding: 1.35rem 0; font-size: 1.04rem; line-height: 1.45; color: var(--ink-2); }
-  .k-steps li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line-2); transform-origin: 0 50%; }
-  .k-steps li:last-child { padding-bottom: 0; }
-  @media (max-width: 639px) { .k-steps li { flex-direction: column; gap: .55rem; } }
-  .k-steps li > span:first-child { flex: none; width: 4.5rem; padding-top: .2rem; font: 600 .7rem/1.2 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .k-steps b { display: block; margin-bottom: .2rem; font-size: 1.12rem; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+  .k-coffee__fine { margin-top: 1.25rem; font: 500 .78rem/1.5 var(--font-mono); color: var(--text-3); }
+  .k-coffee__fine a { color: var(--text-2); }
+  .k-reasons li { display: grid; gap: .35rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .k-reasons li:last-child { padding-bottom: 0; }
+  .k-reasons span { font: 500 .72rem/1 var(--font-mono); color: var(--lc-text); }
+  .k-reasons b { font-size: 1.12rem; font-weight: 600; letter-spacing: -.02em; }
+  .k-reasons p { color: var(--text-2); line-height: 1.5; }
 
-  /* ════════════════════════════════════════════════════════════════
-     08 Contact — dark contrast moment #2; the page lifts off the footer here
-     ════════════════════════════════════════════════════════════════ */
-  .k-contact { margin-top: var(--section-y); border-radius: 1.75rem; background: var(--night); color: var(--text); padding: 4.5rem 0 5rem; }
-  @media (min-width: 768px) { .k-contact { border-radius: 2.5rem; padding: 6.5rem 0 7.5rem; } }
-  .k-contact .k-bar { color: var(--text); }
-  .k-contact .k-bar::before { background: var(--line-d); }
-  .k-contact .k-index { background: #fff; color: var(--ink); }
-  .k-contact__grid { display: grid; gap: 3rem; margin-top: 2.5rem; }
-  @media (min-width: 1024px) { .k-contact__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; margin-top: 4rem; align-items: end; } }
-  .k-contact h2 { font-size: clamp(3rem, 7.6vw, 6.2rem); font-weight: 800; line-height: .92; letter-spacing: -.055em; max-width: 10ch; text-wrap: balance; }
-  .k-contact .k-lede { margin-top: 1.75rem; color: var(--text-2); max-width: 34ch; }
-  .k-reach li { position: relative; }
-  .k-reach li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line-d); transform-origin: 0 50%; }
-  .k-reach li:last-child::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--line-d); }
-  .k-reach a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .3rem 1rem; padding: 1.35rem 0; text-decoration: none; }
-  .k-reach small { grid-column: 1; font: 600 .7rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
-  .k-reach span { grid-column: 1; font-size: clamp(1.35rem, 2.6vw, 2rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.15; overflow-wrap: anywhere; }
-  .k-reach .k-row__go { grid-column: 2; grid-row: 1 / span 2; box-shadow: inset 0 0 0 1.5px var(--line-d); }
-  .k-reach a:hover .k-row__go { background: #fff; color: var(--ink); }
-  .k-reach a:hover .k-row__go svg { transform: translate(1px, -1px); }
-
-  /* ════════════════════════════════════════════════════════════════
-     Scroll reveal (fade-up 26px; art lags with a tilt) — same as /grok-bot
-     ════════════════════════════════════════════════════════════════ */
-  .reveal--armed { opacity: 0; transform: translateY(26px); }
-  .reveal--armed, .reveal--armed .reveal__art { transition: opacity .85s var(--ease-out), transform .9s var(--ease-out); }
-  .reveal--armed .reveal__art { opacity: 0; transform: translateY(16px) rotate(-3.5deg) scale(.94); transition-delay: .12s; }
-  .reveal--in, .reveal--in .reveal__art { opacity: 1; transform: none; }
-  [data-parallax] { will-change: transform; }
-
-  /* ════════════════════════════════════════════════════════════════
-     SHARED — footer, fixed underneath, revealed as the page lifts off it
-     (markup and maths identical to /grok-bot .site-footer)
-     ════════════════════════════════════════════════════════════════ */
-  .site-footer { position: fixed; inset: auto 0 0; z-index: 0; height: var(--footer-h); overflow: hidden; background: var(--paper); color: var(--ink); }
-  .site-footer__inner { display: flex; flex-direction: column; height: 100%; }
-  .site-footer__top { display: flex; flex: 1; align-items: center; width: 100%; max-width: 96rem; margin: 0 auto; padding: 3rem 1.5rem 1.75rem; }
-  @media (min-width: 768px) { .site-footer__top { padding: 3.5rem 2.5rem 1.75rem; } }
-  .site-footer h2 { width: 100%; font-size: clamp(2.25rem, 11.3vw, 9rem); font-weight: 500; line-height: .88; letter-spacing: -.045em; }
-  .footer-wordmark { display: inline-flex; align-items: center; white-space: nowrap; color: var(--ink); text-decoration: none; }
-  .footer-wordmark:hover, .footer-wordmark:focus-visible { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .12em; }
-  .footer-word { --p: clamp(0, calc((var(--reveal, 1) - .6) * 3), 1); opacity: var(--p); transform: translateX(calc((var(--p) - 1) * 5vw)); }
-  .footer-word-b { --p: clamp(0, calc((var(--reveal, 1) - .66) * 3), 1); transform: translateX(calc((1 - var(--p)) * 5vw)); }
-  .footer-wordmark__arrow { --p: clamp(0, calc((var(--reveal, 1) - .72) * 3), 1); width: .25em; height: .25em; margin-left: .12em; flex: none; opacity: var(--p); transform: translateX(calc((1 - var(--p)) * 5vw)); transition: translate .3s var(--ease-out); }
-  .footer-wordmark:hover .footer-wordmark__arrow { translate: 0 -3px; }
-  .footer-rule { height: 1px; width: 100%; background: rgba(10,10,10,.28); transform-origin: 0 50%; transform: scaleX(clamp(0, calc((var(--reveal, 1) - .56) * 3.4), 1)); }
-  .site-footer__bottom { width: 100%; max-width: 96rem; margin: 0 auto; padding: 1.75rem 1.5rem calc(env(safe-area-inset-bottom) + 2rem); }
-  @media (min-width: 768px) { .site-footer__bottom { padding: 2.25rem 2.5rem 2.25rem; } }
-  .footer-rise { --p: clamp(0, calc((var(--reveal, 1) - .04 - .09 * var(--i, 0)) * 6), 1); opacity: var(--p); transform: translateY(calc((1 - var(--p)) * 20px)); }
-  .site-footer:focus-within .footer-rise { opacity: 1; transform: none; }
-  .site-footer p.lead { max-width: 58ch; font-size: .98rem; line-height: 1.5; text-wrap: pretty; }
-  @media (min-width: 768px) { .site-footer p.lead { font-size: 1.12rem; line-height: 1.45; } }
-  .footer-nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem 2rem; max-width: 64rem; margin-top: 1.75rem; }
-  @media (min-width: 640px) { .footer-nav { grid-template-columns: repeat(3, 1fr); margin-top: 2.5rem; gap: 0 3rem; } }
-  .footer-link {
-    display: inline-block; padding: .26rem 0; white-space: nowrap;
-    font-size: .78rem; font-weight: 500; letter-spacing: .11em; text-transform: uppercase;
-    text-decoration: underline; text-decoration-color: rgba(10,10,10,.32); text-decoration-thickness: 1px; text-underline-offset: 6px;
-    transition: text-decoration-color .2s, text-underline-offset .26s var(--ease-out);
-  }
-  @media (min-width: 768px) { .footer-link { font-size: .82rem; } }
-  .footer-link:hover, .footer-link:focus-visible { text-decoration-color: var(--ink); text-underline-offset: 4px; }
-  .footer-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 2rem; font-size: .75rem; font-weight: 500; letter-spacing: .11em; text-transform: uppercase; }
-  @media (min-width: 768px) { .footer-meta { margin-top: 2.5rem; } }
-  .footer-meta > span:first-child { white-space: nowrap; }
-  @media (max-width: 639px) { .footer-meta__right .footer-link { display: none; } }
-  .footer-meta__made { display: none; color: var(--ink-3); }
-  @media (min-width: 768px) { .footer-meta__made { display: inline; } }
-  .footer-mark { --p: clamp(0, calc((var(--reveal, 1) - .62) * 4), 1); opacity: var(--p); transform: scale(calc(.8 + var(--p) * .2)); width: 2.6rem; height: 2.6rem; padding: .7rem .45rem; border-radius: 50%; background: var(--ink); }
-  .footer-mark img { width: 100%; height: 100%; filter: invert(1); }
-  .footer-meta__right { display: flex; align-items: center; gap: 1.25rem; }
-
-  /* ════════════════════════════════════════════════════════════════
-     SHARED — custom cursor (fine pointers only)
-     ════════════════════════════════════════════════════════════════ */
-  .k-cursor {
-    position: fixed; left: 0; top: 0; z-index: 3000; pointer-events: none;
-    width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
-    background: var(--ink); border: 1px solid var(--ink); opacity: 0;
-    transition: width .18s var(--ease-out), height .18s var(--ease-out), margin .18s var(--ease-out), background-color .18s, border-color .18s, opacity .2s;
-  }
-  .k-cursor.is-on { opacity: 1; }
-  .k-cursor.is-hot { width: 46px; height: 46px; margin: -23px 0 0 -23px; background: rgba(10,10,10,.14); }
-  .k-cursor.is-light { background: #fff; border-color: #fff; }
-  .k-cursor.is-light.is-hot { background: rgba(255,255,255,.22); }
-  .k-cursor.is-blue { background: var(--lc); border-color: var(--lc); box-shadow: 0 0 24px var(--lc-glow); }
-  .k-cursor.is-blue.is-hot { background: rgba(36,116,247,.28); }
-  @media (pointer: fine) { html.has-cursor, html.has-cursor * { cursor: none !important; } }
-
-  /* ════════════════════════════════════════════════════════════════
-     Reduced motion — everything reads, nothing moves
-     ════════════════════════════════════════════════════════════════ */
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after { transition-duration: 0s !important; }
-    .k-rise, .k-pop, .k-nav, .k-chip, .k-portrait.k-rise img { animation: none !important; }
-    .reveal--armed, .reveal--armed .reveal__art { opacity: 1; transform: none; }
-    .k-tile:hover .k-tile__art, .k-stat:hover, .k-tech:hover, .k-post:hover, .k-crew__item:hover .k-label { transform: none; }
-    .gb-bubble { animation-name: bubble-still; }
-    body { padding-bottom: 0; }
-    .site-footer { position: static; height: auto; }
-    .site-footer__top { padding-top: 5rem; }
-  }
-  @keyframes bubble-still { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
+  /* ══════════════ Contact ══════════════ */
+  .k-contact { padding-bottom: 6rem; }
+  @media (min-width: 768px) { .k-contact { padding-bottom: 8rem; } }
+  .k-contact__grid { display: grid; gap: 2.75rem; margin-top: 1.5rem; }
+  @media (min-width: 1024px) { .k-contact__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; align-items: end; margin-top: 2rem; } }
+  .k-contact h2 { font-size: clamp(3rem, 7.6vw, 6.2rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; max-width: 11ch; text-wrap: balance; }
+  .k-contact .k-lede { margin-top: 1.6rem; max-width: 34ch; }
+  .k-reach li:last-child a { box-shadow: 0 1px 0 var(--line); }
+  .k-reach a { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .35rem 1rem; padding: 1.3rem 0; text-decoration: none; }
+  .k-reach a::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+  .k-reach small { grid-column: 1; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .k-reach span { grid-column: 1; font-size: clamp(1.3rem, 2.5vw, 1.9rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; overflow-wrap: anywhere; }
+  .k-reach .k-go { grid-column: 2; grid-row: 1 / span 2; }
 </style>
 </head>
 <body>
 
-<!-- Icon sprite -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-enter" viewBox="0 0 24 24"><path d="M20 5v7a3 3 0 0 1-3 3H5m4-4-4 4 4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.76.12 3.05.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.2.67.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></symbol>
   <symbol id="i-cup" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 12h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 4.5c-1 1 1 2 0 3.4"/><path d="M12 4c-1 1 1 2 0 3.4"/></g></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.6 2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.2l-5.8 3.2 1.2-6.5L2.6 9.4l6.5-.8z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1D9BF0"/><path d="m7.6 12.3 3 3 5.8-6.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 
 <a class="k-skip" href="#main">Skip to content</a>
 <div class="k-cursor" aria-hidden="true"></div>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
 
-<!-- ═══════════ Chrome ═══════════ -->
-<a class="k-chip k-chip--brand" href="#top" aria-label="Kappaemme, back to the top">
-  <img src="../../images/kappaemme-mark.svg" alt="" width="27" height="16">
-  <span>Kappaemme</span>
-</a>
-
-<nav class="k-nav" aria-label="Sections">
-  <div class="k-nav__pill">
-    <span class="k-nav__lamp" aria-hidden="true"></span>
-    <a class="k-nav__link" data-spy="products" href="#products">Projects</a>
-    <a class="k-nav__link" data-spy="skills" href="#skills">Skills</a>
-    <a class="k-nav__link" data-spy="grok-bots" href="../../grok-bot/">Grok Bots</a>
-    <a class="k-nav__link" data-spy="shared" href="#shared">On X</a>
-    <a class="k-nav__link" data-spy="stack" href="#stack">Stack</a>
-    <a class="k-nav__link" data-spy="journey" href="#journey">Journey</a>
-    <a class="k-nav__link" data-spy="coffee" href="#coffee">Coffee</a>
-    <a class="k-nav__link" data-spy="contact" href="#contact">Contact</a>
+<!-- ═══════════ Top bar ═══════════ -->
+<header class="k-top">
+  <div class="wrap k-top__in">
+    <a class="k-brand" href="#top" aria-label="Kappaemme, back to the top"><span class="k-brand__mark"><img src="../../images/kappaemme-mark.svg" alt="" width="20" height="12"></span>kappaemme</a>
+    <nav class="k-links" aria-label="Sections">
+      <a data-spy="products" href="#products">projects</a>
+      <a data-spy="skills" href="#skills">skills</a>
+      <a data-spy="grok-bots" href="../grok-bot/prototype.html" data-scan>grok bots</a>
+      <a data-spy="shared" href="#shared">on x</a>
+      <a data-spy="stack" href="#stack">stack</a>
+      <a data-spy="journey" href="#journey">journey</a>
+      <a data-spy="coffee" href="#coffee">coffee</a>
+      <a data-spy="contact" href="#contact">contact</a>
+      <span class="k-caret" aria-hidden="true"></span>
+    </nav>
+    <a class="k-top__gh" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>Kappaemme-git</a>
+    <button class="k-menu" type="button" aria-expanded="false" aria-controls="k-sheet"><i aria-hidden="true"></i><span>menu</span></button>
   </div>
-</nav>
-
-<a class="k-chip k-chip--right" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">
-  <svg aria-hidden="true"><use href="#i-gh"/></svg>
-  Kappaemme-git
-</a>
-
-<button class="k-chip k-chip--menu" type="button" aria-expanded="false" aria-controls="k-sheet">
-  <span class="k-burger" aria-hidden="true"></span><span class="k-menu-label">Menu</span>
-</button>
+</header>
 
 <div class="k-sheet" id="k-sheet" role="dialog" aria-modal="true" aria-label="Site menu" inert>
   <nav aria-label="Sections">
-    <ol class="k-sheet__list">
-      <li style="--i:0"><a data-spy="products" href="#products"><span>01</span>Projects</a></li>
-      <li style="--i:1"><a data-spy="skills" href="#skills"><span>02</span>Skills</a></li>
-      <li style="--i:2"><a data-spy="grok-bots" href="../../grok-bot/"><span>03</span>Grok Bots</a></li>
-      <li style="--i:3"><a data-spy="shared" href="#shared"><span>04</span>On X</a></li>
-      <li style="--i:4"><a data-spy="stack" href="#stack"><span>05</span>Stack</a></li>
-      <li style="--i:5"><a data-spy="journey" href="#journey"><span>06</span>Journey</a></li>
-      <li style="--i:6"><a data-spy="coffee" href="#coffee"><span>07</span>Coffee</a></li>
-      <li style="--i:7"><a data-spy="contact" href="#contact"><span>08</span>Contact</a></li>
-    </ol>
+    <ul>
+      <li style="--i:0"><a class="k-sheet__l" data-spy="products" href="#products"><span>~/</span>Projects</a></li>
+      <li style="--i:1"><a class="k-sheet__l" data-spy="skills" href="#skills"><span>~/</span>Skills</a></li>
+      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="../grok-bot/prototype.html" data-scan><span>~/</span>Grok Bots</a></li>
+      <li style="--i:3"><a class="k-sheet__l" data-spy="shared" href="#shared"><span>~/</span>On X</a></li>
+      <li style="--i:4"><a class="k-sheet__l" data-spy="stack" href="#stack"><span>~/</span>Stack</a></li>
+      <li style="--i:5"><a class="k-sheet__l" data-spy="journey" href="#journey"><span>~/</span>Journey</a></li>
+      <li style="--i:6"><a class="k-sheet__l" data-spy="coffee" href="#coffee"><span>~/</span>Coffee</a></li>
+      <li style="--i:7"><a class="k-sheet__l" data-spy="contact" href="#contact"><span>~/</span>Contact</a></li>
+    </ul>
   </nav>
   <div class="k-sheet__foot">
-    <a class="footer-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">GitHub</a>
-    <a class="footer-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">X · @Kappaemmedev</a>
-    <a class="footer-link" href="mailto:misterokappa12@gmail.com">Email</a>
+    <a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a>
+    <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a>
+    <a href="mailto:misterokappa12@gmail.com">email ↗</a>
   </div>
 </div>
 
@@ -747,305 +277,296 @@
 <main id="main">
 
   <!-- ═══════════ Hero ═══════════ -->
-  <section class="k-hero" id="top" aria-labelledby="k-title">
+  <section class="k-hero" id="top" data-spy-none aria-labelledby="k-title">
     <div class="wrap k-hero__grid">
       <div>
-        <p class="k-hello k-rise" style="--d:.05s"><img src="../../images/me.jpg" alt="" width="64" height="64">Francesco Mistero <span>· aka Kappaemme</span></p>
-        <h1 class="k-rise" id="k-title" style="--d:.12s">Building apps and tools.</h1>
+        <p class="k-eyebrow k-rise" style="--d:.05s">Francesco Mistero · aka Kappaemme</p>
+        <h1 class="k-rise" id="k-title" style="--d:.12s">Building apps <span class="k-dim">and tools.</span></h1>
         <p class="k-hero__lede k-rise" style="--d:.22s"><strong>CS student at Federico II.</strong> I build iPhone apps, websites and open-source tools, and share what I learn through Codex skills.</p>
         <div class="k-hero__cta k-rise" style="--d:.3s">
-          <a class="k-btn" href="#products">See my work <svg class="ic-down" aria-hidden="true"><use href="#i-down"/></svg></a>
-          <a class="k-btn k-btn--ghost" href="#contact">Get in touch</a>
+          <a class="k-btn" href="#products"><span class="k-btn__label">See my work</span><span class="k-key"><svg aria-hidden="true"><use href="#i-down"/></svg></span></a>
+          <a class="k-btn k-btn--ghost" href="#contact"><span class="k-btn__label">Get in touch</span><span class="k-key">@</span></a>
         </div>
-        <p class="k-hero__fine k-rise" style="--d:.38s">Follow the build <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on X</a>, read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>, or <a class="u-link" href="mailto:misterokappa12@gmail.com">send an email</a>.</p>
+        <p class="k-hero__links k-rise" style="--d:.38s">
+          <a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github <svg aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x / @Kappaemmedev <svg aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a href="mailto:misterokappa12@gmail.com">email <svg aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </p>
       </div>
-      <div data-parallax="0.06">
-        <figure class="k-portrait k-rise" style="--d:.2s;margin:0">
-          <img src="../../images/me.jpg" alt="Portrait of Francesco Mistero" width="1254" height="1254" fetchpriority="high">
-          <figcaption class="k-portrait__tags">
-            <span class="k-pill k-pop" style="--i:0">CS student</span>
-            <span class="k-pill k-pop" style="--i:1">Indie hacker</span>
-            <span class="k-pill k-pill--ink k-pop" style="--i:2">@Kappaemmedev</span>
-          </figcaption>
+      <div data-parallax="0.05" data-parallax-hero>
+        <figure class="k-fig k-rise" style="--d:.2s">
+          <div class="k-fig__frame"><div class="k-fig__img"><img src="../../images/me.jpg" alt="Portrait of Francesco Mistero" width="1254" height="1254" fetchpriority="high"></div></div>
+          <figcaption><span class="k-live"><i></i>Building in public since October 2025</span><span>@Kappaemmedev</span></figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════ 01 Projects ═══════════ -->
+  <!-- ═══════════ Projects ═══════════ -->
   <section class="k-section" id="products" aria-labelledby="k-projects-title">
     <div class="wrap">
       <header class="k-head">
-        <p class="k-bar k-grow"><span class="k-index">01</span>Projects<span class="k-count">5 projects</span></p>
+        <p class="k-path"><b>~/</b>projects<span class="k-count">5 projects</span></p>
         <h2 class="k-h2 reveal" id="k-projects-title">Selected work.</h2>
         <p class="k-lede reveal">A small gallery of products I build and maintain. Select a piece to explore it.</p>
       </header>
 
-      <div class="k-features" data-stagger>
-        <a class="k-tile k-tile--zac reveal" href="https://apps.apple.com/it/app/metodo-zac/id6800744272" aria-label="Metodo ZAC, iPhone app. View on the App Store" data-cursor-light>
-          <div class="k-tile__copy">
-            <p class="k-tile__label"><img class="k-tile__chip" src="../../images/metodo-zac-app-icon.jpg" alt="" width="64" height="64">Metodo ZAC<span class="k-badge k-badge--on-dark">iPhone app</span></p>
-            <h3>Coach-led workouts, progress tracking and check-ins.</h3>
-            <span class="k-pill-link">View on the App Store <svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+      <div class="k-projects" data-stagger>
+        <a class="k-proj k-card reveal" href="https://apps.apple.com/it/app/metodo-zac/id6800744272" aria-label="Metodo ZAC, iPhone app. View on the App Store">
+          <div class="k-proj__screen" style="--tint:var(--zac)"><span class="k-tag">iphone app</span><span class="reveal__art" data-parallax="-0.04"><img src="../../images/metodo-zac-app-icon.jpg" alt="" width="512" height="512" loading="lazy" decoding="async" style="width:clamp(7.5rem,15vw,11rem)"></span></div>
+          <div class="k-proj__body">
+            <h3 class="k-proj__name">Metodo ZAC</h3>
+            <p class="k-proj__desc">Coach-led workouts, progress tracking and check-ins.</p>
+            <dl class="k-spec"><div><dt>type</dt><dd>iPhone app</dd></div><div><dt>open</dt><dd class="k-spec__go">View on App Store ↗</dd></div></dl>
           </div>
-          <div class="k-tile__stage"><span data-parallax="-0.05"><img class="k-tile__art reveal__art" src="../../images/metodo-zac-app-icon.jpg" alt="" width="512" height="512" loading="lazy" decoding="async"></span></div>
         </a>
-        <a class="k-tile k-tile--vibe reveal" href="https://www.vibedesk.online/" aria-label="VibeDesk, web app. Visit the website" data-cursor-light>
-          <div class="k-tile__copy">
-            <p class="k-tile__label"><img class="k-tile__chip" src="../../images/vibedesk-icon.png" alt="" width="64" height="64">VibeDesk<span class="k-badge k-badge--on-dark">Web app</span></p>
-            <h3>A study and work companion I am currently building.</h3>
-            <span class="k-pill-link">Visit the website <svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        <a class="k-proj k-proj--vibe k-card reveal" href="https://www.vibedesk.online/" aria-label="VibeDesk, web app. Visit the website">
+          <div class="k-proj__screen" style="--tint:var(--vibe)"><span class="k-tag">web app</span><span class="reveal__art" data-parallax="-0.04"><img src="../../images/vibedesk-gallery.png" alt="" width="1024" height="1024" loading="lazy" decoding="async" style="width:clamp(11rem,22vw,16rem)"></span></div>
+          <div class="k-proj__body">
+            <h3 class="k-proj__name">VibeDesk</h3>
+            <p class="k-proj__desc">A study and work companion I am currently building.</p>
+            <dl class="k-spec"><div><dt>type</dt><dd>Web app</dd></div><div><dt>open</dt><dd class="k-spec__go">Visit website ↗</dd></div></dl>
           </div>
-          <div class="k-tile__stage"><span data-parallax="-0.05"><img class="k-tile__art reveal__art" src="../../images/vibedesk-gallery.png" alt="" width="1024" height="1024" loading="lazy" decoding="async"></span></div>
         </a>
       </div>
 
-      <div class="k-card k-more reveal">
-        <div class="k-card__head">
+      <div class="k-more reveal">
+        <div class="k-more__head">
           <h3>More work</h3>
           <a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">Explore all GitHub projects ↗</a>
         </div>
         <ol data-grow>
           <li><a class="k-row k-grow" style="--i:0" href="https://www.metodozac.com/" target="_blank" rel="noopener">
-            <span class="k-row__n">01</span>
-            <span class="k-row__main"><span class="k-row__name">Metodo ZAC · website</span><span class="k-row__desc">Coaching programs, client journeys and the digital home for Metodo ZAC.</span></span>
-            <span class="k-row__meta"><span class="k-badge">Website</span><span class="k-live"><i></i>Live</span></span>
-            <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+            <span class="k-row__main"><span class="k-row__name">metodo ZAC · website</span><span class="k-row__desc">Coaching programs, client journeys and the digital home for Metodo ZAC.</span></span>
+            <span class="k-row__meta"><span class="k-tag">website</span><span class="k-live"><i></i>live</span></span>
+            <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
           </a></li>
           <li><a class="k-row k-grow" style="--i:1" href="https://www.pocketflow.online/" target="_blank" rel="noopener">
-            <span class="k-row__n">02</span>
-            <span class="k-row__main"><span class="k-row__name">Pocketflow</span><span class="k-row__desc">Minimal widget app for deep focus: tasks, timer and music.</span></span>
-            <span class="k-row__meta"><span class="k-badge">App</span><span class="k-live"><i></i>Live</span></span>
-            <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+            <span class="k-row__main"><span class="k-row__name">pocketflow</span><span class="k-row__desc">Minimal widget app for deep focus — tasks, timer and music.</span></span>
+            <span class="k-row__meta"><span class="k-tag">app</span><span class="k-live"><i></i>live</span></span>
+            <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
           </a></li>
           <li><a class="k-row k-grow" style="--i:2" href="https://www.glorydraw.online/" target="_blank" rel="noopener">
-            <span class="k-row__n">03</span>
-            <span class="k-row__main"><span class="k-row__name">Glorydraw</span><span class="k-row__desc">Fantasy football app for drafting a World Cup dream team.</span></span>
-            <span class="k-row__meta"><span class="k-badge">Web app</span><span class="k-live"><i></i>Live</span></span>
-            <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+            <span class="k-row__main"><span class="k-row__name">glorydraw</span><span class="k-row__desc">Fantasy football app for drafting a World Cup dream team.</span></span>
+            <span class="k-row__meta"><span class="k-tag">web app</span><span class="k-live"><i></i>live</span></span>
+            <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
           </a></li>
         </ol>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════ 02 Skill library ═══════════ -->
+  <!-- ═══════════ Skills: terminal teaser + list ═══════════ -->
   <section class="k-section" id="skills" aria-labelledby="k-skills-title">
     <div class="wrap">
-      <header class="k-head">
-        <p class="k-bar k-grow"><span class="k-index">02</span>Skill library<span class="k-count">10 featured</span></p>
-        <h2 class="k-h2 reveal" id="k-skills-title">Codex skills, open source.</h2>
-        <p class="k-lede reveal">Recent releases and the open-source skills developers have starred most.</p>
-      </header>
-
-      <div class="k-skills" data-stagger>
-        <div class="k-card reveal">
-          <h3 class="k-card__title">Most starred</h3>
-          <ol data-grow>
-            <li><a class="k-row k-grow" style="--i:0" data-stars-repo="codex-first-customer-finder-skill" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener">
-              <span class="k-row__n">01</span>
-              <span class="k-row__main"><span class="k-row__name">codex-first-customer-finder-skill</span><span class="k-row__desc">Find evidence-backed first customers and draft outreach from public signals.</span></span>
-              <span class="k-row__meta"><span class="k-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>1k+ stars</span></span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:1" data-stars-repo="codex-startup-pressure-test-skill" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener">
-              <span class="k-row__n">02</span>
-              <span class="k-row__main"><span class="k-row__name">codex-startup-pressure-test-skill</span><span class="k-row__desc">Pressure-test startup ideas before building the MVP.</span></span>
-              <span class="k-row__meta"><span class="k-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>900+ stars</span></span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:2" data-stars-repo="codex-complexity-optimizer" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener">
-              <span class="k-row__n">03</span>
-              <span class="k-row__main"><span class="k-row__name">codex-complexity-optimizer</span><span class="k-row__desc">Analyze code complexity and identify safe performance improvements.</span></span>
-              <span class="k-row__meta"><span class="k-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>900+ stars</span></span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:3" data-stars-repo="local-client-prospector-skill" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener">
-              <span class="k-row__n">04</span>
-              <span class="k-row__main"><span class="k-row__name">local-client-prospector-skill</span><span class="k-row__desc">Find and qualify local businesses that could use a better website.</span></span>
-              <span class="k-row__meta"><span class="k-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>150+ stars</span></span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:4" data-stars-repo="codex-bug-reproducer" href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener">
-              <span class="k-row__n">05</span>
-              <span class="k-row__main"><span class="k-row__name">codex-bug-reproducer</span><span class="k-row__desc">Reproduce bugs and prove fixes with focused regression evidence.</span></span>
-              <span class="k-row__meta"><span class="k-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>70+ stars</span></span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-          </ol>
-          <p class="k-skills__foot k-card__note">Star counts refresh from GitHub on load.</p>
-        </div>
-
-        <div class="k-card reveal">
-          <h3 class="k-card__title">Recent releases</h3>
-          <ol data-grow>
-            <li><a class="k-row k-grow" style="--i:0" href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener">
-              <span class="k-row__n">06</span>
-              <span class="k-row__main"><span class="k-row__name">astra-ad-studio</span><span class="k-row__desc">Create finished ads, campaign variants and motion previews inside Codex.</span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:1" href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener">
-              <span class="k-row__n">07</span>
-              <span class="k-row__main"><span class="k-row__name">codex-code-avengers</span><span class="k-row__desc">Coordinate six review roles for evidence-backed code reviews.</span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:2" href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener">
-              <span class="k-row__n">08</span>
-              <span class="k-row__main"><span class="k-row__name">codex-dev-team</span><span class="k-row__desc">Run a five-role collaborative engineering workflow in Codex.</span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:3" href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener">
-              <span class="k-row__n">09</span>
-              <span class="k-row__main"><span class="k-row__name">startup-feedback-engine</span><span class="k-row__desc">Turn customer feedback into prioritized product opportunities.</span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-            <li><a class="k-row k-grow" style="--i:4" href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener">
-              <span class="k-row__n">10</span>
-              <span class="k-row__main"><span class="k-row__name">app-store-review-guardian</span><span class="k-row__desc">Audit an iOS app before App Store submission.</span></span>
-              <span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
-            </a></li>
-          </ol>
-          <p class="k-skills__foot"><a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">All repositories on GitHub ↗</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 03 Grok Bots teaser ═══════════ -->
-  <section class="k-section" id="grok-bots" aria-labelledby="k-grok-title">
-    <div class="wrap">
-      <div class="k-grok reveal" data-cursor-light>
+      <div class="k-teaser k-card reveal">
         <div>
-          <p class="k-bar"><span class="k-index">03</span>Grok Bots<span class="k-count">2 bots</span></p>
-          <h2 class="k-h2" id="k-grok-title">My Grok Bots.</h2>
-          <p class="k-lede">Small bots I build and run inside Grok Bot. Each one does one job. The code is on GitHub.</p>
-          <div class="k-grok__cta">
-            <a class="gb-cta" href="../../grok-bot/" data-wakeable data-cursor-quiet>Meet the bots</a>
-            <p class="k-grok__fine">New ones land there first.</p>
+          <p class="k-path"><b>~/</b>skills<span class="k-count">10 featured</span></p>
+          <h2 class="k-h2" id="k-skills-title">My Codex skills.</h2>
+          <p class="k-lede">Open-source skills for Codex, from finding first customers to auditing an iOS app before App Store submission. Recent releases and the ones developers have starred most.</p>
+          <div class="k-teaser__cta">
+            <a class="k-btn" href="#skill-list"><span class="k-btn__label">See all ten</span><span class="k-key"><svg aria-hidden="true"><use href="#i-down"/></svg></span></a>
+            <a class="k-btn k-btn--ghost k-btn--plain" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>On GitHub</a>
           </div>
         </div>
-        <div class="k-gpanel reveal__art">
-          <p class="k-gpanel__head"><span>Library</span><span>kappaemme.dev/grok-bot</span></p>
-          <ul class="k-crew" aria-label="Bots in the library">
-            <li><a class="k-crew__item" href="../../grok-bot/#bot-limit-coach" data-cursor-blue>
-              <span class="k-crew__bot"><img src="../../grok-bot/assets/limit-coach-animated.svg" alt="" width="100" height="112"></span>
-              <span class="k-label k-label--blue">Limit Coach</span>
-              <small>Claude + Codex limits</small>
-            </a></li>
-            <li><a class="k-crew__item" href="../../grok-bot/#bot-crankobot">
-              <span class="k-crew__bot"><img src="../../grok-bot/assets/crankobot-animated.svg" alt="" width="100" height="112"></span>
-              <span class="k-label k-label--white">Crankobot</span>
-              <small>First Customer Finder</small>
-            </a></li>
-            <li><span class="k-crew__item" aria-label="Open slot">
-              <span class="k-crew__bot k-crew__bot--ghost"><img src="../../grok-bot/assets/ghost-slot.svg" alt="" width="100" height="100"></span>
-              <span class="k-label k-label--ghost">Next bot</span>
-              <small>Soon</small>
-            </span></li>
-          </ul>
+        <div class="k-term reveal__art" data-term role="group" aria-label="Codex skills, as a terminal listing">
+          <div class="k-term__bar"><span>~/codex-skills</span><span>Kappaemme-git</span></div>
+          <ol class="k-term__body">
+            <li class="k-term__cmd" style="--i:0" aria-hidden="true"><span>$</span>ls --most-starred</li>
+            <li style="--i:1"><a href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-first-customer-finder-skill</span><span class="k-term__s"><b data-stars-repo="codex-first-customer-finder-skill" data-stars data-stars-short>1k+</b> ★</span></a></li>
+            <li style="--i:2"><a href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-startup-pressure-test-skill</span><span class="k-term__s"><b data-stars-repo="codex-startup-pressure-test-skill" data-stars data-stars-short>900+</b> ★</span></a></li>
+            <li style="--i:3"><a href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-complexity-optimizer</span><span class="k-term__s"><b data-stars-repo="codex-complexity-optimizer" data-stars data-stars-short>900+</b> ★</span></a></li>
+            <li style="--i:4"><a href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">local-client-prospector-skill</span><span class="k-term__s"><b data-stars-repo="local-client-prospector-skill" data-stars data-stars-short>150+</b> ★</span></a></li>
+            <li style="--i:5"><a href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-bug-reproducer</span><span class="k-term__s"><b data-stars-repo="codex-bug-reproducer" data-stars data-stars-short>70+</b> ★</span></a></li>
+            <li class="k-term__cmd" style="--i:6" aria-hidden="true"><span>$</span>ls --recent</li>
+            <li style="--i:7"><a href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">astra-ad-studio</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:8"><a href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-code-avengers</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:9"><a href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-dev-team</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:10"><a href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">startup-feedback-engine</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:11"><a href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">app-store-review-guardian</span><span class="k-term__s">recent</span></a></li>
+            <li class="k-term__cmd" style="--i:12" aria-hidden="true"><span>$</span><i class="k-term__caret"></i></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="k-skilllist" id="skill-list">
+        <div class="reveal">
+          <h3>Most starred <span>stars refresh from GitHub</span></h3>
+          <ol data-grow>
+            <li><a class="k-row k-grow" style="--i:0" data-stars-repo="codex-first-customer-finder-skill" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-first-customer-finder-skill</span><span class="k-row__desc">Find evidence-backed first customers and draft outreach from public signals.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>1k+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:1" data-stars-repo="codex-startup-pressure-test-skill" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-startup-pressure-test-skill</span><span class="k-row__desc">Pressure-test startup ideas before building the MVP.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>900+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:2" data-stars-repo="codex-complexity-optimizer" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-complexity-optimizer</span><span class="k-row__desc">Analyze code complexity and identify safe performance improvements.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>900+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:3" data-stars-repo="local-client-prospector-skill" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">local-client-prospector-skill</span><span class="k-row__desc">Find and qualify local businesses that could use a better website.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>150+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:4" data-stars-repo="codex-bug-reproducer" href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-bug-reproducer</span><span class="k-row__desc">Reproduce bugs and prove fixes with focused regression evidence.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>70+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          </ol>
+        </div>
+        <div class="reveal">
+          <h3>Recent releases <span>5 skills</span></h3>
+          <ol data-grow>
+            <li><a class="k-row k-grow" style="--i:0" href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">astra-ad-studio</span><span class="k-row__desc">Create finished ads, campaign variants and motion previews inside Codex.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:1" href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-code-avengers</span><span class="k-row__desc">Coordinate six review roles for evidence-backed code reviews.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:2" href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-dev-team</span><span class="k-row__desc">Run a five-role collaborative engineering workflow in Codex.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:3" href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">startup-feedback-engine</span><span class="k-row__desc">Turn customer feedback into prioritized product opportunities.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:4" href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">app-store-review-guardian</span><span class="k-row__desc">Audit an iOS app before App Store submission.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          </ol>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════ 04 Shared on X ═══════════ -->
+  <!-- ═══════════ Grok Bots teaser (stage) ═══════════ -->
+  <section class="k-section" id="grok-bots" aria-labelledby="k-grok-title">
+    <div class="wrap">
+      <div class="k-teaser k-teaser--flip k-card reveal">
+        <div>
+          <p class="k-path"><b>~/</b>grok-bots<span class="k-count">2 bots</span></p>
+          <h2 class="k-h2" id="k-grok-title">My Grok Bots.</h2>
+          <p class="k-lede">Small bots I build and run inside Grok Bot. Each one does one job. The code is on GitHub.</p>
+          <div class="k-teaser__cta">
+            <a class="k-btn" href="../grok-bot/prototype.html" data-scan data-busy-text="cd ~/grok-bots"><span class="k-btn__label">Meet the bots</span><span class="k-key"><svg aria-hidden="true"><use href="#i-enter"/></svg></span></a>
+            <p class="k-teaser__fine">New ones land there first.</p>
+          </div>
+        </div>
+        <div class="k-stage reveal__art" role="group" aria-label="Limit Coach and Crankobot">
+          <p class="k-stage__head" aria-hidden="true"><span>grok bot · library</span><span>2 online</span></p>
+          <div class="k-stage__cast">
+            <figure>
+              <div class="k-actor" data-bot="limit-coach" data-cursor-blue><div class="k-actor__body"><span data-bot-slot="limit-coach"></span></div><span class="k-actor__ring"></span></div>
+              <figcaption><span class="k-who k-who--lc"><i></i>Limit Coach</span><small>Claude + Codex limits</small></figcaption>
+            </figure>
+            <figure>
+              <div class="k-actor" data-bot="crankobot"><div class="k-actor__body"><span data-bot-slot="crankobot"></span></div><span class="k-actor__ring"></span></div>
+              <figcaption><span class="k-who"><i></i>Crankobot</span><small>First Customer Finder</small></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Shared on X ═══════════ -->
   <section class="k-section" id="shared" aria-labelledby="k-shared-title">
     <div class="wrap">
       <header class="k-head">
-        <p class="k-bar k-grow"><span class="k-index">04</span>Shared on X<span class="k-count">5 quote posts</span></p>
+        <p class="k-path"><b>~/</b>on-x<span class="k-count">5 quote posts</span></p>
         <h2 class="k-h2 reveal" id="k-shared-title">Shared by Greg Brockman.</h2>
         <p class="k-lede reveal">Greg Brockman, OpenAI co-founder, quote-posted five of my Codex skill demos on X. Each card opens his original post.</p>
       </header>
-
-      <div class="k-stats" data-stagger aria-label="Engagement across the five posts">
-        <div class="k-stat k-stat--card reveal"><strong>5</strong><span>posts by Greg</span></div>
-        <div class="k-stat k-stat--blue reveal"><strong>1.8M+</strong><span>combined views</span></div>
-        <div class="k-stat k-stat--ink reveal"><strong>10K+</strong><span>likes</span></div>
+      <div class="k-stats reveal" aria-label="Engagement across the five posts">
+        <div class="k-stat"><strong>5</strong><span>posts by Greg</span></div>
+        <div class="k-stat k-stat--lc"><strong>1.8M+</strong><span>combined views</span></div>
+        <div class="k-stat"><strong>10K+</strong><span>likes</span></div>
       </div>
-
       <div class="k-posts" data-stagger>
-        <a class="k-post reveal" href="https://x.com/gdb/status/2084074129930772953" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Feedback Engine">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2084074129930772953" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Feedback Engine">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for customer feedback → roadmap</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS CUSTOMER FEEDBACK INTO A ROADMAP!</p><span class="k-mono">Startup Feedback Engine</span></span>
-          <span class="k-post__meta"><span>♡ 732</span><span>138K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS CUSTOMER FEEDBACK INTO A ROADMAP!</p><span class="k-mono">Startup Feedback Engine</span></span>
+          <span class="k-post__meta"><span>♡ 732</span><span>138K views</span><span class="k-post__open">View on X ↗</span></span>
         </a>
-        <a class="k-post reveal" href="https://x.com/gdb/status/2076686329686171666" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about First Customer Finder">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2076686329686171666" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about First Customer Finder">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">Codex for finding customers for your startup:</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS YOUR STARTUP'S FIRST CUSTOMERS!</p><span class="k-mono">First Customer Finder</span></span>
-          <span class="k-post__meta"><span>♡ 3.7K</span><span>692K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS YOUR STARTUP'S FIRST CUSTOMERS!</p><span class="k-mono">First Customer Finder</span></span>
+          <span class="k-post__meta"><span>♡ 3.7K</span><span>692K views</span><span class="k-post__open">View on X ↗</span></span>
         </a>
-        <a class="k-post reveal" href="https://x.com/gdb/status/2055646916499714488" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Complexity Optimizer">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2055646916499714488" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Complexity Optimizer">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for improving computational complexity</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS COMPLEXITY HOTSPOTS IN YOUR CODEBASE!</p><span class="k-mono">Complexity Optimizer</span></span>
-          <span class="k-post__meta"><span>♡ 1.7K</span><span>331K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS COMPLEXITY HOTSPOTS IN YOUR CODEBASE!</p><span class="k-mono">Complexity Optimizer</span></span>
+          <span class="k-post__meta"><span>♡ 1.7K</span><span>331K views</span><span class="k-post__open">View on X ↗</span></span>
         </a>
-        <a class="k-post reveal" href="https://x.com/gdb/status/2055285857628676399" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Local Client Prospector">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2055285857628676399" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Local Client Prospector">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for finding local businesses who may need help building a website:</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS LOCAL SEARCH INTO CLIENT LEADS!</p><span class="k-mono">Local Client Prospector</span></span>
-          <span class="k-post__meta"><span>♡ 1.5K</span><span>292K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS LOCAL SEARCH INTO CLIENT LEADS!</p><span class="k-mono">Local Client Prospector</span></span>
+          <span class="k-post__meta"><span>♡ 1.5K</span><span>292K views</span><span class="k-post__open">View on X ↗</span></span>
         </a>
-        <a class="k-post reveal" href="https://x.com/gdb/status/2050972114077843772" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Pressure Test">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2050972114077843772" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Pressure Test">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for startup ideas</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL TO BRUTALLY TEST ANY STARTUP IDEA!</p><span class="k-mono">Startup Pressure Test</span></span>
-          <span class="k-post__meta"><span>♡ 2.3K</span><span>395K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL TO BRUTALLY TEST ANY STARTUP IDEA!</p><span class="k-mono">Startup Pressure Test</span></span>
+          <span class="k-post__meta"><span>♡ 2.3K</span><span>395K views</span><span class="k-post__open">View on X ↗</span></span>
         </a>
       </div>
       <p class="k-note">Engagement figures checked on 23 September 2026.</p>
     </div>
   </section>
 
-  <!-- ═══════════ 05 Stack ═══════════ -->
+  <!-- ═══════════ Stack ═══════════ -->
   <section class="k-section" id="stack" aria-labelledby="k-stack-title">
     <div class="wrap">
       <header class="k-head">
-        <p class="k-bar k-grow"><span class="k-index">05</span>Stack<span class="k-count">12 tools</span></p>
+        <p class="k-path"><b>~/</b>stack<span class="k-count">12 tools</span></p>
         <h2 class="k-h2 reveal" id="k-stack-title">The stack.</h2>
         <p class="k-lede reveal">The languages, frameworks and tools behind these projects.</p>
       </header>
-      <ul class="k-stack" data-stagger>
-        <li class="k-tech reveal"><svg style="color:#00599C" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M17 6.6a8 8 0 1 0 0 10.8"/></svg><span><b>C</b><small>language</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#5382A1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 12h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 4.2c-1 1 1 2 0 3.4"/><path d="M12 3.8c-1 1 1 2 0 3.4"/></svg><span><b>Java</b><small>language</small></span></li>
-        <li class="k-tech reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4" fill="#F7DF1E"/><text x="12.5" y="17.4" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="9.5" font-weight="700" fill="#000" text-anchor="middle">JS</text></svg><span><b>JavaScript</b><small>language</small></span></li>
-        <li class="k-tech reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#3776AB" d="M12 2c-2.6 0-4.5.4-4.5 2.8v2.2h4.6v.6H5.2C2.8 7.6 2 9.3 2 12s.8 4.3 3.2 4.3h1.5v-2.7c0-2.3 1.9-4.2 4.2-4.2h4.4c1.9 0 3.4-1.6 3.4-3.5V4.8C18.6 2.6 16.6 2 14 2h-2Zm-2.6 1.6a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Z"/><path fill="#FFD43B" d="M12 22c2.6 0 4.5-.4 4.5-2.8v-2.2h-4.6v-.6h6.9c2.4 0 3.2-1.7 3.2-4.4s-.8-4.3-3.2-4.3h-1.5v2.7c0 2.3-1.9 4.2-4.2 4.2H8.7c-1.9 0-3.4 1.6-3.4 3.5v2.4C5.4 21.4 7.4 22 10 22h2Zm2.6-1.6a.85.85 0 1 1 0-1.7.85.85 0 0 1 0 1.7Z"/></svg><span><b>Python</b><small>language</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#149ECA" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="3.9"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(120 12 12)"/></svg><span><b>React</b><small>framework</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#47848F" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(-30 12 12)"/><circle cx="19.4" cy="9.4" r="1.2" fill="currentColor" stroke="none"/></svg><span><b>Electron</b><small>framework</small></span></li>
-        <li class="k-tech reveal"><svg aria-hidden="true"><use href="#i-gh"/></svg><span><b>GitHub</b><small>platform</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#007ACC" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg><span><b>VS Code</b><small>editor</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#FFA000" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5c2 3 .2 5-1 6.6C9.6 7.4 9.1 5.9 9.1 5.9 7 7.9 5.5 10.1 5.5 13.2a6.5 6.5 0 0 0 13 0c0-2.4-1.2-4.6-2.7-6.1-.6 1.6-1.5 2.3-2.1 1.1-.5-1-.3-2.9-1.7-5.7z"/></svg><span><b>Firebase</b><small>backend</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#4169E1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3"/></svg><span><b>PostgreSQL</b><small>database</small></span></li>
-        <li class="k-tech reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 3v18M16 3v18"/><path d="M5 7.5h14M5 12h14M5 16.5h14"/></svg><span><b>Railway</b><small>deploy</small></span></li>
-        <li class="k-tech reveal"><svg style="color:#635BFF" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 7.6 18 4.8v2.7L2 10.3zM2 11.9 18 9.1v2.7L2 14.6zM2 16.2 18 13.4v2.7L2 18.9z"/></svg><span><b>Stripe</b><small>payments</small></span></li>
+      <ul class="k-stack reveal">
+        <li class="k-tech"><svg style="color:#A8B9CC" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 6.6a8 8 0 1 0 0 10.8"/></svg><span><b>C</b><small>language</small></span></li>
+        <li class="k-tech"><svg style="color:#5382A1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 12h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 4.2c-1 1 1 2 0 3.4"/><path d="M12 3.8c-1 1 1 2 0 3.4"/></svg><span><b>Java</b><small>language</small></span></li>
+        <li class="k-tech"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4" fill="#F7DF1E"/><text x="12.5" y="17.4" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="9.5" font-weight="700" fill="#000" text-anchor="middle">JS</text></svg><span><b>JavaScript</b><small>language</small></span></li>
+        <li class="k-tech"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#3776AB" d="M12 2c-2.6 0-4.5.4-4.5 2.8v2.2h4.6v.6H5.2C2.8 7.6 2 9.3 2 12s.8 4.3 3.2 4.3h1.5v-2.7c0-2.3 1.9-4.2 4.2-4.2h4.4c1.9 0 3.4-1.6 3.4-3.5V4.8C18.6 2.6 16.6 2 14 2h-2Zm-2.6 1.6a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Z"/><path fill="#FFD43B" d="M12 22c2.6 0 4.5-.4 4.5-2.8v-2.2h-4.6v-.6h6.9c2.4 0 3.2-1.7 3.2-4.4s-.8-4.3-3.2-4.3h-1.5v2.7c0 2.3-1.9 4.2-4.2 4.2H8.7c-1.9 0-3.4 1.6-3.4 3.5v2.4C5.4 21.4 7.4 22 10 22h2Zm2.6-1.6a.85.85 0 1 1 0-1.7.85.85 0 0 1 0 1.7Z"/></svg><span><b>Python</b><small>language</small></span></li>
+        <li class="k-tech"><svg style="color:#61DAFB" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="3.9"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(120 12 12)"/></svg><span><b>React</b><small>framework</small></span></li>
+        <li class="k-tech"><svg style="color:#47848F" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(-30 12 12)"/><circle cx="19.4" cy="9.4" r="1.2" fill="currentColor" stroke="none"/></svg><span><b>Electron</b><small>framework</small></span></li>
+        <li class="k-tech"><svg aria-hidden="true"><use href="#i-gh"/></svg><span><b>GitHub</b><small>platform</small></span></li>
+        <li class="k-tech"><svg style="color:#007ACC" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg><span><b>VS Code</b><small>editor</small></span></li>
+        <li class="k-tech"><svg style="color:#FFA000" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5c2 3 .2 5-1 6.6C9.6 7.4 9.1 5.9 9.1 5.9 7 7.9 5.5 10.1 5.5 13.2a6.5 6.5 0 0 0 13 0c0-2.4-1.2-4.6-2.7-6.1-.6 1.6-1.5 2.3-2.1 1.1-.5-1-.3-2.9-1.7-5.7z"/></svg><span><b>Firebase</b><small>backend</small></span></li>
+        <li class="k-tech"><svg style="color:#6C8FEF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3"/></svg><span><b>PostgreSQL</b><small>database</small></span></li>
+        <li class="k-tech"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 3v18M16 3v18"/><path d="M5 7.5h14M5 12h14M5 16.5h14"/></svg><span><b>Railway</b><small>deploy</small></span></li>
+        <li class="k-tech"><svg style="color:#7A73FF" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 7.6 18 4.8v2.7L2 10.3zM2 11.9 18 9.1v2.7L2 14.6zM2 16.2 18 13.4v2.7L2 18.9z"/></svg><span><b>Stripe</b><small>payments</small></span></li>
       </ul>
     </div>
   </section>
 
-  <!-- ═══════════ 06 Journey ═══════════ -->
+  <!-- ═══════════ Journey ═══════════ -->
   <section class="k-section" id="journey" aria-labelledby="k-journey-title">
     <div class="wrap">
-      <p class="k-bar k-grow" style="margin-bottom:2.25rem"><span class="k-index">06</span>Journey<span class="k-count">2023 — present</span></p>
-      <div class="k-journey">
-        <div class="k-journey__intro">
-          <h2 class="k-h2 reveal" id="k-journey-title">The journey so far.</h2>
-          <p class="k-lede reveal">Computer Science at Federico II, and building in public since October 2025.</p>
-        </div>
-        <ol>
-          <li class="k-entry reveal">
-            <span class="k-badge">2023 — present</span>
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>journey<span class="k-count">2023 — present</span></p>
+        <h2 class="k-h2 reveal" id="k-journey-title">The journey so far.</h2>
+        <p class="k-lede reveal">Computer Science at Federico II, and building in public since October 2025.</p>
+      </header>
+      <ol>
+        <li class="k-entry k-grow reveal">
+          <p class="k-entry__when">2023 — present</p>
+          <div class="k-entry__what">
             <h3>Computer Science student</h3>
             <p class="k-entry__org">Università degli Studi di Napoli Federico II</p>
             <ul class="k-points">
               <li>Computer Science student at Università degli Studi di Napoli Federico II.</li>
               <li>2024 experience at Apple Foundation.</li>
-              <li>Growing solid foundations in algorithms, systems, databases and software engineering.</li>
+              <li>Growing solid foundations in algorithms, systems, databases, and software engineering.</li>
             </ul>
-          </li>
-          <li class="k-entry k-grow reveal">
-            <span class="k-badge">October 2025 — present</span>
+          </div>
+        </li>
+        <li class="k-entry k-grow reveal">
+          <p class="k-entry__when">october 2025 — present</p>
+          <div class="k-entry__what">
             <h3>Indie hacker</h3>
             <p class="k-entry__org">Building in public · <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">@Kappaemmedev</a></p>
             <ul class="k-points">
@@ -1053,49 +574,49 @@
               <li>Built the Metodo ZAC iPhone app and website.</li>
               <li>Published Codex skills used and starred by developers around the world.</li>
             </ul>
-          </li>
-        </ol>
-      </div>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 
-  <!-- ═══════════ 07 Coffee ═══════════ -->
+  <!-- ═══════════ Coffee ═══════════ -->
   <section class="k-section" id="coffee" aria-labelledby="k-coffee-title">
     <div class="wrap">
-      <div class="k-coffee reveal">
+      <div class="k-coffee k-card reveal">
         <div>
-          <p class="k-bar"><span class="k-index">07</span>Coffee<span class="k-count">Support the build</span></p>
+          <p class="k-path"><b>~/</b>coffee<span class="k-count">support the build</span></p>
           <h2 class="k-h2" id="k-coffee-title">Support the next build.</h2>
           <p class="k-lede">I build small digital products, test them in the real world, and keep improving. If something I make is useful to you, a small donation helps me keep shipping.</p>
           <div class="k-coffee__cta">
-            <a class="k-btn" href="https://buy.stripe.com/bJedR96H14WF5xmezS57W03" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-cup"/></svg>Buy me a coffee</a>
-            <a class="k-btn k-btn--ghost" href="#products">My work</a>
-            <a class="k-btn k-btn--ghost" href="mailto:misterokappa12@gmail.com">Contact me</a>
+            <a class="k-btn" href="https://buy.stripe.com/bJedR96H14WF5xmezS57W03" target="_blank" rel="noopener"><span class="k-btn__label">Buy me a coffee</span><span class="k-key"><svg aria-hidden="true"><use href="#i-cup"/></svg></span></a>
+            <a class="k-btn k-btn--ghost k-btn--plain" href="#products">My work</a>
+            <a class="k-btn k-btn--ghost k-btn--plain" href="mailto:misterokappa12@gmail.com">Contact me</a>
           </div>
-          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" href="coffee.html">More on the coffee page</a>.</p>
+          <p class="k-coffee__fine">Donations go through Stripe · <a href="coffee.html" data-scan>the coffee page →</a></p>
         </div>
-        <ol class="k-steps" data-grow>
-          <li class="k-grow" style="--i:0"><span>Build</span><span><b>I ship small products fast.</b>VibeDesk, ShipSlap and PocketFlow started from simple ideas, real usage and fast iteration.</span></li>
-          <li class="k-grow" style="--i:1"><span>Learn</span><span><b>I keep raising the bar.</b>I study Computer Science at Federico II and use every project to sharpen the next one.</span></li>
-          <li class="k-grow" style="--i:2"><span>Repeat</span><span><b>Your support becomes momentum.</b>Every small donation helps cover tools, experiments and the time to keep building in public.</span></li>
+        <ol class="k-reasons">
+          <li><span>build</span><b>I ship small products fast.</b><p>VibeDesk, ShipSlap and PocketFlow started from simple ideas, real usage and fast iteration.</p></li>
+          <li><span>learn</span><b>I keep raising the bar.</b><p>I study Computer Science at Federico II and use every project to sharpen the next one.</p></li>
+          <li><span>repeat</span><b>Your support becomes momentum.</b><p>Every small donation helps cover tools, experiments and the time to keep building in public.</p></li>
         </ol>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════ 08 Contact ═══════════ -->
-  <section class="k-contact" id="contact" aria-labelledby="k-contact-title" data-cursor-light>
+  <!-- ═══════════ Contact (last; the page lifts off the floor here) ═══════════ -->
+  <section class="k-section k-contact" id="contact" aria-labelledby="k-contact-title">
     <div class="wrap">
-      <p class="k-bar k-grow"><span class="k-index">08</span>Contact</p>
+      <p class="k-path"><b>~/</b>contact</p>
       <div class="k-contact__grid">
         <div>
-          <h2 class="reveal" id="k-contact-title">Got a project or an idea? Let's talk.</h2>
+          <h2 class="reveal" id="k-contact-title">Got a project or an idea? <span class="k-dim">Let's talk.</span></h2>
           <p class="k-lede reveal">Open to collaborations, freelance work, or just a good conversation about shipping.</p>
         </div>
         <ul class="k-reach reveal" data-grow>
-          <li class="k-grow" style="--i:0"><a href="mailto:misterokappa12@gmail.com"><small>Email</small><span>misterokappa12@gmail.com</span><span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
-          <li class="k-grow" style="--i:1"><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><small>X</small><span>@Kappaemmedev</span><span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
-          <li class="k-grow" style="--i:2"><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><small>GitHub</small><span>Kappaemme-git</span><span class="k-row__go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:0" href="mailto:misterokappa12@gmail.com"><small>email</small><span>misterokappa12@gmail.com</span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:1" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><small>x</small><span>@Kappaemmedev</span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:2" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><small>github</small><span>Kappaemme-git</span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
         </ul>
       </div>
     </div>
@@ -1104,259 +625,23 @@
 </main>
 </div>
 
-<!-- ═══════════ Footer — fixed underneath, shared with /grok-bot and /coffee ═══════════ -->
-<footer class="site-footer" aria-label="Site footer">
-  <div class="site-footer__inner">
-    <div class="site-footer__top">
-      <h2><a class="footer-wordmark" href="#top" aria-label="kappaemme.dev, back to the top"><span class="footer-word">kappaemme</span><span class="footer-word footer-word-b">.dev</span><svg class="footer-wordmark__arrow" aria-hidden="true"><use href="#i-up"/></svg></a></h2>
-    </div>
-    <div class="footer-rule" aria-hidden="true"></div>
-    <div class="site-footer__bottom">
-      <p class="lead footer-rise" style="--i:4">I build small apps, tools and bots, try them in the real world and keep the ones that work.</p>
-      <nav class="footer-nav" aria-label="Footer">
-        <ul class="footer-rise" style="--i:1">
-          <li><a class="footer-link" href="#products">Projects</a></li>
-          <li><a class="footer-link" href="#skills">Skills</a></li>
-          <li><a class="footer-link" href="../../grok-bot/">Grok Bots</a></li>
-          <li><a class="footer-link" href="#shared">On X</a></li>
-        </ul>
-        <ul class="footer-rise" style="--i:2">
-          <li><a class="footer-link" href="#stack">Stack</a></li>
-          <li><a class="footer-link" href="#journey">Journey</a></li>
-          <li><a class="footer-link" href="coffee.html">Coffee</a></li>
-          <li><a class="footer-link" href="#contact">Contact</a></li>
-        </ul>
-        <ul class="footer-rise" style="--i:3">
-          <li><a class="footer-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a class="footer-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">X · @Kappaemmedev</a></li>
-          <li><a class="footer-link" href="mailto:misterokappa12@gmail.com">Email</a></li>
-        </ul>
+<!-- ═══════════ The floor (footer) ═══════════ -->
+<footer class="k-floor" aria-label="Site footer">
+  <div class="wrap k-floor__in">
+    <div class="k-floor__top">
+      <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work.</p>
+      <nav class="k-floor__nav" aria-label="Footer">
+        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="#products">projects</a></li><li><a href="#skills">skills</a></li><li><a href="../grok-bot/prototype.html" data-scan>grok bots</a></li><li><a href="#shared">on x</a></li></ul></div>
+        <div class="k-rise-f" style="--i:2"><p>more</p><ul><li><a href="#stack">stack</a></li><li><a href="#journey">journey</a></li><li><a href="coffee.html" data-scan>coffee</a></li><li><a href="#contact">contact</a></li></ul></div>
+        <div class="k-rise-f" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li><li><a href="mailto:misterokappa12@gmail.com">email ↗</a></li></ul></div>
       </nav>
-      <div class="footer-meta">
-        <span>© 2026 Francesco Mistero <span class="footer-meta__made">· Made one commit at a time.</span></span>
-        <span class="footer-meta__right"><a class="footer-link" href="#top">Back to the top ↑</a><span class="footer-mark" aria-hidden="true"><img src="../../images/kappaemme-mark.svg" alt=""></span></span>
-      </div>
     </div>
+    <a class="k-mark" href="#top" aria-label="kappaemme.dev, back to the top"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
+    <p class="k-floor__status"><span>© 2026 Francesco Mistero<span class="k-floor__made"> · Made one commit at a time.</span></span><a href="#top">↑ back to top</a></p>
   </div>
 </footer>
 
-<script>
-(function () {
-  "use strict";
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer = window.matchMedia("(pointer: fine)").matches;
-  var $ = function (s, r) { return (r || document).querySelector(s); };
-  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
-  var hasIO = "IntersectionObserver" in window;
-
-  /* ───────────── Stagger siblings by 80ms ───────────── */
-  $$("[data-stagger]").forEach(function (group) {
-    $$(":scope > .reveal", group).forEach(function (el, i) { el.style.transitionDelay = i * 80 + "ms"; });
-  });
-
-  /* ───────────── Scroll reveal (as /grok-bot) ───────────── */
-  if (!reduce && hasIO) {
-    var revealEls = $$(".reveal");
-    revealEls.forEach(function (el) {
-      if (el.getBoundingClientRect().top > window.innerHeight * .92) el.classList.add("reveal--armed");
-    });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var el = en.target;
-        el.classList.add("reveal--in"); io.unobserve(el);
-        setTimeout(function () { el.classList.remove("reveal--armed", "reveal--in"); el.style.transitionDelay = ""; }, 1100 + (parseFloat(el.style.transitionDelay) || 0));
-      });
-    }, { rootMargin: "0px 0px -12% 0px", threshold: .15 });
-    revealEls.forEach(function (el) { io.observe(el); });
-  }
-
-  /* ───────────── Hairlines draw in ───────────── */
-  var growIO = hasIO ? new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); growIO.unobserve(en.target); } });
-  }, { rootMargin: "0px 0px -10% 0px" }) : null;
-  $$("[data-grow], .k-bar.k-grow, .k-entry.k-grow").forEach(function (el) { growIO ? growIO.observe(el) : el.classList.add("is-in"); });
-
-  /* ───────────── Nav lamp + scroll-spy ───────────── */
-  var pill = $(".k-nav__pill"), lamp = $(".k-nav__lamp");
-  var navLinks = $$(".k-nav__link[data-spy]"), sheetLinks = $$(".k-sheet [data-spy]");
-  var active = null;
-  function placeLamp() {
-    var a = navLinks.filter(function (l) { return l.dataset.spy === active; })[0];
-    if (!a || !pill.offsetParent) { lamp.classList.remove("is-on"); return; }
-    var pr = pill.getBoundingClientRect(), ar = a.getBoundingClientRect();
-    lamp.style.setProperty("--lamp-x", (ar.left - pr.left + ar.width / 2) + "px");
-    lamp.classList.add("is-on");
-  }
-  function setActive(id) {
-    if (id === active) return;
-    active = id;
-    navLinks.concat(sheetLinks).forEach(function (l) {
-      if (l.dataset.spy === id) l.setAttribute("aria-current", "true"); else l.removeAttribute("aria-current");
-    });
-    placeLamp();
-  }
-  if (hasIO) {
-    var spyIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) setActive(en.target.id === "top" ? null : en.target.id); });
-    }, { rootMargin: "-45% 0px -54% 0px" });
-    ["top"].concat(navLinks.map(function (l) { return l.dataset.spy; })).forEach(function (id) {
-      var s = document.getElementById(id); if (s) spyIO.observe(s);
-    });
-  }
-  window.addEventListener("resize", placeLamp, { passive: true });
-  document.fonts && document.fonts.ready.then(placeLamp);
-
-  /* ───────────── Mobile menu sheet ───────────── */
-  var menuBtn = $(".k-chip--menu"), sheet = $("#k-sheet"), menuLabel = $(".k-menu-label");
-  function setMenu(open) {
-    sheet.classList.toggle("is-open", open);
-    menuBtn.setAttribute("aria-expanded", String(open));
-    menuLabel.textContent = open ? "Close" : "Menu";
-    document.documentElement.classList.toggle("menu-open", open);
-    if (open) { sheet.removeAttribute("inert"); var f = $("a", sheet); f && f.focus({ preventScroll: true }); }
-    else sheet.setAttribute("inert", "");
-  }
-  menuBtn.addEventListener("click", function () { setMenu(menuBtn.getAttribute("aria-expanded") !== "true"); });
-  $$("a", sheet).forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && menuBtn.getAttribute("aria-expanded") === "true") { setMenu(false); menuBtn.focus(); }
-  });
-
-  /* ───────────── GitHub stars (kept from the current site) ───────────── */
-  var starred = $$("[data-stars-repo]");
-  if (starred.length && window.fetch) {
-    fetch("https://api.github.com/users/Kappaemme-git/repos?per_page=100")
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("GitHub unavailable")); })
-      .then(function (repos) {
-        if (!Array.isArray(repos)) return;
-        var byName = Object.create(null);
-        repos.forEach(function (repo) { byName[repo.name.toLowerCase()] = repo.stargazers_count; });
-        starred.forEach(function (row) {
-          var n = byName[row.getAttribute("data-stars-repo")], badge = $("[data-stars]", row);
-          if (badge && typeof n === "number") badge.textContent = n.toLocaleString("en-US") + (n === 1 ? " star" : " stars");
-        });
-      })
-      .catch(function () { /* keep the verified fallback labels */ });
-  }
-
-  /* ───────────── Custom cursor + parallax: one rAF loop ───────────── */
-  var cursor = $(".k-cursor"), mouse = { x: -100, y: -100 }, cur = { x: -100, y: -100, vx: 0, vy: 0 };
-  var useCursor = finePointer && !reduce;
-  if (useCursor) {
-    document.documentElement.classList.add("has-cursor");
-    window.addEventListener("pointermove", function (e) {
-      mouse.x = e.clientX; mouse.y = e.clientY;
-      cursor.classList.add("is-on");
-      var t = e.target; if (!t || !t.closest) return;
-      cursor.classList.toggle("is-hot", !t.closest("[data-cursor-quiet]") && !!t.closest("a[href], button, [role='button'], .k-tech, .k-stat"));
-      cursor.classList.toggle("is-light", !!t.closest("[data-cursor-light]"));
-      cursor.classList.toggle("is-blue", !!t.closest("[data-cursor-blue]"));
-    }, { passive: true });
-    document.documentElement.addEventListener("pointerleave", function () { cursor.classList.remove("is-on"); });
-  } else if (cursor) cursor.remove();
-
-  var para = $$("[data-parallax]").map(function (el) {
-    return { el: el, k: parseFloat(el.getAttribute("data-parallax")) || 0, hero: !!el.closest(".k-hero"), y: 0, last: null };
-  });
-  var last = performance.now(), running = !reduce && !document.hidden;
-  function tick(now) {
-    if (!running) return;
-    var dt = Math.min(.05, (now - last) / 1000); last = now;
-    var sy = window.scrollY, vh = window.innerHeight, i, p;
-    // read phase
-    for (i = 0; i < para.length; i++) {
-      p = para[i];
-      if (p.hero) p.y = sy < vh * 1.2 ? sy * p.k : p.y;
-      else { var r = p.el.parentElement.getBoundingClientRect(); p.y = (r.bottom > 0 && r.top < vh) ? (r.top + r.height / 2 - vh / 2) * p.k : p.y; }
-    }
-    // write phase
-    if (useCursor) {
-      var k = 1100, c = 52, m = .3, steps = 2, h = dt / steps;
-      for (var s = 0; s < steps; s++) {
-        cur.vx += ((mouse.x - cur.x) * k - cur.vx * c) / m * h;
-        cur.vy += ((mouse.y - cur.y) * k - cur.vy * c) / m * h;
-        cur.x += cur.vx * h; cur.y += cur.vy * h;
-      }
-      cursor.style.transform = "translate3d(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px,0)";
-    }
-    for (i = 0; i < para.length; i++) {
-      p = para[i];
-      if (p.y !== p.last) { p.el.style.transform = "translate3d(0," + p.y.toFixed(1) + "px,0)"; p.last = p.y; }
-    }
-    requestAnimationFrame(tick);
-  }
-  if (!reduce) {
-    document.addEventListener("visibilitychange", function () { running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(tick); } });
-    requestAnimationFrame(tick);
-  }
-
-  /* ───────────── "Meet the bots" wakes up into Crankobot (as /grok-bot) ───────────── */
-  var LINES = ["Hey, I was reading replies.", "Shh. Scanning for demand.", "Fine. I'm up.", "You woke me mid-search."];
-  var WAKE_MS = 700, BUBBLE_MS = 1800, said = 0;
-  $$("[data-wakeable]").forEach(function (cta) {
-    var label = cta.textContent;
-    cta.setAttribute("aria-label", label);
-    cta.innerHTML = '<span class="gb-cta__letters" aria-hidden="true">' + label.split("").map(function (ch, i) {
-      return '<span class="gb-cta__l" style="--i:' + i + '">' + (ch === " " ? "&nbsp;" : esc(ch)) + "</span>";
-    }).join("") + '</span><span class="gb-cta__face" aria-hidden="true"><span class="gb-cta__eye"><span class="gb-cta__brow"></span><span class="gb-cta__pupil"></span></span><span class="gb-cta__eye"><span class="gb-cta__brow"></span><span class="gb-cta__pupil"></span></span></span>';
-    cta.addEventListener("click", function (e) {
-      if (reduce || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-      e.preventDefault();
-      var r = cta.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      $$(".gb-cta__l", cta).forEach(function (l) {
-        var lr = l.getBoundingClientRect();
-        l.style.setProperty("--dx", (cx - (lr.left + lr.width / 2)).toFixed(1) + "px");
-        l.style.setProperty("--dy", (cy - (lr.top + lr.height / 2)).toFixed(1) + "px");
-      });
-      cta.style.setProperty("--h", r.height + "px");
-      cta.setAttribute("data-wake", "");
-      setTimeout(function () {
-        cta.setAttribute("data-grumpy", "");
-        var rr = cta.getBoundingClientRect(), b = document.createElement("div");
-        b.className = "gb-bubble"; b.setAttribute("aria-hidden", "true");
-        b.textContent = LINES[said++ % LINES.length];
-        document.body.appendChild(b);
-        var w = b.offsetWidth, mid = rr.left + rr.width / 2, left = Math.min(Math.max(mid - w / 2, 12), window.innerWidth - w - 12);
-        b.style.left = left + window.scrollX + "px";
-        b.style.top = rr.top + window.scrollY - b.offsetHeight - 16 + "px";
-        b.style.setProperty("--tail", Math.min(Math.max(mid - left, 16), w - 16) + "px");
-      }, WAKE_MS);
-      // then go to the Grok Bot page while the bubble is still up
-      setTimeout(function () { window.location.href = cta.href; }, WAKE_MS + 650);
-    });
-  });
-  // bfcache: coming back restores the pill
-  window.addEventListener("pageshow", function () {
-    $$("[data-wakeable]").forEach(function (cta) { cta.removeAttribute("data-wake"); cta.removeAttribute("data-grumpy"); });
-    $$(".gb-bubble").forEach(function (b) { b.remove(); });
-  });
-
-  /* ───────────── Footer reveal (as /grok-bot) ───────────── */
-  var footer = $(".site-footer"), content = $(".site-content");
-  if (reduce) footer.style.setProperty("--reveal", "1");
-  else {
-    var fr = 0, prev = -1;
-    var measure = function () {
-      fr = 0;
-      var h = footer.offsetHeight || 1;
-      var v = Math.round(100 * Math.max(0, Math.min(1, (window.scrollY + window.innerHeight - content.offsetHeight - content.offsetTop) / h))) / 100;
-      if (v !== prev) {
-        prev = v; footer.style.setProperty("--reveal", String(v));
-        if (v > .01) document.body.setAttribute("data-footer-open", ""); else document.body.removeAttribute("data-footer-open");
-      }
-    };
-    var schedule = function () { if (!fr) fr = requestAnimationFrame(measure); };
-    measure();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    footer.addEventListener("focusin", function () {
-      var max = document.scrollingElement.scrollHeight;
-      if (window.scrollY + window.innerHeight < max - 2) window.scrollTo({ top: max, behavior: "instant" });
-    });
-  }
-})();
-</script>
+<script src="shared.js"></script>
+<script>KM.boot();</script>
 </body>
 </html>
