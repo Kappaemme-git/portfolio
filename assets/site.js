@@ -139,7 +139,7 @@
       }).catch(function () { /* keep the verified fallback labels */ });
   };
 
-  /* ───────────── Black scan transition on cross-page links ───────────── */
+  /* ───────────── Black scan transition on page tabs ───────────── */
   var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer;
   function path(url) { return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, ""); }
   function clearScan() {
@@ -154,10 +154,10 @@
     arrivalTimer = setTimeout(clearScan, 650);
   }
   document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest("a[data-scan]");
+    var a = e.target.closest && e.target.closest(".k-top .k-links a[data-scan], .k-sheet nav a[data-scan]");
     if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
     var url = new URL(a.href, location.href);
-    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || (path(url) === path(location) && (url.hash || !a.hasAttribute("data-scan-reload")))) return;
+    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location)) return;
     e.preventDefault();
     if (leaving) return;
     leaving = true;

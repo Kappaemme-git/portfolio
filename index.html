@@ -660,7 +660,7 @@
 <!-- ═══════════ Top bar ═══════════ -->
 <header class="k-top">
   <div class="wrap k-top__in">
-    <a class="k-brand" href="./" data-scan data-scan-reload aria-label="Kappaemme home"><span class="k-brand__mark"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+    <a class="k-brand" href="./" aria-label="Kappaemme home"><span class="k-brand__mark"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
     <nav class="k-links" aria-label="Sections">
       <a data-spy="products" href="#products">projects</a>
       <a data-spy="skills" href="#skills">skills</a>
@@ -857,7 +857,7 @@
           <p class="k-skills__foot"><a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">All repositories on GitHub ↗</a></p>
         </div>
       </div>
-      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" href="skills/" data-scan><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
+      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" href="skills/"><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
     </div>
   </section>
 
@@ -870,19 +870,19 @@
           <h2 class="k-h2" id="k-grok-title">My Grok Bots.</h2>
           <p class="k-lede">Small bots I build and run inside Grok Bot. Each one does one job. The code is on GitHub.</p>
           <div class="k-grok__cta">
-            <a class="gb-cta" href="grok-bot/" data-scan>Meet the bots</a>
+            <a class="gb-cta" href="grok-bot/">Meet the bots</a>
             <p class="k-grok__fine">New ones land there first.</p>
           </div>
         </div>
         <div class="k-gpanel reveal__art">
           <p class="k-gpanel__head"><span>Library</span><span>kappaemme.dev/grok-bot</span></p>
           <ul class="k-crew" aria-label="Bots in the library">
-            <li><a class="k-crew__item" href="grok-bot/#bot-limit-coach" data-scan>
+            <li><a class="k-crew__item" href="grok-bot/#bot-limit-coach">
               <span class="k-crew__bot"><img src="grok-bot/assets/limit-coach-animated.svg" alt="" width="100" height="112"></span>
               <span class="k-label k-label--blue">Limit Coach</span>
               <small>Claude + Codex limits</small>
             </a></li>
-            <li><a class="k-crew__item" href="grok-bot/#bot-crankobot" data-scan>
+            <li><a class="k-crew__item" href="grok-bot/#bot-crankobot">
               <span class="k-crew__bot"><img src="grok-bot/assets/crankobot-animated.svg" alt="" width="100" height="112"></span>
               <span class="k-label k-label--white">Crankobot</span>
               <small>First Customer Finder</small>
@@ -1017,7 +1017,7 @@
             <a class="k-btn k-btn--ghost" href="#products">My work</a>
             <a class="k-btn k-btn--ghost" href="mailto:misterokappa12@gmail.com">Contact me</a>
           </div>
-          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" href="coffee/" data-scan>More on the coffee page</a>.</p>
+          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" href="coffee/">More on the coffee page</a>.</p>
         </div>
         <ol class="k-steps" data-grow>
           <li class="k-grow" style="--i:0"><span>Build</span><span><b>I ship small products fast.</b>VibeDesk, ShipSlap and PocketFlow started from simple ideas, real usage and fast iteration.</span></li>
@@ -1053,7 +1053,7 @@
 <footer class="site-footer" aria-label="Site footer">
   <div class="site-footer__inner">
     <div class="site-footer__top">
-      <h2><a class="k-mark" href="./" data-scan data-scan-reload aria-label="kappaemme.dev, back to the top"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a></h2>
+      <h2><a class="k-mark" href="./" aria-label="kappaemme.dev, back to the top"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a></h2>
     </div>
     <div class="footer-rule" aria-hidden="true"></div>
     <div class="site-footer__bottom">
@@ -1061,14 +1061,14 @@
       <nav class="footer-nav" aria-label="Footer">
         <ul class="footer-rise" style="--i:1">
           <li><a class="footer-link" href="#products">Projects</a></li>
-          <li><a class="footer-link" href="skills/" data-scan>Skills</a></li>
-          <li><a class="footer-link" href="grok-bot/" data-scan>Grok Bots</a></li>
+          <li><a class="footer-link" href="skills/">Skills</a></li>
+          <li><a class="footer-link" href="grok-bot/">Grok Bots</a></li>
           <li><a class="footer-link" href="#shared">On X</a></li>
         </ul>
         <ul class="footer-rise" style="--i:2">
           <li><a class="footer-link" href="#stack">Stack</a></li>
           <li><a class="footer-link" href="#journey">Journey</a></li>
-          <li><a class="footer-link" href="coffee/" data-scan>Coffee</a></li>
+          <li><a class="footer-link" href="coffee/">Coffee</a></li>
           <li><a class="footer-link" href="#contact">Contact</a></li>
         </ul>
         <ul class="footer-rise" style="--i:3">
@@ -1094,7 +1094,7 @@
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var hasIO = "IntersectionObserver" in window;
 
-  /* ───────────── Black scan transition, matching assets/site.js ───────────── */
+  /* ───────────── Black scan transition on page tabs ───────────── */
   var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer;
   function path(url) { return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, ""); }
   function clearScan() {
@@ -1108,10 +1108,10 @@
     arrivalTimer = setTimeout(clearScan, 650);
   }
   document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest("a[data-scan]");
+    var a = e.target.closest && e.target.closest(".k-top .k-links a[data-scan], .k-sheet nav a[data-scan]");
     if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
     var url = new URL(a.href, location.href);
-    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || (path(url) === path(location) && (url.hash || !a.hasAttribute("data-scan-reload")))) return;
+    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location)) return;
     e.preventDefault();
     if (leaving) return;
     leaving = true;
