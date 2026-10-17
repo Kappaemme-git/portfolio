@@ -51,8 +51,8 @@
     --line-2:  rgba(10,10,10,.20);
 
     /* Dark contrast moments */
-    --night:   #000000;              /* same ground as /grok-bot */
-    --panel:   #161616;              /* Grok Bot app panel */
+    --night:   #000000;              /* home contrast sections */
+    --panel:   #161616;              /* home dark panels */
     --text:    #FFFFFF;
     --text-2:  rgba(255,255,255,.68);
     --text-3:  rgba(255,255,255,.50);
@@ -73,7 +73,6 @@
     --r-sm:   1.1rem;
 
     /* Motion — same tokens as /grok-bot */
-    --spring:    linear(0, .42 9%, .84 21%, 1.02 33%, 1.05 41%, 1.01 55%, .99 70%, 1);
     --ease-out:  cubic-bezier(.22, 1, .36, 1);
     --ease-soft: cubic-bezier(.2, .8, .2, 1);
     --pop:       cubic-bezier(.3, 1.7, .5, 1);
@@ -83,13 +82,14 @@
     --gutter:    1.25rem;
     --section-y: 5.5rem;
     --footer-h:  37rem;
+    --top-h:     64px;
   }
   @media (min-width: 640px)  { :root { --gutter: 2rem; } }
   @media (min-width: 768px)  { :root { --section-y: 7rem; --footer-h: 36rem; } }
   @media (min-width: 1024px) { :root { --section-y: 8.5rem; } }
 
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; -webkit-text-size-adjust: 100%; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--top-h) + 1.5rem); -webkit-text-size-adjust: 100%; }
   html, body { margin: 0; background: var(--paper); color: var(--ink); overscroll-behavior-y: none; overflow-x: clip; }
   body {
     font-family: var(--font-sans); font-weight: 500; letter-spacing: -.01em; line-height: 1.5;
@@ -120,94 +120,68 @@
 
   .ic { width: 1em; height: 1em; flex: none; }
 
-  /* ════════════════════════════════════════════════════════════════
-     SHARED — chrome: brand chip, pill nav with lamp, GitHub chip, menu
-     ════════════════════════════════════════════════════════════════ */
-  .k-chip {
-    position: fixed; top: max(1rem, env(safe-area-inset-top)); z-index: 40;
-    display: inline-flex; align-items: center; gap: .55rem; min-height: 44px;
-    padding: .7rem 1rem; border-radius: 999px;
-    font-size: 13px; font-weight: 500; line-height: 1; text-decoration: none; color: var(--ink);
-    border: 1px solid var(--line-2); background: rgba(242,242,239,.78);
+  /* Top bar and mobile sheet, matching /coffee and /grok-bot. */
+  .k-top, .k-sheet { --bg: var(--paper); --text: var(--ink); --text-2: var(--ink-2); --text-3: var(--ink-3); --lc-text: #1A5FD6; --line-2: rgba(10,10,10,.18); --line-3: rgba(10,10,10,.34); }
+  .k-top {
+    position: fixed; inset: 0 0 auto; z-index: 50; height: var(--top-h);
+    border-bottom: 1px solid transparent;
+    transition: background-color .35s, border-color .35s, opacity .3s;
+    animation: top-in .5s var(--ease-out) .05s backwards;
+  }
+  .k-top.is-scrolled {
+    background: rgba(242,242,239,.82); border-bottom-color: var(--line);
     -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
-    transition: opacity .3s;
-    cursor: pointer;
   }
-  .k-chip:hover { border-color: rgba(10,10,10,.45); }
-  .k-chip svg { width: 16px; height: 16px; transition: transform .3s var(--ease-out); }
-  .k-chip--brand { left: 1rem; padding-left: .85rem; font-weight: 600; }
-  .k-chip--brand img { width: 27px; height: 16px; transition: transform .35s var(--pop); }
-  .k-chip--brand:hover img { transform: rotate(-6deg) scale(1.06); }
-  .k-chip--right { right: 1rem; display: none; }
-  .k-chip--right:hover svg { transform: rotate(-8deg) scale(1.08); }
-  .k-chip--menu { right: 1rem; background: var(--ink); color: #fff; border-color: var(--ink); font-weight: 600; }
-  .k-chip--menu:hover { border-color: var(--ink); }
-  .k-chip--menu .k-burger { position: relative; width: 14px; height: 8px; }
-  .k-chip--menu .k-burger::before, .k-chip--menu .k-burger::after {
-    content: ""; position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 2px; background: currentColor;
-    transition: transform .35s var(--ease-out);
-  }
-  .k-chip--menu .k-burger::before { top: 0; }
-  .k-chip--menu .k-burger::after { top: 6.5px; }
-  .k-chip--menu[aria-expanded="true"] .k-burger::before { transform: translateY(3.25px) rotate(45deg); }
-  .k-chip--menu[aria-expanded="true"] .k-burger::after { transform: translateY(-3.25px) rotate(-45deg); }
-  @media (min-width: 640px) {
-    .k-chip { top: 1.75rem; }
-    .k-chip--brand { left: 1.75rem; }
-    .k-chip--menu, .k-chip--right { right: 1.75rem; }
-  }
-  body[data-footer-open] .k-chip, body[data-footer-open] .k-nav { opacity: 0; pointer-events: none; }
+  @keyframes top-in { 0% { opacity: 0; transform: translateY(-8px); } }
+  .k-top__in { display: flex; align-items: center; gap: 1.5rem; height: 100%; }
+  .k-brand { display: inline-flex; align-items: center; gap: .7rem; min-height: 44px; text-decoration: none; font: 500 .82rem/1 var(--font-mono); letter-spacing: .01em; }
+  .k-brand__mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; box-shadow: inset 0 0 0 1px var(--line-2); transition: box-shadow .25s, background-color .25s; }
+  .k-brand__mark img { width: 20px; height: 12px; }
+  .k-brand:hover .k-brand__mark { background: rgba(10,10,10,.05); box-shadow: inset 0 0 0 1px var(--line-3); }
 
-  .k-nav { position: fixed; top: 0; left: 50%; z-index: 50; transform: translateX(-50%); padding-top: 1.5rem; display: none; transition: opacity .3s; }
-  @media (min-width: 1024px) {
-    .k-nav { display: block; }
-    .k-chip--menu { display: none; }
+  .k-links { position: relative; display: none; align-items: center; margin-left: auto; }
+  .k-links a {
+    position: relative; padding: .6rem .62rem; white-space: nowrap; text-decoration: none;
+    font: 500 .78rem/1 var(--font-mono); letter-spacing: .01em; color: var(--text-3); transition: color .2s;
   }
-  @media (min-width: 1280px) { .k-chip--right { display: inline-flex; } }
-  .k-nav__pill {
-    position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px;
-    background: rgba(242,242,239,.8); border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
-    box-shadow: 0 10px 30px -14px rgba(10,10,10,.28);
+  @media (min-width: 1280px) { .k-links a { padding: .6rem .8rem; } }
+  .k-links a:hover, .k-links a[aria-current] { color: var(--text); }
+  .k-caret {
+    position: absolute; left: 0; bottom: -2px; width: 100px; height: 2px; border-radius: 2px; background: var(--lc);
+    transform-origin: 0 50%; transform: translateX(var(--cx, 0px)) scaleX(var(--cw, 0));
+    opacity: 0; transition: transform .5s var(--ease-out), opacity .3s;
   }
-  .k-nav__link {
-    position: relative; padding: 6px 13px; border-radius: 999px; white-space: nowrap;
-    font-size: 13px; font-weight: 500; text-decoration: none; color: rgba(10,10,10,.66);
+  .k-caret.is-on { opacity: 1; }
+  .k-top__gh { display: none; align-items: center; gap: .45rem; min-height: 36px; padding: 0 .8rem; margin-left: .5rem; border-radius: 9px; box-shadow: inset 0 0 0 1px var(--line-2); font: 500 .76rem/1 var(--font-mono); text-decoration: none; color: var(--text-2); transition: color .2s, box-shadow .2s; }
+  .k-top__gh:hover { color: var(--text); box-shadow: inset 0 0 0 1px var(--line-3); }
+  .k-top__gh svg { width: 14px; height: 14px; }
+  @media (min-width: 1024px) { .k-links { display: flex; } .k-menu { display: none !important; } }
+  @media (min-width: 1280px) { .k-top__gh { display: inline-flex; } }
 
+  .k-menu {
+    margin-left: auto; display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; padding: 0 .9rem; border: 0; border-radius: 10px;
+    background: transparent; box-shadow: inset 0 0 0 1px var(--line-2); cursor: pointer; font: 500 .8rem/1 var(--font-mono);
   }
-  @media (min-width: 1280px) { .k-nav__link { padding: 6px 16px; } }
-  .k-nav__link::after { content: ""; position: absolute; inset: -7px 0; }
-  .k-nav__link:hover { color: var(--ink); }
-  .k-nav__link[aria-current] { color: var(--ink); background: rgba(10,10,10,.075); }
-  .k-nav__lamp {
-    position: absolute; top: -5px; left: 0; width: 32px; height: 5px; border-radius: 0 0 4px 4px;
-    background: var(--ink); transform: translateX(calc(var(--lamp-x, 50%) - 50%)); opacity: 0;
-    transition: transform .5s var(--ease-out), opacity .3s;
-  }
-  .k-nav__lamp.is-on { opacity: 1; }
-  .k-nav__lamp::after {
-    content: ""; position: absolute; left: 50%; top: 2px; width: 64px; height: 22px; transform: translateX(-50%);
-    background: radial-gradient(50% 100% at 50% 0, rgba(10,10,10,.16), transparent 70%); pointer-events: none;
-  }
-  .k-nav, .k-chip { animation: nav-in .45s ease-out .1s backwards; }
-  @keyframes nav-in { 0% { opacity: 0; } }
+  .k-menu i { position: relative; width: 14px; height: 8px; }
+  .k-menu i::before, .k-menu i::after { content: ""; position: absolute; left: 0; right: 0; height: 1.5px; background: currentColor; transition: transform .35s var(--ease-out), top .35s var(--ease-out); }
+  .k-menu i::before { top: 0; } .k-menu i::after { top: 6.5px; }
+  .k-menu[aria-expanded="true"] i::before { top: 3.25px; transform: rotate(45deg); }
+  .k-menu[aria-expanded="true"] i::after { top: 3.25px; transform: rotate(-45deg); }
 
-  /* Mobile menu sheet */
   .k-sheet {
-    position: fixed; inset: 0; z-index: 38; display: flex; flex-direction: column; overflow-y: auto;
-    padding: calc(max(1rem, env(safe-area-inset-top)) + 5rem) var(--gutter) calc(env(safe-area-inset-bottom) + 2rem);
-    background: var(--paper);
-    opacity: 0; visibility: hidden; transform: translateY(-1rem);
-    transition: opacity .35s var(--ease-out), transform .5s var(--ease-out), visibility 0s linear .5s;
+    position: fixed; inset: 0; z-index: 45; display: flex; flex-direction: column; overflow-y: auto;
+    padding: calc(var(--top-h) + 1.5rem) var(--gutter) calc(env(safe-area-inset-bottom) + 1.75rem);
+    background: var(--bg); opacity: 0; visibility: hidden;
+    transition: opacity .3s var(--ease-out), visibility 0s linear .3s;
   }
-  .k-sheet.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-  .k-sheet__list li { opacity: 0; transform: translateY(12px); transition: opacity .5s var(--ease-out), transform .6s var(--ease-out); transition-delay: calc(.06s + var(--i) * 35ms); }
-  .k-sheet.is-open .k-sheet__list li { opacity: 1; transform: none; }
-  .k-sheet__list a {
-    display: flex; align-items: baseline; padding: .7rem 0; border-bottom: 1px solid var(--line);
-    font-size: clamp(2rem, 9.4vw, 2.9rem); font-weight: 800; line-height: 1; letter-spacing: -.045em; text-decoration: none;
-  }
-  .k-sheet__foot { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: auto; padding-top: 2rem; font-size: .8rem; font-weight: 500; letter-spacing: .11em; text-transform: uppercase; }
+  .k-sheet.is-open { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .k-sheet li { opacity: 0; transform: translateY(10px); transition: opacity .45s var(--ease-out), transform .55s var(--ease-out); transition-delay: calc(.04s + var(--i) * 32ms); }
+  .k-sheet.is-open li { opacity: 1; transform: none; }
+  .k-sheet a.k-sheet__l { display: flex; align-items: baseline; gap: .6rem; padding: .62rem 0; border-bottom: 1px solid var(--line); text-decoration: none; font-size: clamp(1.9rem, 8.6vw, 2.6rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; }
+  .k-sheet a.k-sheet__l[aria-current] { color: var(--text); }
+  .k-sheet__foot { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: auto; padding-top: 2rem; font: 500 .8rem var(--font-mono); }
+  .k-sheet__foot a { color: var(--text-2); text-decoration: none; }
+  body[data-footer-open] .k-top { opacity: 0; pointer-events: none; }
 
   /* ════════════════════════════════════════════════════════════════
      SHARED — type, section head, buttons, pills
@@ -295,22 +269,13 @@
   @media (min-width: 640px) and (max-width: 1023px) { .k-portrait { aspect-ratio: 16 / 10; } }
   @media (min-width: 1024px) { .k-portrait { aspect-ratio: 4 / 5; } }
   .k-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; }
-  .k-portrait__tags { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; display: flex; flex-wrap: wrap; gap: .45rem; }
-  .k-pill {
-    display: inline-flex; align-items: center; padding: .42rem .8rem; border-radius: 999px; white-space: nowrap;
-    font-size: .88rem; font-weight: 700; letter-spacing: -.01em; background: #fff; color: var(--ink);
-  }
-  .k-pill--ink { background: var(--ink); color: #fff; }
-  .k-pill--blue { background: var(--lc); color: #fff; }
 
-  /* entrance (same rise + crew pop as /grok-bot, without the curtain) */
+  /* entrance (same rise as /grok-bot, without the curtain) */
   .k-rise { animation: rise .7s var(--ease-out) var(--d, 0s) both; }
   @keyframes rise { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
   .k-portrait.k-rise { animation-duration: .9s; }
   .k-portrait.k-rise img { animation: settle 1.4s var(--ease-out) var(--d, 0s) both; }
   @keyframes settle { 0% { transform: scale(1.06); } 100% { transform: none; } }
-  .k-pop { animation: crew-in .56s var(--spring) calc(.55s + var(--i) * 80ms) both; }
-  @keyframes crew-in { 0% { opacity: 0; transform: translateY(1rem) scale(.6); } 100% { opacity: 1; transform: none; } }
 
   /* ════════════════════════════════════════════════════════════════
      01 Projects
@@ -659,7 +624,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: 0s !important; }
-    .k-rise, .k-pop, .k-nav, .k-chip, .k-portrait.k-rise img { animation: none !important; }
+    .k-rise, .k-top, .k-portrait.k-rise img { animation: none !important; }
     .reveal--armed, .reveal--armed .reveal__art { opacity: 1; transform: none; }
     .k-tile:hover .k-tile__art, .k-stat:hover, .k-tech:hover, .k-post:hover, .k-crew__item:hover .k-label { transform: none; }
     .gb-bubble { animation-name: bubble-still; }
@@ -686,52 +651,43 @@
 
 <a class="k-skip" href="#main">Skip to content</a>
 
-<!-- ═══════════ Chrome ═══════════ -->
-<a class="k-chip k-chip--brand" href="#top" aria-label="Kappaemme, back to the top">
-  <img src="images/kappaemme-mark.svg" alt="" width="27" height="16">
-  <span>Kappaemme</span>
-</a>
-
-<nav class="k-nav" aria-label="Sections">
-  <div class="k-nav__pill">
-    <span class="k-nav__lamp" aria-hidden="true"></span>
-    <a class="k-nav__link" data-spy="products" href="#products">Projects</a>
-    <a class="k-nav__link" data-spy="skills" href="#skills">Skills</a>
-    <a class="k-nav__link" data-spy="grok-bots" href="grok-bot/">Grok Bots</a>
-    <a class="k-nav__link" data-spy="shared" href="#shared">On X</a>
-    <a class="k-nav__link" data-spy="stack" href="#stack">Stack</a>
-    <a class="k-nav__link" data-spy="journey" href="#journey">Journey</a>
-    <a class="k-nav__link" data-spy="coffee" href="#coffee">Coffee</a>
-    <a class="k-nav__link" data-spy="contact" href="#contact">Contact</a>
+<!-- ═══════════ Top bar ═══════════ -->
+<header class="k-top">
+  <div class="wrap k-top__in">
+    <a class="k-brand" href="./" aria-label="Kappaemme home"><span class="k-brand__mark"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+    <nav class="k-links" aria-label="Sections">
+      <a data-spy="products" href="#products">projects</a>
+      <a data-spy="skills" href="#skills">skills</a>
+      <a data-spy="grok-bots" href="grok-bot/">grok bots</a>
+      <a data-spy="shared" href="#shared">on x</a>
+      <a data-spy="stack" href="#stack">stack</a>
+      <a data-spy="journey" href="#journey">journey</a>
+      <a data-spy="coffee" href="#coffee">coffee</a>
+      <a data-spy="contact" href="#contact">contact</a>
+      <span class="k-caret" aria-hidden="true"></span>
+    </nav>
+    <a class="k-top__gh" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>Kappaemme-git</a>
+    <button class="k-menu" type="button" aria-expanded="false" aria-controls="k-sheet"><i aria-hidden="true"></i><span>menu</span></button>
   </div>
-</nav>
-
-<a class="k-chip k-chip--right" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">
-  <svg aria-hidden="true"><use href="#i-gh"/></svg>
-  Kappaemme-git
-</a>
-
-<button class="k-chip k-chip--menu" type="button" aria-expanded="false" aria-controls="k-sheet">
-  <span class="k-burger" aria-hidden="true"></span><span class="k-menu-label">Menu</span>
-</button>
+</header>
 
 <div class="k-sheet" id="k-sheet" role="dialog" aria-modal="true" aria-label="Site menu" inert>
   <nav aria-label="Sections">
     <ol class="k-sheet__list">
-      <li style="--i:0"><a data-spy="products" href="#products">Projects</a></li>
-      <li style="--i:1"><a data-spy="skills" href="#skills">Skills</a></li>
-      <li style="--i:2"><a data-spy="grok-bots" href="grok-bot/">Grok Bots</a></li>
-      <li style="--i:3"><a data-spy="shared" href="#shared">On X</a></li>
-      <li style="--i:4"><a data-spy="stack" href="#stack">Stack</a></li>
-      <li style="--i:5"><a data-spy="journey" href="#journey">Journey</a></li>
-      <li style="--i:6"><a data-spy="coffee" href="#coffee">Coffee</a></li>
-      <li style="--i:7"><a data-spy="contact" href="#contact">Contact</a></li>
+      <li style="--i:0"><a class="k-sheet__l" data-spy="products" href="#products">projects</a></li>
+      <li style="--i:1"><a class="k-sheet__l" data-spy="skills" href="#skills">skills</a></li>
+      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="grok-bot/">grok bots</a></li>
+      <li style="--i:3"><a class="k-sheet__l" data-spy="shared" href="#shared">on x</a></li>
+      <li style="--i:4"><a class="k-sheet__l" data-spy="stack" href="#stack">stack</a></li>
+      <li style="--i:5"><a class="k-sheet__l" data-spy="journey" href="#journey">journey</a></li>
+      <li style="--i:6"><a class="k-sheet__l" data-spy="coffee" href="#coffee">coffee</a></li>
+      <li style="--i:7"><a class="k-sheet__l" data-spy="contact" href="#contact">contact</a></li>
     </ol>
   </nav>
   <div class="k-sheet__foot">
-    <a class="footer-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">GitHub</a>
-    <a class="footer-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">X · @Kappaemmedev</a>
-    <a class="footer-link" href="mailto:misterokappa12@gmail.com">Email</a>
+    <a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github</a>
+    <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on x</a>
+    <a href="mailto:misterokappa12@gmail.com">email</a>
   </div>
 </div>
 
@@ -754,11 +710,6 @@
       <div data-parallax="0.06">
         <figure class="k-portrait k-rise" style="--d:.2s;margin:0">
           <img src="images/me.jpg" alt="Portrait of Francesco Mistero" width="1254" height="1254" fetchpriority="high">
-          <figcaption class="k-portrait__tags">
-            <span class="k-pill k-pop" style="--i:0">CS student</span>
-            <span class="k-pill k-pop" style="--i:1">Indie hacker</span>
-            <span class="k-pill k-pill--ink k-pop" style="--i:2">@Kappaemmedev</span>
-          </figcaption>
         </figure>
       </div>
     </div>
@@ -1164,24 +1115,30 @@
   }, { rootMargin: "0px 0px -10% 0px" }) : null;
   $$("[data-grow], .k-bar.k-grow, .k-entry.k-grow").forEach(function (el) { growIO ? growIO.observe(el) : el.classList.add("is-in"); });
 
-  /* ───────────── Nav lamp + scroll-spy ───────────── */
-  var pill = $(".k-nav__pill"), lamp = $(".k-nav__lamp");
-  var navLinks = $$(".k-nav__link[data-spy]"), sheetLinks = $$(".k-sheet [data-spy]");
-  var active = null;
-  function placeLamp() {
-    var a = navLinks.filter(function (l) { return l.dataset.spy === active; })[0];
-    if (!a || !pill.offsetParent) { lamp.classList.remove("is-on"); return; }
-    var pr = pill.getBoundingClientRect(), ar = a.getBoundingClientRect();
-    lamp.style.setProperty("--lamp-x", (ar.left - pr.left + ar.width / 2) + "px");
-    lamp.classList.add("is-on");
+  /* ───────────── Top bar + section caret ───────────── */
+  var topBar = $(".k-top");
+  function onScrollTop() { topBar.classList.toggle("is-scrolled", window.scrollY > 8); }
+  onScrollTop();
+  window.addEventListener("scroll", onScrollTop, { passive: true });
+
+  var linksBox = $(".k-links"), caret = $(".k-caret");
+  var navLinks = $$(".k-links [data-spy]"), sheetLinks = $$(".k-sheet [data-spy]");
+  var activeId = null;
+  function placeCaret() {
+    var a = navLinks.filter(function (l) { return l.dataset.spy === activeId; })[0];
+    if (!a || !linksBox.offsetParent) { caret.classList.remove("is-on"); return; }
+    var br = linksBox.getBoundingClientRect(), r = a.getBoundingClientRect(), pl = parseFloat(getComputedStyle(a).paddingLeft) || 0;
+    caret.style.setProperty("--cx", (r.left - br.left + pl) + "px");
+    caret.style.setProperty("--cw", ((r.width - 2 * pl) / 100).toFixed(3));
+    caret.classList.add("is-on");
   }
   function setActive(id) {
-    if (id === active) return;
-    active = id;
+    if (id === activeId) return;
+    activeId = id;
     navLinks.concat(sheetLinks).forEach(function (l) {
       if (l.dataset.spy === id) l.setAttribute("aria-current", "true"); else l.removeAttribute("aria-current");
     });
-    placeLamp();
+    placeCaret();
   }
   if (hasIO) {
     var spyIO = new IntersectionObserver(function (entries) {
@@ -1191,15 +1148,16 @@
       var s = document.getElementById(id); if (s) spyIO.observe(s);
     });
   }
-  window.addEventListener("resize", placeLamp, { passive: true });
-  document.fonts && document.fonts.ready.then(placeLamp);
+  placeCaret();
+  window.addEventListener("resize", placeCaret, { passive: true });
+  document.fonts && document.fonts.ready.then(placeCaret);
 
   /* ───────────── Mobile menu sheet ───────────── */
-  var menuBtn = $(".k-chip--menu"), sheet = $("#k-sheet"), menuLabel = $(".k-menu-label");
+  var menuBtn = $(".k-menu"), sheet = $("#k-sheet"), menuLabel = $(".k-menu span", menuBtn);
   function setMenu(open) {
     sheet.classList.toggle("is-open", open);
     menuBtn.setAttribute("aria-expanded", String(open));
-    menuLabel.textContent = open ? "Close" : "Menu";
+    menuLabel.textContent = open ? "close" : "menu";
     document.documentElement.classList.toggle("menu-open", open);
     if (open) { sheet.removeAttribute("inert"); var f = $("a", sheet); f && f.focus({ preventScroll: true }); }
     else sheet.setAttribute("inert", "");

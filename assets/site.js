@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════
-   kappaemme.dev — shared behaviour (home, /coffee, /grok-bot)
+   kappaemme.dev — shared behaviour (/coffee, /grok-bot)
    Source of truth for Codex → /assets/site.js. One rAF loop, reads before
    writes, transform/opacity only. Everything is skipped under reduced motion.
    ══════════════════════════════════════════════════════════════════════ */

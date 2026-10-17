@@ -1,8 +1,7 @@
 /* ══════════════════════════════════════════════════════════════════════
-   kappaemme.dev — shared system v3 HYBRID (home, /coffee, /grok-bot)
+   kappaemme.dev — shared system v3 (/coffee, /grok-bot)
    Source of truth for Codex → assets/site.css. Spec: design/restyle/SPEC.md §v3
-   Paper base; dark objects (.k-dark & friends) and blue blocks (.k-blue) re-scope
-   the same tokens, so every v2 component and animation works unchanged.
+   Paper base; small dark objects and blue blocks re-scope the same tokens.
    Signature motif: the caret (nav, terminal, scan line, typed wordmark). Everything animates transform/opacity only.
    ══════════════════════════════════════════════════════════════════════ */
 
@@ -17,14 +16,14 @@
   --paper-2: #E8E8E3;
   --card:    #FFFFFF;
   --ink:     #0A0A0A;
-  --night:   #0A0A0A;               /* dark objects: terminal, stage, floor, night tiles */
-  --panel:   #161616;               /* "Under the hood" tile, nested dark panels */
+  --night:   #0A0A0A;               /* small dark accents */
+  --panel:   #161616;               /* optional dark tile */
 
   /* Ground — scoped tokens (light by default; see the scopes below) */
   --bg:      var(--paper);
   --raise:   var(--card);           /* cards on paper */
   --raise-2: var(--paper-2);        /* nested (quote boxes) */
-  --floor:   var(--night);          /* the footer floor under the page */
+  --floor:   var(--paper);          /* the light footer under the page */
   --text:    var(--ink);
   --text-2:  rgba(10,10,10,.68);    /* ledes ≈ 6.7:1 */
   --text-3:  rgba(10,10,10,.60);    /* meta  ≈ 5.0:1 */
@@ -67,9 +66,9 @@
 @media (min-width: 1024px) { :root { --section-y: 9rem; } }
 
 /* ── Scopes (v3) ─────────────────────────────────────────────────────────
-   Dark objects on paper re-scope the tokens to the v2 dark values;
-   Limit Coach blocks re-scope them to white-on-blue. */
-.k-dark, .k-floor, .k-term, .k-stage, .gb-set, .gb-boot, .k-tile--night, .k-tile--panel {
+   Dark accents re-scope the tokens; blue tiles use ink so their small text
+   meets AA while Limit Coach keeps its original blue. */
+.k-dark, .k-term, .k-stage, .k-tile--night, .k-tile--panel {
   color-scheme: dark;
   --bg: var(--night); --raise: var(--panel); --raise-2: #1F1F1F;
   --text: #F3F3EF; --text-2: rgba(243,243,239,.68); --text-3: rgba(243,243,239,.52);
@@ -79,15 +78,16 @@
 }
 .k-blue, .k-tile--blue {
   --bg: var(--lc); --raise: rgba(255,255,255,.12); --raise-2: rgba(10,10,10,.16);
-  --text: #FFFFFF; --text-2: rgba(255,255,255,.9); --text-3: rgba(255,255,255,.8);
-  --line: rgba(255,255,255,.24); --line-2: rgba(255,255,255,.36); --line-3: rgba(255,255,255,.62);
-  --lc-text: #FFFFFF;
+  --text: var(--ink); --text-2: var(--ink); --text-3: var(--ink);
+  --line: rgba(10,10,10,.20); --line-2: rgba(10,10,10,.32); --line-3: rgba(10,10,10,.55);
+  --lc-text: var(--ink);
   color: var(--text);
 }
-/* Colour blocks — the Grok Bot tile family: blue, white, night, panel. Nothing else. */
+/* Colour blocks — blue, white and cream, with optional small dark accents. */
 .k-tile { position: relative; border-radius: var(--r-tile); overflow: hidden; }
 .k-tile--blue  { background: var(--lc); }
 .k-tile--white { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+.k-tile--cream { background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--line); }
 .k-tile--night { background: var(--night); }
 .k-tile--panel { background: var(--panel); }
 
@@ -332,11 +332,11 @@ a:hover > .k-go svg { transform: translate(1px, -1px); }
 
 /* ══════════════════════════════════════════════════════════════════════
    Scan transition (replaces the wake-up CTA + curtain)
-   A blue scan line sweeps down; black fills behind it on leave,
+   A blue scan line sweeps down; paper fills behind it on leave,
    and on arrival the page is revealed behind the line as it continues.
    ══════════════════════════════════════════════════════════════════════ */
 .k-scan { position: fixed; inset: 0; z-index: 3600; pointer-events: none; visibility: hidden; overflow: hidden; }
-.k-scan__fill { position: absolute; inset: 0; background: var(--night); transform-origin: 50% 0; transform: scaleY(0); }
+.k-scan__fill { position: absolute; inset: 0; background: var(--paper); transform-origin: 50% 0; transform: scaleY(0); }
 .k-scan__line { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--lc); box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); transform: translateY(-6px); }
 .k-scan.is-out { visibility: visible; pointer-events: auto; }
 .k-scan.is-out .k-scan__fill { transition: transform .6s var(--ease-io); transform: scaleY(1); }
@@ -349,7 +349,7 @@ html[data-scan="in"] .k-scan__line { transform: translateY(0); animation: scan-l
 html[data-scan="in"] { --enter: .45s; }
 
 /* ══════════════════════════════════════════════════════════════════════
-   The floor (footer) — dark, revealed under the page; typed wordmark
+   The floor (footer) — light, revealed under the page; typed wordmark
    ══════════════════════════════════════════════════════════════════════ */
 .k-floor { position: fixed; inset: auto 0 0; z-index: 0; height: var(--floor-h); overflow: hidden; background: var(--floor); color: var(--text); }
 .k-floor__in { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-top: 3.25rem; padding-bottom: calc(env(safe-area-inset-bottom) + 1.25rem); }
