@@ -181,6 +181,7 @@ button { font: inherit; color: inherit; }
   .k-top--sub .k-links a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0 .55rem; font-size: .74rem; }
 }
 @media (max-width: 389px) { .k-top--sub .k-top__in { gap: .4rem; } .k-top--sub .k-links a { padding: 0 .34rem; font-size: .72rem; } }
+@media (max-width: 400px) { .k-top--sub .k-brand__back { display: none; } }
 @media (min-width: 640px) { .k-top--sub .k-links .s { display: none; } }
 
 .k-menu {
@@ -406,6 +407,7 @@ body[data-floor-open] .k-top { opacity: 0; pointer-events: none; }
   :root { --floor-h: 46rem; }
   .k-floor__top > *, .k-floor__nav > * { min-width: 0; }
   .k-floor__nav a { display: flex; align-items: center; min-width: 44px; min-height: 44px; padding: .3rem 0; font-size: .94rem; overflow-wrap: anywhere; }
+  .k-floor__nav a::before { content: none; }
   .k-floor__status a { display: inline-flex; align-items: center; min-height: 44px; }
   .k-mark { font-size: clamp(2rem, 8.6vw, 3.5rem); }
   .k-sheet__foot a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; }

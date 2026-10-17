@@ -70,7 +70,7 @@
   .c-reason h3 { margin-top: auto; padding-top: 2.25rem; font-size: clamp(1.55rem, 2.4vw, 2rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; text-wrap: balance; }
   .c-reason p { margin-top: .75rem; font-size: 1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
 
-  .k-contact { padding-bottom: 6rem; }
+  .k-contact { padding-bottom: 6rem; background: #0A0A0A; --line: rgba(255,255,255,.22); --line-2: rgba(255,255,255,.28); --line-3: rgba(255,255,255,.5); }
   @media (min-width: 768px) { .k-contact { padding-bottom: 8rem; } }
   .k-contact__grid { display: grid; gap: 2.5rem; margin-top: 1.5rem; }
   @media (min-width: 1024px) { .k-contact__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; align-items: end; margin-top: 2rem; } }
@@ -160,7 +160,7 @@
     </div>
   </section>
 
-  <section class="k-section k-contact" id="contact" aria-labelledby="contact-title">
+  <section class="k-section k-contact k-dark" id="contact" aria-labelledby="contact-title">
     <div class="wrap">
       <p class="k-path"><b>~/</b>contact-me</p>
       <div class="k-contact__grid">
@@ -181,7 +181,7 @@
     <div class="k-floor__top">
       <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work. Everything else I make is on kappaemme.dev.</p>
       <nav class="k-floor__nav" aria-label="Footer">
-        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="../#products">projects</a></li><li><a href="../skills/">skills</a></li><li><a href="../grok-bot/">grok bots</a></li><li><a href="../#shared">on x</a></li></ul></div>
+        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="../#products">projects</a></li><li><a data-scan href="../skills/">skills</a></li><li><a href="../grok-bot/">grok bots</a></li><li><a href="../#shared">on x</a></li></ul></div>
         <div class="k-rise-f" style="--i:2"><p>more</p><ul><li><a href="../#stack">stack</a></li><li><a href="../#journey">journey</a></li><li><a href="#top">coffee</a></li><li><a href="../#contact">contact</a></li></ul></div>
         <div class="k-rise-f" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li><li><a href="mailto:misterokappa12@gmail.com">email ↗</a></li></ul></div>
       </nav>

@@ -247,14 +247,8 @@
   @media (min-width: 1024px) {
     .k-hero__grid { grid-template-columns: minmax(0, 1.72fr) minmax(0, 1fr); gap: 4rem; align-items: center; min-height: min(calc(100svh - 11rem), 46rem); }
   }
-  .k-hello {
-    display: inline-flex; align-items: center; gap: .6rem; padding: .3rem 1rem .3rem .3rem; border-radius: 999px;
-    background: var(--card); box-shadow: inset 0 0 0 1px var(--line); font-size: .92rem; font-weight: 600;
-  }
-  .k-hello img { width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; background: var(--me); }
-  .k-hello span { color: var(--ink-2); font-weight: 500; }
   .k-hero h1 {
-    margin-top: 1.75rem;
+    margin-top: 0;
     font-size: clamp(3.25rem, 13.6vw, 7.4rem); font-weight: 800; line-height: .88; letter-spacing: -.058em; text-wrap: balance;
   }
   @media (min-width: 640px) { .k-hero h1 { font-size: clamp(4.5rem, 9.2vw, 7.4rem); } }
@@ -511,10 +505,13 @@
   .k-coffee .k-h2 { max-width: 10ch; font-size: clamp(3rem, 7.4vw, 6rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; text-wrap: balance; }
   .k-coffee .k-dim { color: var(--text-3); }
   .k-coffee .k-lede { margin-top: 1.6rem; max-width: 36ch; color: var(--text-2); }
-  .k-coffee__cta { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem; }
-  .k-coffee .k-btn:not(.k-btn--ghost), .k-coffee .k-btn:not(.k-btn--ghost):hover { background: #FFFFFF; color: var(--ink); }
-  .k-coffee .k-btn--ghost { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--line-2); }
-  .k-coffee .k-btn--ghost:hover { background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1.5px var(--line-3); }
+  .k-coffee__cta { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem 1.5rem; margin-top: 2rem; }
+  .k-coffee__link { display: inline-flex; align-items: center; gap: .5em; min-height: 44px; padding: .25rem 0; color: var(--text-2); font: 500 .86rem/1.25 var(--font-mono); text-decoration: none; text-underline-offset: 5px; text-decoration-thickness: 1px; white-space: nowrap; }
+  .k-coffee__link:hover, .k-coffee__link:focus-visible { color: var(--text); text-decoration: underline; }
+  .k-coffee__link--primary { color: var(--text); font-size: 1.08rem; font-weight: 600; text-decoration: underline; text-decoration-color: #2474F7; text-decoration-thickness: 2px; }
+  .k-coffee__link--primary:hover, .k-coffee__link--primary:focus-visible { text-decoration-color: #2474F7; }
+  .k-coffee__link--primary .k-coffee__arrow { color: #2474F7; }
+  @media (max-width: 479px) { .k-coffee__link--primary { flex-basis: 100%; } }
   .k-coffee__fine { margin-top: 1.25rem; font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
   .k-coffee__fine a { color: var(--text-2); }
   .k-steps li { position: relative; display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: 1rem; padding: 1.25rem 0; font-size: 1.06rem; line-height: 1.5; color: var(--text-2); }
@@ -718,17 +715,16 @@
   <section class="k-hero" id="top" aria-labelledby="k-title">
     <div class="wrap k-hero__grid">
       <div>
-        <p class="k-hello k-rise" style="--d:.05s"><img src="images/me.jpg" alt="" width="64" height="64">Francesco Mistero <span>· aka Kappaemme</span></p>
-        <h1 class="k-rise" id="k-title" style="--d:.12s">Building apps and tools.</h1>
-        <p class="k-hero__lede k-rise" style="--d:.22s"><strong>CS student at Federico II.</strong> I am Francesco, aka Kappaemme. I build iPhone apps, websites and open-source tools, and share what I learn through Codex skills.</p>
-        <div class="k-hero__cta k-rise" style="--d:.3s">
+        <h1 class="k-rise" id="k-title" style="--d:.05s">Building apps and tools.</h1>
+        <p class="k-hero__lede k-rise" style="--d:.15s"><strong>CS student at Federico II.</strong> I am Francesco, aka Kappaemme. I build iPhone apps, websites and open-source tools, and share what I learn through Codex skills.</p>
+        <div class="k-hero__cta k-rise" style="--d:.23s">
           <a class="k-btn" href="#products">See my work <svg class="ic-down" aria-hidden="true"><use href="#i-down"/></svg></a>
           <a class="k-btn k-btn--ghost" href="#contact">Get in touch</a>
         </div>
-        <p class="k-hero__fine k-rise" style="--d:.38s">Follow the build <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on X</a>, read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>, or <a class="u-link" href="mailto:misterokappa12@gmail.com">send an email</a>.</p>
+        <p class="k-hero__fine k-rise" style="--d:.31s">Follow the build <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on X</a>, read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>, or <a class="u-link" href="mailto:misterokappa12@gmail.com">send an email</a>.</p>
       </div>
       <div data-parallax="0.06">
-        <figure class="k-portrait k-rise" style="--d:.2s;margin:0">
+        <figure class="k-portrait k-rise" style="--d:.15s;margin:0">
           <img src="images/me.jpg" alt="Portrait of Francesco Mistero" width="1254" height="1254" fetchpriority="high">
         </figure>
       </div>
@@ -871,7 +867,7 @@
           <p class="k-skills__foot"><a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">All repositories on GitHub ↗</a></p>
         </div>
       </div>
-      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" href="skills/"><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
+      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" data-scan href="skills/"><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
     </div>
   </section>
 
@@ -1027,11 +1023,11 @@
           <h2 class="k-h2" id="k-coffee-title">Support <span class="k-dim">the next build.</span></h2>
           <p class="k-lede">I build small digital products, test them in the real world, and keep improving. If something I make is useful to you, a small donation helps me keep shipping.</p>
           <div class="k-coffee__cta">
-            <a class="k-btn" href="https://buy.stripe.com/bJedR96H14WF5xmezS57W03" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-cup"/></svg>Buy me a coffee</a>
-            <a class="k-btn k-btn--ghost" href="#products">My work</a>
-            <a class="k-btn k-btn--ghost" href="mailto:misterokappa12@gmail.com">Contact me</a>
+            <a class="k-coffee__link k-coffee__link--primary" href="https://buy.stripe.com/bJedR96H14WF5xmezS57W03" target="_blank" rel="noopener">Buy me a coffee <span class="k-coffee__arrow" aria-hidden="true">↗</span></a>
+            <a class="k-coffee__link" href="#products">My work <span aria-hidden="true">→</span></a>
+            <a class="k-coffee__link" href="mailto:misterokappa12@gmail.com">Contact me <span aria-hidden="true">→</span></a>
           </div>
-          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" href="coffee/">More on the coffee page</a>.</p>
+          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" data-scan href="coffee/">More on the coffee page</a>.</p>
         </div>
         <ol class="k-steps" data-grow>
           <li class="k-grow" style="--i:0"><span>Build</span><span><b>I ship small products fast.</b>VibeDesk, ShipSlap and PocketFlow started from simple ideas, real usage and fast iteration.</span></li>
@@ -1075,14 +1071,14 @@
       <nav class="footer-nav" aria-label="Footer">
         <ul class="footer-rise" style="--i:1">
           <li><a class="footer-link" href="#products">Projects</a></li>
-          <li><a class="footer-link" href="skills/">Skills</a></li>
+          <li><a class="footer-link" data-scan href="skills/">Skills</a></li>
           <li><a class="footer-link" href="grok-bot/">Grok Bots</a></li>
           <li><a class="footer-link" href="#shared">On X</a></li>
         </ul>
         <ul class="footer-rise" style="--i:2">
           <li><a class="footer-link" href="#stack">Stack</a></li>
           <li><a class="footer-link" href="#journey">Journey</a></li>
-          <li><a class="footer-link" href="coffee/">Coffee</a></li>
+          <li><a class="footer-link" data-scan href="coffee/">Coffee</a></li>
           <li><a class="footer-link" href="#contact">Contact</a></li>
         </ul>
         <ul class="footer-rise" style="--i:3">
@@ -1108,7 +1104,7 @@
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var hasIO = "IntersectionObserver" in window;
 
-  /* ───────────── Black scan transition on page tabs ───────────── */
+  /* ───────────── Black scan transition on marked links ───────────── */
   var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer, typeTimer;
   function path(url) { return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, ""); }
   function typeScanCommand(cmd, command) {
@@ -1132,8 +1128,8 @@
     arrivalTimer = setTimeout(clearScan, 650);
   }
   document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest(".k-top .k-links a[data-scan], .k-sheet nav a[data-scan]");
-    if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
+    var a = e.target.closest && e.target.closest("a[data-scan]");
+    if (!a || reduce || !scan || e.defaultPrevented || (e.button != null && e.button !== 0) || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
     var url = new URL(a.href, location.href);
     var page = path(url).split("/").pop();
     if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || path(url) === path(location) || page === "grok-bot") return;
