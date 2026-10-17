@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>kappaemme.dev — OG card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .card { position: relative; width: 1200px; height: 630px; overflow: hidden; padding: 57px 64px 53px; background: #F2F2EF; color: #0A0A0A; font-family: "Geist", sans-serif; }
+  .top { display: flex; align-items: center; justify-content: space-between; height: 48px; }
+  .path { display: flex; align-items: center; gap: 13px; font: 500 21px/1 "Geist Mono", monospace; }
+  .path::before { content: ""; width: 12px; height: 26px; background: #2474F7; }
+  .mark { width: 68px; height: 41px; object-fit: contain; }
+  .rule { height: 1px; background: rgba(10,10,10,.24); margin-top: 32px; }
+  .hero { position: absolute; left: 64px; right: 64px; top: 195px; }
+  .wordmark { display: flex; align-items: center; gap: 0; white-space: nowrap; font: 500 91px/.97 "Geist Mono", monospace; letter-spacing: -.07em; }
+  .wordmark .dim { color: rgba(10,10,10,.54); }
+  .cursor { display: inline-block; width: 42px; height: 78px; margin-left: 5px; background: #2474F7; }
+  .description { margin: 45px 0 0; font: 400 30px/1.22 "Geist", sans-serif; letter-spacing: -.03em; }
+  .bottom { position: absolute; left: 64px; right: 64px; bottom: 48px; display: flex; justify-content: space-between; align-items: center; padding-top: 23px; border-top: 1px solid rgba(10,10,10,.24); font: 500 19px/1 "Geist Mono", monospace; }
+  .bottom .site { color: #2474F7; }
+</style>
+</head>
+<body>
+<main class="card" aria-label="Kappaemme.dev link preview">
+  <div class="top"><span class="path">~/</span><img class="mark" src="../../images/kappaemme-mark.svg" alt="" width="68" height="41"></div>
+  <div class="rule"></div>
+  <div class="hero">
+    <div class="wordmark">kappaemme<span class="dim">.dev</span><span class="cursor" aria-hidden="true"></span></div>
+    <p class="description">iPhone apps, websites, open-source tools and Codex skills.</p>
+  </div>
+  <div class="bottom"><span>Francesco Mistero · @Kappaemmedev</span><span class="site">kappaemme.dev</span></div>
+</main>
+</body>
+</html>

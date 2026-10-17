@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Buy me a coffee | Kappaemme</title>
+<meta name="description" content="Support Kappaemme with a small donation through Stripe.">
+<meta name="author" content="Francesco Mistero">
+<meta name="theme-color" content="#F2F2EF">
+<meta property="og:type" content="website" />
+  <meta property="og:title" content="Buy me a coffee | Kappaemme" />
+  <meta property="og:description" content="A small support page for Francesco Mistero, CS student and indie hacker." />
+  <meta property="og:image" content="https://kappaemmedev.vercel.app/images/og-logo.png" />
+<link rel="icon" type="image/svg+xml" href="../../coffee/km-logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<!--
+  Coffee support page; shared dark system in ../assets/.
+-->
+<script>
+  document.documentElement.classList.add("js");
+  try { if (sessionStorage.getItem("k-scan")) { sessionStorage.removeItem("k-scan"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.setAttribute("data-scan", "in"); } } catch (e) {}
+</script>
+<link rel="stylesheet" href="shared.css">
+<style>
+  @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
+
+  .c-hero { padding-top: calc(var(--top-h) + 3rem); }
+  @media (min-width: 1024px) { .c-hero { padding-top: calc(var(--top-h) + 5rem); } }
+  .c-hero__grid { display: grid; gap: 3rem; }
+  @media (min-width: 1024px) { .c-hero__grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 4.5rem; align-items: center; } }
+  .c-hero h1 { margin-top: 1.5rem; max-width: 10ch; font-size: clamp(3.3rem, 14.4vw, 7.25rem); font-weight: 600; line-height: .93; letter-spacing: -.058em; text-wrap: balance; }
+  @media (min-width: 640px) { .c-hero h1 { font-size: clamp(4.6rem, 9.4vw, 7.25rem); } }
+  .c-sub { margin-top: 1.5rem; font: 500 .8rem/1.3 var(--font-mono); color: var(--text-3); }
+  .c-intro { margin-top: 1rem; max-width: 38ch; font-size: 1.1rem; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+  @media (min-width: 768px) { .c-intro { font-size: 1.26rem; line-height: 1.5; } }
+  .c-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2.25rem; }
+  @media (max-width: 479px) { .c-actions .k-btn:first-child { flex: 1 1 100%; } .c-actions .k-btn { flex: 1 1 auto; } }
+
+  .c-panel { overflow: hidden; padding: 8px; }
+  .c-panel__art { display: grid; place-items: center; aspect-ratio: 16 / 10; border-radius: 10px; background: #0B0B09; box-shadow: inset 0 0 0 1px var(--line); }
+  .c-panel__art img { width: 36%; height: auto; clip-path: inset(1px); }
+  .c-panel__body { padding: 1.4rem 1rem 1rem; }
+  .c-panel h2 { margin-top: .95rem; font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; }
+  .c-panel p { margin-top: .75rem; font-size: 1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .c-stripe { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--line); font: 500 .74rem/1 var(--font-mono); color: var(--text-2); }
+  .c-stripe span:first-child { display: inline-flex; align-items: center; gap: .5rem; }
+  .c-stripe i { width: 8px; height: 8px; border-radius: 50%; background: var(--stripe); box-shadow: 0 0 10px rgba(99,91,255,.6); }
+  .c-stripe span:last-child { color: var(--text-3); }
+
+  .c-reasons { display: grid; gap: 1rem; }
+  @media (min-width: 768px) { .c-reasons { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; } }
+  .c-reason { display: flex; flex-direction: column; min-height: 13rem; padding: 1.5rem 1.4rem 1.6rem; transition: transform .35s var(--ease-out); }
+  @media (min-width: 768px) { .c-reason { min-height: 17rem; padding: 1.9rem 1.75rem 2rem; } }
+  .c-reason:hover { transform: translateY(-3px); }
+  .c-reason > span { font: 500 .74rem/1 var(--font-mono); color: var(--lc-text); }
+  .c-reason h3 { margin-top: auto; padding-top: 2.25rem; font-size: clamp(1.55rem, 2.4vw, 2rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; text-wrap: balance; }
+  .c-reason p { margin-top: .75rem; font-size: 1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+
+  .k-contact { padding-bottom: 6rem; }
+  @media (min-width: 768px) { .k-contact { padding-bottom: 8rem; } }
+  .k-contact__grid { display: grid; gap: 2.5rem; margin-top: 1.5rem; }
+  @media (min-width: 1024px) { .k-contact__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; align-items: end; margin-top: 2rem; } }
+  .k-contact h2 { font-size: clamp(3rem, 7.6vw, 6.2rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; max-width: 9ch; text-wrap: balance; }
+  .k-reach li:last-child a { box-shadow: 0 1px 0 var(--line); }
+  .k-reach a { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .3rem 1rem; padding: 1.3rem 0; text-decoration: none; }
+  .k-reach a::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+  .k-reach small { grid-column: 1; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .k-reach span { grid-column: 1; font-size: clamp(1.3rem, 2.5vw, 1.9rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
+  .k-reach em { grid-column: 1; font: 500 .84rem/1.3 var(--font-mono); font-style: normal; color: var(--text-2); overflow-wrap: anywhere; }
+  .k-reach .k-go { grid-column: 2; grid-row: 1 / span 3; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.76.12 3.05.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.2.67.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 12h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 4.5c-1 1 1 2 0 3.4"/><path d="M12 4c-1 1 1 2 0 3.4"/></g></symbol>
+</svg>
+
+<a class="k-skip" href="#main">Skip to content</a>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
+
+<!-- ═══════════ Top bar (sub-page) ═══════════ -->
+<header class="k-top k-top--sub">
+  <div class="wrap k-top__in">
+    <a class="k-brand" href="prototype.html" data-scan aria-label="Kappaemme home"><svg class="k-brand__back" aria-hidden="true"><use href="#i-back"/></svg><span class="k-brand__mark"><img src="../../images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+    <nav class="k-links" aria-label="Site">
+      <a href="prototype.html" data-scan><span class="t">home</span><span class="s">home</span></a>
+      <a href="../grok-bot/prototype.html" data-scan><span class="t">grok bots</span><span class="s">bots</span></a>
+      <a href="#top" aria-current="page"><span class="t">coffee</span><span class="s">coffee</span></a>
+      <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="t">on x</span><span class="s">x</span><svg class="ic" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      <span class="k-caret" aria-hidden="true"></span>
+    </nav>
+    <a class="k-top__gh" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>Kappaemme-git</a>
+  </div>
+</header>
+
+<div class="site-content">
+<main id="main">
+
+  <section class="c-hero" id="top" aria-labelledby="page-title">
+    <div class="wrap c-hero__grid">
+      <div>
+        <p class="k-eyebrow k-rise" style="--d:.05s"><span class="k-live"><i></i>CS Student &amp; Indie Hacker</span></p>
+        <h1 class="k-rise" id="page-title" style="--d:.12s">Support <span class="k-dim">the next build.</span></h1>
+        <p class="c-sub k-rise" style="--d:.2s">A tiny backing page for Kappaemme</p>
+        <p class="c-intro k-rise" style="--d:.26s">I build small digital products, test them in the real world, and keep improving. If something I make is useful to you, a small donation helps me keep shipping.</p>
+        <div class="c-actions k-rise" style="--d:.34s">
+          <a class="k-btn" id="donateHero" href="https://buy.stripe.com/bJedR96H14WF5xmezS57W03" target="_blank" rel="noopener noreferrer"><span class="k-btn__label">Donate with Stripe</span><span class="k-key"><svg aria-hidden="true"><use href="#i-cup"/></svg></span></a>
+          <a class="k-btn k-btn--ghost k-btn--plain" href="prototype.html#products" data-scan>My work</a>
+          <a class="k-btn k-btn--ghost k-btn--plain" href="mailto:misterokappa12@gmail.com">Contact me</a>
+        </div>
+      </div>
+      <aside class="c-panel k-card k-rise" style="--d:.22s" aria-label="Donation panel">
+        <div class="c-panel__art"><img src="../../coffee/km-logo.png" alt="Kappaemme logo" width="400" height="400"></div>
+        <div class="c-panel__body">
+          <span class="k-tag">support page</span>
+          <h2>Support my next project.</h2>
+          <p>Donations go through Stripe and help cover experiments, tools and the time to keep building useful side projects.</p>
+          <div class="c-stripe"><span><i aria-hidden="true"></i>Stripe payment</span><span>Secure checkout</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="k-section" id="why" aria-labelledby="why-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>why-donate<span class="k-count">build · learn · repeat</span></p>
+        <h2 class="k-h2 reveal" id="why-title">Why it helps.</h2>
+      </header>
+      <div class="c-reasons" data-stagger>
+        <article class="c-reason k-tile k-tile--blue reveal"><span>build</span><h3>I ship small products fast.</h3><p>VibeDesk, ShipSlap and pocketflow started from simple ideas, real usage and fast iteration.</p></article>
+        <article class="c-reason k-tile k-tile--night reveal"><span>learn</span><h3>I keep raising the bar.</h3><p>I study Computer Science at Federico II and use every project to sharpen the next one.</p></article>
+        <article class="c-reason k-tile k-tile--white reveal"><span>repeat</span><h3>Your support becomes momentum.</h3><p>Every small donation helps cover tools, experiments and the time to keep building in public.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="k-section k-contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <p class="k-path"><b>~/</b>contact-me</p>
+      <div class="k-contact__grid">
+        <h2 class="reveal" id="contact-title">Write me <span class="k-dim">directly.</span></h2>
+        <ul class="k-reach reveal" data-grow>
+          <li><a class="k-grow" style="--i:0" href="mailto:misterokappa12@gmail.com"><small>email</small><span>Write me directly</span><em>misterokappa12@gmail.com</em><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:1" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener noreferrer"><small>github</small><span>See the code</span><em>github.com/Kappaemme-git</em><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<footer class="k-floor" aria-label="Site footer">
+  <div class="wrap k-floor__in">
+    <div class="k-floor__top">
+      <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work. Everything else I make is on kappaemme.dev.</p>
+      <nav class="k-floor__nav" aria-label="Footer">
+        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="prototype.html#products" data-scan>projects</a></li><li><a href="prototype.html#skills" data-scan>skills</a></li><li><a href="../grok-bot/prototype.html" data-scan>grok bots</a></li><li><a href="prototype.html#shared" data-scan>on x</a></li></ul></div>
+        <div class="k-rise-f" style="--i:2"><p>more</p><ul><li><a href="prototype.html#stack" data-scan>stack</a></li><li><a href="prototype.html#journey" data-scan>journey</a></li><li><a href="#top">coffee</a></li><li><a href="prototype.html#contact" data-scan>contact</a></li></ul></div>
+        <div class="k-rise-f" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li><li><a href="mailto:misterokappa12@gmail.com">email ↗</a></li></ul></div>
+      </nav>
+    </div>
+    <a class="k-mark" href="prototype.html" data-scan aria-label="kappaemme.dev, back to the main site"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
+    <p class="k-floor__status"><span>© 2026 Francesco Mistero<span class="k-floor__made"> · Created by Kappaemme</span></span><a href="#top">↑ back to top</a></p>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+  /* Stripe link (kept from the current page: falls back to email if unset) */
+  (function () {
+    var stripeDonationLink = "https://buy.stripe.com/bJedR96H14WF5xmezS57W03";
+    var donate = document.getElementById("donateHero");
+    if (!stripeDonationLink.startsWith("http")) { donate.removeAttribute("target"); donate.href = "mailto:misterokappa12@gmail.com?subject=Stripe%20donation%20link"; }
+    else donate.href = stripeDonationLink;
+  })();
+  KM.boot();
+</script>
+</body>
+</html>

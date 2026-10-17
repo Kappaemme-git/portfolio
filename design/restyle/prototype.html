@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kappaemme — Francesco Mistero · CS student & indie hacker</title>
+<meta name="description" content="Francesco Mistero, aka Kappaemme. CS student and indie developer building iPhone apps, websites, open-source tools and Codex skills.">
+<meta name="author" content="Francesco Mistero">
+<meta name="theme-color" content="#F2F2EF">
+<link rel="canonical" href="https://kappaemme.dev/">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kappaemme — Francesco Mistero">
+<meta property="og:description" content="iPhone apps, websites, open-source tools and Codex skills by Francesco Mistero.">
+<meta property="og:url" content="https://kappaemme.dev/">
+<meta property="og:image" content="https://kappaemme.dev/images/og-preview.png">
+<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@Kappaemmedev">
+<meta name="twitter:title" content="Kappaemme — Francesco Mistero">
+<meta name="twitter:description" content="iPhone apps, websites, open-source tools and Codex skills by Francesco Mistero.">
+<meta name="twitter:image" content="https://kappaemme.dev/images/og-preview.png">
+<meta name="twitter:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
+
+<link rel="icon" type="image/svg+xml" href="../../images/kappaemme-favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<!--
+  Portfolio home; shared dark system in assets/site.css and assets/site.js.
+-->
+<script>
+  document.documentElement.classList.add("js");
+  try { if (sessionStorage.getItem("k-scan")) { sessionStorage.removeItem("k-scan"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.setAttribute("data-scan", "in"); } } catch (e) {}
+</script>
+<link rel="stylesheet" href="shared.css">
+<script src="../../grok-bot/bots.data.js"></script>
+<style>
+  /* ══════════════ Hero ══════════════ */
+  .k-hero { padding-top: calc(var(--top-h) + 3rem); }
+  @media (min-width: 1024px) { .k-hero { padding-top: calc(var(--top-h) + 4.5rem); } }
+  .k-hero__grid { display: grid; gap: 3rem; }
+  @media (min-width: 1024px) { .k-hero__grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 4.5rem; align-items: end; } }
+  .k-hero h1 { margin-top: 1.5rem; font-size: clamp(3.3rem, 13.6vw, 7.75rem); font-weight: 600; line-height: .93; letter-spacing: -.058em; text-wrap: balance; }
+  @media (min-width: 640px) { .k-hero h1 { font-size: clamp(4.6rem, 9.6vw, 7.75rem); } }
+  .k-hero__lede { margin-top: 1.75rem; max-width: 37ch; font-size: 1.1rem; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+  .k-hero__lede strong { font-weight: 500; color: var(--text); }
+  @media (min-width: 768px) { .k-hero__lede { margin-top: 2rem; font-size: 1.28rem; line-height: 1.5; } }
+  .k-hero__cta { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2.25rem; }
+  @media (max-width: 479px) { .k-hero__cta .k-btn { flex: 1 1 auto; } }
+  .k-hero__links { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin-top: 1.75rem; font: 500 .8rem/1 var(--font-mono); }
+  .k-hero__links a { display: inline-flex; align-items: center; gap: .3rem; min-height: 28px; color: var(--text-2); text-decoration: none; transition: color .2s; }
+  .k-hero__links a:hover { color: var(--text); }
+  .k-hero__links svg { width: 11px; height: 11px; color: var(--text-3); }
+
+  .k-fig__frame { padding: 7px; border-radius: 22px; box-shadow: inset 0 0 0 1px var(--line-2); }
+  .k-fig__img { position: relative; overflow: hidden; border-radius: 15px; background: var(--me); aspect-ratio: 5 / 4; }
+  @media (min-width: 640px) and (max-width: 1023px) { .k-fig__img { aspect-ratio: 16 / 10; } }
+  @media (min-width: 1024px) { .k-fig__img { aspect-ratio: 4 / 5; } }
+  .k-fig__img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .k-rise .k-fig__img img { animation: settle 1.5s var(--ease-out) calc(var(--enter) + .2s) both; }
+  @keyframes settle { from { transform: scale(1.07); } }
+  .k-fig figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: .85rem; padding: 0 .3rem; font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
+
+  /* ══════════════ Projects: spec-sheet cards ══════════════ */
+  .k-projects { display: grid; gap: 1rem; }
+  @media (min-width: 768px) { .k-projects { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+  .k-proj { display: flex; flex-direction: column; padding: 8px; color: inherit; text-decoration: none; transition: box-shadow .3s; }
+  .k-proj:hover { box-shadow: inset 0 0 0 1px var(--line-3); }
+  .k-proj__screen { position: relative; display: grid; place-items: center; overflow: hidden; aspect-ratio: 16 / 10.5; border-radius: 10px; background: var(--tint); }
+  .k-proj__screen img { height: auto; aspect-ratio: 1; border-radius: 22.5%; box-shadow: 0 30px 50px -24px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.1); transition: transform .7s var(--ease-out); }
+  .k-proj--vibe .k-proj__screen img { border-radius: 50%; box-shadow: none; }
+  .k-proj:hover .k-proj__screen img { transform: translateY(-5px) scale(1.03); }
+  .k-proj__screen .k-tag { position: absolute; top: 12px; left: 12px; color: rgba(255,255,255,.86); background: rgba(0,0,0,.22); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+  .k-proj__body { display: grid; gap: .55rem; padding: 1.3rem 1rem 1rem; }
+  .k-proj__name { font-size: 1.6rem; font-weight: 600; letter-spacing: -.035em; line-height: 1.1; }
+  .k-proj__desc { max-width: 40ch; font-size: 1.04rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .k-spec { margin-top: .8rem; }
+  .k-spec div { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid var(--line); font: 500 .76rem/1.2 var(--font-mono); }
+  .k-spec dt { color: var(--text-3); }
+  .k-spec dd { color: var(--text-2); text-align: right; transition: color .2s; }
+  .k-proj:hover .k-spec__go { color: var(--text); }
+
+  .k-more { margin-top: 3.5rem; }
+  .k-more__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem 1rem; padding-bottom: 1rem; }
+  .k-more__head h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: -.03em; }
+  .k-more__head a { margin-left: auto; font: 500 .8rem var(--font-mono); }
+  .k-more li:last-child .k-row { box-shadow: 0 1px 0 var(--line); }
+
+  /* ══════════════ Teasers (skills + bots): sibling cards ══════════════ */
+  .k-teaser { display: grid; gap: 2rem; padding: 1.5rem 1.25rem 1.25rem; overflow: hidden; }
+  @media (min-width: 640px) { .k-teaser { padding: 2.25rem; } }
+  @media (min-width: 1024px) {
+    .k-teaser { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 3.5rem; align-items: center; padding: 3.5rem; }
+    .k-teaser--flip { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); }
+    .k-teaser--flip > :first-child { order: 2; }
+  }
+  .k-teaser .k-h2 { margin-top: 1.4rem; }
+  .k-teaser .k-lede { margin-top: 1.1rem; }
+  .k-teaser__cta { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; margin-top: 2rem; }
+  .k-teaser__fine { font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
+
+  /* terminal motif — skills */
+  .k-term { border-radius: var(--r-sm); background: var(--night); box-shadow: 0 30px 60px -34px rgba(10,10,10,.55), inset 0 0 0 1px var(--line); font: 500 .8rem/1 var(--font-mono); overflow: hidden; }
+  .k-term__bar { display: flex; justify-content: space-between; padding: .85rem 1rem; border-bottom: 1px solid var(--line); color: var(--text-3); font-size: .72rem; }
+  .k-term__body { padding: .7rem .35rem .9rem; }
+  .k-term__body li > a, .k-term__cmd { display: flex; align-items: center; gap: .7rem; min-height: 2.1rem; padding: 0 .65rem; border-radius: 6px; color: var(--text-2); text-decoration: none; }
+  .k-term__body li > a { transition: background-color .2s, color .2s; }
+  .k-term__body li > a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+  .k-term__ok { color: var(--live); flex: none; }
+  .k-term__n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .k-term__s { margin-left: auto; flex: none; color: var(--text-3); }
+  .k-term__s b { font-weight: 500; color: var(--text-2); }
+  .k-term__cmd { color: var(--text); margin-top: .35rem; }
+  .k-term__body li:first-child.k-term__cmd { margin-top: 0; }
+  .k-term__cmd span { color: var(--lc-text); }
+  .k-term__caret { display: inline-block; width: .55em; height: 1.1em; background: var(--text); }
+  @media (prefers-reduced-motion: no-preference) {
+    .k-term__caret { animation: caret-blink 1s steps(1) infinite; }
+    html.js [data-term] .k-term__body li { opacity: 0; transform: translateX(-8px); }
+    html.js [data-term].is-in .k-term__body li { animation: term-in .45s var(--ease-out) calc(.15s + var(--i) * 70ms) both; }
+  }
+  @keyframes term-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 420px) { .k-term { font-size: .74rem; } .k-term__body li > a, .k-term__cmd { gap: .5rem; padding: 0 .5rem; } }
+
+  /* mini stage — bots */
+  .k-stage { position: relative; border-radius: 18px; background: var(--night); box-shadow: 0 30px 60px -30px rgba(10,10,10,.55); padding: 3rem 1rem 1.75rem; }
+  .k-stage__head { position: absolute; top: 1rem; left: 1rem; right: 1rem; display: flex; justify-content: space-between; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .k-stage__cast { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .k-stage figure { display: grid; justify-items: center; gap: 1rem; text-align: center; }
+  .k-stage .k-actor { width: clamp(6.75rem, 26vw, 10.5rem); }
+  .k-stage figcaption { display: grid; justify-items: center; gap: .45rem; }
+  .k-stage figcaption small { font: 500 .74rem/1.35 var(--font-mono); color: var(--text-3); }
+
+  /* skill list */
+  .k-skilllist { display: grid; gap: 2.5rem; margin-top: 3rem; scroll-margin-top: calc(var(--top-h) + 1.5rem); }
+  @media (min-width: 1024px) { .k-skilllist { grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem; } }
+  .k-skilllist h3 { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 1rem; font-size: 1.35rem; font-weight: 600; letter-spacing: -.03em; }
+  .k-skilllist h3 span { font: 500 .74rem/1 var(--font-mono); letter-spacing: 0; color: var(--text-3); }
+  .k-skilllist .k-row { grid-template-columns: minmax(0, 1fr) 2.5rem; grid-template-areas: "main go" "meta go"; }
+  .k-skilllist li:last-child .k-row { box-shadow: 0 1px 0 var(--line); }
+  .k-skilllist .k-row__name { font-family: var(--font-mono); font-size: .95rem; font-weight: 500; letter-spacing: 0; }
+  .k-skilllist .k-row__meta:empty { display: none; }
+
+  /* ══════════════ On X ══════════════ */
+  .k-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 1.5rem; border-block: 1px solid var(--line); }
+  .k-stat { padding: 1.3rem .75rem 1.3rem 0; }
+  .k-stat + .k-stat { padding-left: 1rem; border-left: 1px solid var(--line); }
+  @media (min-width: 768px) { .k-stat { padding: 1.75rem 1.5rem 1.75rem 0; } .k-stat + .k-stat { padding-left: 1.75rem; } }
+  .k-stat strong { display: block; font-size: clamp(1.9rem, 5.6vw, 4.25rem); font-weight: 600; line-height: 1; letter-spacing: -.05em; }
+  .k-stat--lc strong { color: var(--lc-text); }
+  .k-stat span { display: block; margin-top: .55rem; font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
+
+  .k-posts { display: flex; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: .25rem var(--gutter) 1rem; scroll-padding: 0 var(--gutter); }
+  .k-posts::-webkit-scrollbar { display: none; }
+  .k-posts > * { flex: 0 0 min(84%, 22rem); scroll-snap-align: start; }
+  @media (min-width: 1024px) {
+    .k-posts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; overflow: visible; margin: 0; padding: 0; }
+    .k-posts > * { grid-column: span 2; }
+    .k-posts > :nth-child(n+4) { grid-column: span 3; }
+  }
+  .k-post { display: flex; flex-direction: column; padding: 1.3rem; color: inherit; text-decoration: none; transition: box-shadow .3s, transform .4s var(--ease-out); }
+  .k-post:hover { box-shadow: inset 0 0 0 1px var(--line-3); transform: translateY(-2px); }
+  .k-au { display: flex; align-items: center; gap: .65rem; min-width: 0; }
+  .k-av { width: 2.4rem; height: 2.4rem; flex: none; border-radius: 50%; object-fit: cover; background: var(--raise-2); }
+  .k-au b { display: flex; align-items: center; gap: .25rem; font-size: .94rem; font-weight: 600; line-height: 1.2; white-space: nowrap; }
+  .k-au small { display: block; font-size: .84rem; line-height: 1.25; color: var(--text-3); }
+  .k-check { width: 15px; height: 15px; }
+  .k-post__x { width: 16px; height: 16px; margin-left: auto; align-self: flex-start; color: var(--text-2); }
+  .k-post__text { margin: 1.1rem 0 1.2rem; font-size: 1.16rem; font-weight: 500; line-height: 1.3; letter-spacing: -.02em; text-wrap: pretty; }
+  .k-quote { margin-top: auto; padding: 1rem; border-radius: 10px; background: var(--raise-2); }
+  .k-quote .k-av { width: 1.6rem; height: 1.6rem; }
+  .k-quote .k-au b { font-size: .84rem; } .k-quote .k-au small { font-size: .78rem; }
+  .k-quote p { margin: .7rem 0 .6rem; font-size: .84rem; font-weight: 500; line-height: 1.4; }
+  .k-mono { font: 500 .68rem/1.2 var(--font-mono); letter-spacing: .04em; color: var(--text-3); }
+  .k-post__meta { display: flex; align-items: center; gap: .9rem; margin-top: 1.1rem; font: 500 .76rem/1 var(--font-mono); color: var(--text-3); }
+  .k-post__open { margin-left: auto; color: var(--text); }
+  .k-note { margin-top: 1rem; font: 500 .72rem/1.4 var(--font-mono); color: var(--text-3); }
+
+  /* ══════════════ Stack: hairline grid ══════════════ */
+  .k-stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  @media (min-width: 768px)  { .k-stack { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .k-stack { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+  .k-tech { display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; min-height: 7.25rem; padding: 1rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background-color .25s; }
+  @media (min-width: 768px) { .k-tech { min-height: 9rem; padding: 1.25rem; } }
+  .k-tech:hover { background: rgba(10,10,10,.03); }
+  .k-tech svg { width: 26px; height: 26px; transition: transform .35s var(--ease-out); }
+  .k-tech:hover svg { transform: translateY(-3px); }
+  .k-tech b { display: block; font-size: .98rem; font-weight: 500; letter-spacing: -.01em; }
+  .k-tech small { display: block; margin-top: .3rem; font: 500 .68rem/1 var(--font-mono); color: var(--text-3); }
+
+  /* ══════════════ Journey ══════════════ */
+  .k-entry { position: relative; display: grid; gap: .9rem; padding: 2rem 0; }
+  .k-entry::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line-2); transform-origin: 0 50%; }
+  @media (min-width: 1024px) { .k-entry { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; padding: 2.5rem 0; } .k-entry__when { grid-column: 1 / span 4; } .k-entry__what { grid-column: 5 / -1; } }
+  .k-entry__when { font: 500 .8rem/1.6 var(--font-mono); color: var(--text-3); }
+  .k-entry h3 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; }
+  .k-entry__org { margin-top: .5rem; font-size: 1.04rem; color: var(--text-2); }
+  .k-points { margin-top: 1.1rem; }
+  .k-points li { display: flex; gap: .75rem; padding: .7rem 0; border-top: 1px solid var(--line); font-size: 1rem; line-height: 1.45; color: var(--text-2); }
+  .k-points li::before { content: "—"; color: var(--text-3); font-family: var(--font-mono); flex: none; }
+
+  /* ══════════════ Coffee ══════════════ */
+  .k-coffee { display: grid; gap: 2.5rem; padding: 1.75rem 1.25rem 1.5rem; }
+  @media (min-width: 640px) { .k-coffee { padding: 2.5rem 2.25rem 2rem; } }
+  @media (min-width: 1024px) { .k-coffee { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 4rem; padding: 3.5rem; } }
+  .k-coffee .k-h2 { margin-top: 1.4rem; font-size: clamp(2.3rem, 5vw, 4.1rem); }
+  .k-coffee .k-lede { margin-top: 1.1rem; }
+  .k-coffee__cta { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem; }
+  .k-coffee__fine { margin-top: 1.25rem; font: 500 .78rem/1.5 var(--font-mono); color: var(--text-3); }
+  .k-coffee__fine a { color: var(--text-2); }
+  .k-reasons li { display: grid; gap: .35rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .k-reasons li:last-child { padding-bottom: 0; }
+  .k-reasons span { font: 500 .72rem/1 var(--font-mono); color: var(--lc-text); }
+  .k-reasons b { font-size: 1.12rem; font-weight: 600; letter-spacing: -.02em; }
+  .k-reasons p { color: var(--text-2); line-height: 1.5; }
+
+  /* ══════════════ Contact ══════════════ */
+  .k-contact { padding-bottom: 6rem; }
+  @media (min-width: 768px) { .k-contact { padding-bottom: 8rem; } }
+  .k-contact__grid { display: grid; gap: 2.75rem; margin-top: 1.5rem; }
+  @media (min-width: 1024px) { .k-contact__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; align-items: end; margin-top: 2rem; } }
+  .k-contact h2 { font-size: clamp(3rem, 7.6vw, 6.2rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; max-width: 11ch; text-wrap: balance; }
+  .k-contact .k-lede { margin-top: 1.6rem; max-width: 34ch; }
+  .k-reach li:last-child a { box-shadow: 0 1px 0 var(--line); }
+  .k-reach a { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .35rem 1rem; padding: 1.3rem 0; text-decoration: none; }
+  .k-reach a::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+  .k-reach small { grid-column: 1; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .k-reach span { grid-column: 1; font-size: clamp(1.3rem, 2.5vw, 1.9rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; overflow-wrap: anywhere; }
+  .k-reach .k-go { grid-column: 2; grid-row: 1 / span 2; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-enter" viewBox="0 0 24 24"><path d="M20 5v7a3 3 0 0 1-3 3H5m4-4-4 4 4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.76.12 3.05.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.2.67.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 12h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 4.5c-1 1 1 2 0 3.4"/><path d="M12 4c-1 1 1 2 0 3.4"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1D9BF0"/><path d="m7.6 12.3 3 3 5.8-6.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<a class="k-skip" href="#main">Skip to content</a>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
+
+<!-- ═══════════ Top bar ═══════════ -->
+<header class="k-top">
+  <div class="wrap k-top__in">
+    <a class="k-brand" href="#top" aria-label="Kappaemme, back to the top"><span class="k-brand__mark"><img src="../../images/kappaemme-mark.svg" alt="" width="20" height="12"></span>kappaemme</a>
+    <nav class="k-links" aria-label="Sections">
+      <a data-spy="products" href="#products">projects</a>
+      <a data-spy="skills" href="#skills">skills</a>
+      <a data-spy="grok-bots" href="../grok-bot/prototype.html" data-scan>grok bots</a>
+      <a data-spy="shared" href="#shared">on x</a>
+      <a data-spy="stack" href="#stack">stack</a>
+      <a data-spy="journey" href="#journey">journey</a>
+      <a data-spy="coffee" href="#coffee">coffee</a>
+      <a data-spy="contact" href="#contact">contact</a>
+      <span class="k-caret" aria-hidden="true"></span>
+    </nav>
+    <a class="k-top__gh" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>Kappaemme-git</a>
+    <button class="k-menu" type="button" aria-expanded="false" aria-controls="k-sheet"><i aria-hidden="true"></i><span>menu</span></button>
+  </div>
+</header>
+
+<div class="k-sheet" id="k-sheet" role="dialog" aria-modal="true" aria-label="Site menu" inert>
+  <nav aria-label="Sections">
+    <ul>
+      <li style="--i:0"><a class="k-sheet__l" data-spy="products" href="#products"><span>~/</span>Projects</a></li>
+      <li style="--i:1"><a class="k-sheet__l" data-spy="skills" href="#skills"><span>~/</span>Skills</a></li>
+      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="../grok-bot/prototype.html" data-scan><span>~/</span>Grok Bots</a></li>
+      <li style="--i:3"><a class="k-sheet__l" data-spy="shared" href="#shared"><span>~/</span>On X</a></li>
+      <li style="--i:4"><a class="k-sheet__l" data-spy="stack" href="#stack"><span>~/</span>Stack</a></li>
+      <li style="--i:5"><a class="k-sheet__l" data-spy="journey" href="#journey"><span>~/</span>Journey</a></li>
+      <li style="--i:6"><a class="k-sheet__l" data-spy="coffee" href="#coffee"><span>~/</span>Coffee</a></li>
+      <li style="--i:7"><a class="k-sheet__l" data-spy="contact" href="#contact"><span>~/</span>Contact</a></li>
+    </ul>
+  </nav>
+  <div class="k-sheet__foot">
+    <a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a>
+    <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a>
+    <a href="mailto:misterokappa12@gmail.com">email ↗</a>
+  </div>
+</div>
+
+<div class="site-content">
+<main id="main">
+
+  <!-- ═══════════ Hero ═══════════ -->
+  <section class="k-hero" id="top" data-spy-none aria-labelledby="k-title">
+    <div class="wrap k-hero__grid">
+      <div>
+        <p class="k-eyebrow k-rise" style="--d:.05s">Francesco Mistero · aka Kappaemme</p>
+        <h1 class="k-rise" id="k-title" style="--d:.12s">Building apps <span class="k-dim">and tools.</span></h1>
+        <p class="k-hero__lede k-rise" style="--d:.22s"><strong>CS student at Federico II.</strong> I build iPhone apps, websites and open-source tools, and share what I learn through Codex skills.</p>
+        <div class="k-hero__cta k-rise" style="--d:.3s">
+          <a class="k-btn" href="#products"><span class="k-btn__label">See my work</span><span class="k-key"><svg aria-hidden="true"><use href="#i-down"/></svg></span></a>
+          <a class="k-btn k-btn--ghost" href="#contact"><span class="k-btn__label">Get in touch</span><span class="k-key">@</span></a>
+        </div>
+        <p class="k-hero__links k-rise" style="--d:.38s">
+          <a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github <svg aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x / @Kappaemmedev <svg aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a href="mailto:misterokappa12@gmail.com">email <svg aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </p>
+      </div>
+      <div data-parallax="0.05" data-parallax-hero>
+        <figure class="k-fig k-rise" style="--d:.2s">
+          <div class="k-fig__frame"><div class="k-fig__img"><img src="../../images/me.jpg" alt="Portrait of Francesco Mistero" width="1254" height="1254" fetchpriority="high"></div></div>
+          <figcaption><span class="k-live"><i></i>Building in public since October 2025</span><span>@Kappaemmedev</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Projects ═══════════ -->
+  <section class="k-section" id="products" aria-labelledby="k-projects-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>projects<span class="k-count">5 projects</span></p>
+        <h2 class="k-h2 reveal" id="k-projects-title">Selected work.</h2>
+        <p class="k-lede reveal">A small gallery of products I build and maintain. Select a piece to explore it.</p>
+      </header>
+
+      <div class="k-projects" data-stagger>
+        <a class="k-proj k-card reveal" href="https://apps.apple.com/it/app/metodo-zac/id6800744272" aria-label="Metodo ZAC, iPhone app. View on the App Store">
+          <div class="k-proj__screen" style="--tint:var(--zac)"><span class="k-tag">iphone app</span><span class="reveal__art" data-parallax="-0.04"><img src="../../images/metodo-zac-app-icon.jpg" alt="" width="512" height="512" loading="lazy" decoding="async" style="width:clamp(7.5rem,15vw,11rem)"></span></div>
+          <div class="k-proj__body">
+            <h3 class="k-proj__name">Metodo ZAC</h3>
+            <p class="k-proj__desc">Coach-led workouts, progress tracking and check-ins.</p>
+            <dl class="k-spec"><div><dt>type</dt><dd>iPhone app</dd></div><div><dt>open</dt><dd class="k-spec__go">View on App Store ↗</dd></div></dl>
+          </div>
+        </a>
+        <a class="k-proj k-proj--vibe k-card reveal" href="https://www.vibedesk.online/" aria-label="VibeDesk, web app. Visit the website">
+          <div class="k-proj__screen" style="--tint:var(--vibe)"><span class="k-tag">web app</span><span class="reveal__art" data-parallax="-0.04"><img src="../../images/vibedesk-gallery.png" alt="" width="1024" height="1024" loading="lazy" decoding="async" style="width:clamp(11rem,22vw,16rem)"></span></div>
+          <div class="k-proj__body">
+            <h3 class="k-proj__name">VibeDesk</h3>
+            <p class="k-proj__desc">A study and work companion I am currently building.</p>
+            <dl class="k-spec"><div><dt>type</dt><dd>Web app</dd></div><div><dt>open</dt><dd class="k-spec__go">Visit website ↗</dd></div></dl>
+          </div>
+        </a>
+      </div>
+
+      <div class="k-more reveal">
+        <div class="k-more__head">
+          <h3>More work</h3>
+          <a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">Explore all GitHub projects ↗</a>
+        </div>
+        <ol data-grow>
+          <li><a class="k-row k-grow" style="--i:0" href="https://www.metodozac.com/" target="_blank" rel="noopener">
+            <span class="k-row__main"><span class="k-row__name">metodo ZAC · website</span><span class="k-row__desc">Coaching programs, client journeys and the digital home for Metodo ZAC.</span></span>
+            <span class="k-row__meta"><span class="k-tag">website</span><span class="k-live"><i></i>live</span></span>
+            <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+          </a></li>
+          <li><a class="k-row k-grow" style="--i:1" href="https://www.pocketflow.online/" target="_blank" rel="noopener">
+            <span class="k-row__main"><span class="k-row__name">pocketflow</span><span class="k-row__desc">Minimal widget app for deep focus — tasks, timer and music.</span></span>
+            <span class="k-row__meta"><span class="k-tag">app</span><span class="k-live"><i></i>live</span></span>
+            <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+          </a></li>
+          <li><a class="k-row k-grow" style="--i:2" href="https://www.glorydraw.online/" target="_blank" rel="noopener">
+            <span class="k-row__main"><span class="k-row__name">glorydraw</span><span class="k-row__desc">Fantasy football app for drafting a World Cup dream team.</span></span>
+            <span class="k-row__meta"><span class="k-tag">web app</span><span class="k-live"><i></i>live</span></span>
+            <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+          </a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Skills: terminal teaser + list ═══════════ -->
+  <section class="k-section" id="skills" aria-labelledby="k-skills-title">
+    <div class="wrap">
+      <div class="k-teaser k-tile k-tile--white reveal">
+        <div>
+          <p class="k-path"><b>~/</b>skills<span class="k-count">10 featured</span></p>
+          <h2 class="k-h2" id="k-skills-title">My Codex skills.</h2>
+          <p class="k-lede">Open-source skills for Codex, from finding first customers to auditing an iOS app before App Store submission. Recent releases and the ones developers have starred most.</p>
+          <div class="k-teaser__cta">
+            <a class="k-btn" href="#skill-list"><span class="k-btn__label">See all ten</span><span class="k-key"><svg aria-hidden="true"><use href="#i-down"/></svg></span></a>
+            <a class="k-btn k-btn--ghost k-btn--plain" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>On GitHub</a>
+          </div>
+        </div>
+        <div class="k-term reveal__art" data-term role="group" aria-label="Codex skills, as a terminal listing">
+          <div class="k-term__bar"><span>~/codex-skills</span><span>Kappaemme-git</span></div>
+          <ol class="k-term__body">
+            <li class="k-term__cmd" style="--i:0" aria-hidden="true"><span>$</span>ls --most-starred</li>
+            <li style="--i:1"><a href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-first-customer-finder-skill</span><span class="k-term__s"><b data-stars-repo="codex-first-customer-finder-skill" data-stars data-stars-short>1k+</b> ★</span></a></li>
+            <li style="--i:2"><a href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-startup-pressure-test-skill</span><span class="k-term__s"><b data-stars-repo="codex-startup-pressure-test-skill" data-stars data-stars-short>900+</b> ★</span></a></li>
+            <li style="--i:3"><a href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-complexity-optimizer</span><span class="k-term__s"><b data-stars-repo="codex-complexity-optimizer" data-stars data-stars-short>900+</b> ★</span></a></li>
+            <li style="--i:4"><a href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">local-client-prospector-skill</span><span class="k-term__s"><b data-stars-repo="local-client-prospector-skill" data-stars data-stars-short>150+</b> ★</span></a></li>
+            <li style="--i:5"><a href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-bug-reproducer</span><span class="k-term__s"><b data-stars-repo="codex-bug-reproducer" data-stars data-stars-short>70+</b> ★</span></a></li>
+            <li class="k-term__cmd" style="--i:6" aria-hidden="true"><span>$</span>ls --recent</li>
+            <li style="--i:7"><a href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">astra-ad-studio</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:8"><a href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-code-avengers</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:9"><a href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">codex-dev-team</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:10"><a href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">startup-feedback-engine</span><span class="k-term__s">recent</span></a></li>
+            <li style="--i:11"><a href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener"><span class="k-term__ok">✓</span><span class="k-term__n">app-store-review-guardian</span><span class="k-term__s">recent</span></a></li>
+            <li class="k-term__cmd" style="--i:12" aria-hidden="true"><span>$</span><i class="k-term__caret"></i></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="k-skilllist" id="skill-list">
+        <div class="reveal">
+          <h3>Most starred <span>stars refresh from GitHub</span></h3>
+          <ol data-grow>
+            <li><a class="k-row k-grow" style="--i:0" data-stars-repo="codex-first-customer-finder-skill" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-first-customer-finder-skill</span><span class="k-row__desc">Find evidence-backed first customers and draft outreach from public signals.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>1k+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:1" data-stars-repo="codex-startup-pressure-test-skill" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-startup-pressure-test-skill</span><span class="k-row__desc">Pressure-test startup ideas before building the MVP.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>900+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:2" data-stars-repo="codex-complexity-optimizer" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-complexity-optimizer</span><span class="k-row__desc">Analyze code complexity and identify safe performance improvements.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>900+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:3" data-stars-repo="local-client-prospector-skill" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">local-client-prospector-skill</span><span class="k-row__desc">Find and qualify local businesses that could use a better website.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>150+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:4" data-stars-repo="codex-bug-reproducer" href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-bug-reproducer</span><span class="k-row__desc">Reproduce bugs and prove fixes with focused regression evidence.</span></span>
+              <span class="k-row__meta"><span class="k-tag">★ <span data-stars>70+ stars</span></span></span>
+              <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          </ol>
+        </div>
+        <div class="reveal">
+          <h3>Recent releases <span>5 skills</span></h3>
+          <ol data-grow>
+            <li><a class="k-row k-grow" style="--i:0" href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">astra-ad-studio</span><span class="k-row__desc">Create finished ads, campaign variants and motion previews inside Codex.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:1" href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-code-avengers</span><span class="k-row__desc">Coordinate six review roles for evidence-backed code reviews.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:2" href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">codex-dev-team</span><span class="k-row__desc">Run a five-role collaborative engineering workflow in Codex.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:3" href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">startup-feedback-engine</span><span class="k-row__desc">Turn customer feedback into prioritized product opportunities.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+            <li><a class="k-row k-grow" style="--i:4" href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener">
+              <span class="k-row__main"><span class="k-row__name">app-store-review-guardian</span><span class="k-row__desc">Audit an iOS app before App Store submission.</span></span>
+              <span class="k-row__meta"></span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Grok Bots teaser (stage) ═══════════ -->
+  <section class="k-section" id="grok-bots" aria-labelledby="k-grok-title">
+    <div class="wrap">
+      <div class="k-teaser k-teaser--flip k-tile k-tile--blue reveal">
+        <div>
+          <p class="k-path"><b>~/</b>grok-bots<span class="k-count">2 bots</span></p>
+          <h2 class="k-h2" id="k-grok-title">My Grok Bots.</h2>
+          <p class="k-lede">Small bots I build and run inside Grok Bot. Each one does one job. The code is on GitHub.</p>
+          <div class="k-teaser__cta">
+            <a class="k-btn" href="../grok-bot/prototype.html" data-scan data-busy-text="cd ~/grok-bots"><span class="k-btn__label">Meet the bots</span><span class="k-key"><svg aria-hidden="true"><use href="#i-enter"/></svg></span></a>
+            <p class="k-teaser__fine">New ones land there first.</p>
+          </div>
+        </div>
+        <div class="k-stage reveal__art" role="group" aria-label="Limit Coach and Crankobot">
+          <p class="k-stage__head" aria-hidden="true"><span>grok bot · library</span><span>2 online</span></p>
+          <div class="k-stage__cast">
+            <figure>
+              <div class="k-actor" data-bot="limit-coach"><div class="k-actor__body"><span data-bot-slot="limit-coach"></span></div><span class="k-actor__ring"></span></div>
+              <figcaption><span class="k-who k-who--lc"><i></i>Limit Coach</span><small>Claude + Codex limits</small></figcaption>
+            </figure>
+            <figure>
+              <div class="k-actor" data-bot="crankobot"><div class="k-actor__body"><span data-bot-slot="crankobot"></span></div><span class="k-actor__ring"></span></div>
+              <figcaption><span class="k-who"><i></i>Crankobot</span><small>First Customer Finder</small></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Shared on X ═══════════ -->
+  <section class="k-section" id="shared" aria-labelledby="k-shared-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>on-x<span class="k-count">5 quote posts</span></p>
+        <h2 class="k-h2 reveal" id="k-shared-title">Shared by Greg Brockman.</h2>
+        <p class="k-lede reveal">Greg Brockman, OpenAI co-founder, quote-posted five of my Codex skill demos on X. Each card opens his original post.</p>
+      </header>
+      <div class="k-stats reveal" aria-label="Engagement across the five posts">
+        <div class="k-stat"><strong>5</strong><span>posts by Greg</span></div>
+        <div class="k-stat k-stat--lc"><strong>1.8M+</strong><span>combined views</span></div>
+        <div class="k-stat"><strong>10K+</strong><span>likes</span></div>
+      </div>
+      <div class="k-posts" data-stagger>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2084074129930772953" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Feedback Engine">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-post__text">codex for customer feedback → roadmap</span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS CUSTOMER FEEDBACK INTO A ROADMAP!</p><span class="k-mono">Startup Feedback Engine</span></span>
+          <span class="k-post__meta"><span>♡ 732</span><span>138K views</span><span class="k-post__open">View on X ↗</span></span>
+        </a>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2076686329686171666" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about First Customer Finder">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-post__text">Codex for finding customers for your startup:</span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS YOUR STARTUP'S FIRST CUSTOMERS!</p><span class="k-mono">First Customer Finder</span></span>
+          <span class="k-post__meta"><span>♡ 3.7K</span><span>692K views</span><span class="k-post__open">View on X ↗</span></span>
+        </a>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2055646916499714488" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Complexity Optimizer">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-post__text">codex for improving computational complexity</span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS COMPLEXITY HOTSPOTS IN YOUR CODEBASE!</p><span class="k-mono">Complexity Optimizer</span></span>
+          <span class="k-post__meta"><span>♡ 1.7K</span><span>331K views</span><span class="k-post__open">View on X ↗</span></span>
+        </a>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2055285857628676399" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Local Client Prospector">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-post__text">codex for finding local businesses who may need help building a website:</span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS LOCAL SEARCH INTO CLIENT LEADS!</p><span class="k-mono">Local Client Prospector</span></span>
+          <span class="k-post__meta"><span>♡ 1.5K</span><span>292K views</span><span class="k-post__open">View on X ↗</span></span>
+        </a>
+        <a class="k-post k-card reveal" href="https://x.com/gdb/status/2050972114077843772" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Pressure Test">
+          <span class="k-au"><img class="k-av" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-post__text">codex for startup ideas</span>
+          <span class="k-quote"><span class="k-au"><img class="k-av" src="../../images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-check" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL TO BRUTALLY TEST ANY STARTUP IDEA!</p><span class="k-mono">Startup Pressure Test</span></span>
+          <span class="k-post__meta"><span>♡ 2.3K</span><span>395K views</span><span class="k-post__open">View on X ↗</span></span>
+        </a>
+      </div>
+      <p class="k-note">Engagement figures checked on 23 September 2026.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ Stack ═══════════ -->
+  <section class="k-section" id="stack" aria-labelledby="k-stack-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>stack<span class="k-count">12 tools</span></p>
+        <h2 class="k-h2 reveal" id="k-stack-title">The stack.</h2>
+        <p class="k-lede reveal">The languages, frameworks and tools behind these projects.</p>
+      </header>
+      <ul class="k-stack reveal">
+        <li class="k-tech"><svg style="color:#00599C" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 6.6a8 8 0 1 0 0 10.8"/></svg><span><b>C</b><small>language</small></span></li>
+        <li class="k-tech"><svg style="color:#5382A1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h11v4a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 12h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 4.2c-1 1 1 2 0 3.4"/><path d="M12 3.8c-1 1 1 2 0 3.4"/></svg><span><b>Java</b><small>language</small></span></li>
+        <li class="k-tech"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4" fill="#F7DF1E"/><text x="12.5" y="17.4" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="9.5" font-weight="700" fill="#000" text-anchor="middle">JS</text></svg><span><b>JavaScript</b><small>language</small></span></li>
+        <li class="k-tech"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#3776AB" d="M12 2c-2.6 0-4.5.4-4.5 2.8v2.2h4.6v.6H5.2C2.8 7.6 2 9.3 2 12s.8 4.3 3.2 4.3h1.5v-2.7c0-2.3 1.9-4.2 4.2-4.2h4.4c1.9 0 3.4-1.6 3.4-3.5V4.8C18.6 2.6 16.6 2 14 2h-2Zm-2.6 1.6a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Z"/><path fill="#FFD43B" d="M12 22c2.6 0 4.5-.4 4.5-2.8v-2.2h-4.6v-.6h6.9c2.4 0 3.2-1.7 3.2-4.4s-.8-4.3-3.2-4.3h-1.5v2.7c0 2.3-1.9 4.2-4.2 4.2H8.7c-1.9 0-3.4 1.6-3.4 3.5v2.4C5.4 21.4 7.4 22 10 22h2Zm2.6-1.6a.85.85 0 1 1 0-1.7.85.85 0 0 1 0 1.7Z"/></svg><span><b>Python</b><small>language</small></span></li>
+        <li class="k-tech"><svg style="color:#149ECA" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="3.9"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(120 12 12)"/></svg><span><b>React</b><small>framework</small></span></li>
+        <li class="k-tech"><svg style="color:#47848F" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.9" transform="rotate(-30 12 12)"/><circle cx="19.4" cy="9.4" r="1.2" fill="currentColor" stroke="none"/></svg><span><b>Electron</b><small>framework</small></span></li>
+        <li class="k-tech"><svg aria-hidden="true"><use href="#i-gh"/></svg><span><b>GitHub</b><small>platform</small></span></li>
+        <li class="k-tech"><svg style="color:#007ACC" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587 18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg><span><b>VS Code</b><small>editor</small></span></li>
+        <li class="k-tech"><svg style="color:#FFA000" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5c2 3 .2 5-1 6.6C9.6 7.4 9.1 5.9 9.1 5.9 7 7.9 5.5 10.1 5.5 13.2a6.5 6.5 0 0 0 13 0c0-2.4-1.2-4.6-2.7-6.1-.6 1.6-1.5 2.3-2.1 1.1-.5-1-.3-2.9-1.7-5.7z"/></svg><span><b>Firebase</b><small>backend</small></span></li>
+        <li class="k-tech"><svg style="color:#4169E1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3"/></svg><span><b>PostgreSQL</b><small>database</small></span></li>
+        <li class="k-tech"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 3v18M16 3v18"/><path d="M5 7.5h14M5 12h14M5 16.5h14"/></svg><span><b>Railway</b><small>deploy</small></span></li>
+        <li class="k-tech"><svg style="color:#635BFF" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 7.6 18 4.8v2.7L2 10.3zM2 11.9 18 9.1v2.7L2 14.6zM2 16.2 18 13.4v2.7L2 18.9z"/></svg><span><b>Stripe</b><small>payments</small></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ Journey ═══════════ -->
+  <section class="k-section" id="journey" aria-labelledby="k-journey-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>journey<span class="k-count">2023 — present</span></p>
+        <h2 class="k-h2 reveal" id="k-journey-title">The journey so far.</h2>
+        <p class="k-lede reveal">Computer Science at Federico II, and building in public since October 2025.</p>
+      </header>
+      <ol>
+        <li class="k-entry k-grow reveal">
+          <p class="k-entry__when">2023 — present</p>
+          <div class="k-entry__what">
+            <h3>Computer Science student</h3>
+            <p class="k-entry__org">Università degli Studi di Napoli Federico II</p>
+            <ul class="k-points">
+              <li>Computer Science student at Università degli Studi di Napoli Federico II.</li>
+              <li>2024 experience at Apple Foundation.</li>
+              <li>Growing solid foundations in algorithms, systems, databases, and software engineering.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="k-entry k-grow reveal">
+          <p class="k-entry__when">october 2025 — present</p>
+          <div class="k-entry__what">
+            <h3>Indie hacker</h3>
+            <p class="k-entry__org">Building in public · <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">@Kappaemmedev</a></p>
+            <ul class="k-points">
+              <li>Started in October 2025 and changed my mindset about software.</li>
+              <li>Built the Metodo ZAC iPhone app and website.</li>
+              <li>Published Codex skills used and starred by developers around the world.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════ Coffee ═══════════ -->
+  <section class="k-section" id="coffee" aria-labelledby="k-coffee-title">
+    <div class="wrap">
+      <div class="k-coffee k-card reveal">
+        <div>
+          <p class="k-path"><b>~/</b>coffee<span class="k-count">support the build</span></p>
+          <h2 class="k-h2" id="k-coffee-title">Support the next build.</h2>
+          <p class="k-lede">I build small digital products, test them in the real world, and keep improving. If something I make is useful to you, a small donation helps me keep shipping.</p>
+          <div class="k-coffee__cta">
+            <a class="k-btn" href="https://buy.stripe.com/bJedR96H14WF5xmezS57W03" target="_blank" rel="noopener"><span class="k-btn__label">Buy me a coffee</span><span class="k-key"><svg aria-hidden="true"><use href="#i-cup"/></svg></span></a>
+            <a class="k-btn k-btn--ghost k-btn--plain" href="#products">My work</a>
+            <a class="k-btn k-btn--ghost k-btn--plain" href="mailto:misterokappa12@gmail.com">Contact me</a>
+          </div>
+          <p class="k-coffee__fine">Donations go through Stripe · <a href="coffee.html" data-scan>the coffee page →</a></p>
+        </div>
+        <ol class="k-reasons">
+          <li><span>build</span><b>I ship small products fast.</b><p>VibeDesk, ShipSlap and pocketflow started from simple ideas, real usage and fast iteration.</p></li>
+          <li><span>learn</span><b>I keep raising the bar.</b><p>I study Computer Science at Federico II and use every project to sharpen the next one.</p></li>
+          <li><span>repeat</span><b>Your support becomes momentum.</b><p>Every small donation helps cover tools, experiments and the time to keep building in public.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Contact (last; the page lifts off the floor here) ═══════════ -->
+  <section class="k-section k-contact" id="contact" aria-labelledby="k-contact-title">
+    <div class="wrap">
+      <p class="k-path"><b>~/</b>contact</p>
+      <div class="k-contact__grid">
+        <div>
+          <h2 class="reveal" id="k-contact-title">Got a project or an idea? <span class="k-dim">Let's talk.</span></h2>
+          <p class="k-lede reveal">Open to collaborations, freelance work, or just a good conversation about shipping.</p>
+        </div>
+        <ul class="k-reach reveal" data-grow>
+          <li><a class="k-grow" style="--i:0" href="mailto:misterokappa12@gmail.com"><small>email</small><span>misterokappa12@gmail.com</span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:1" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><small>x</small><span>@Kappaemmedev</span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:2" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><small>github</small><span>Kappaemme-git</span><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- ═══════════ The floor (footer) ═══════════ -->
+<footer class="k-floor" aria-label="Site footer">
+  <div class="wrap k-floor__in">
+    <div class="k-floor__top">
+      <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work.</p>
+      <nav class="k-floor__nav" aria-label="Footer">
+        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="#products">projects</a></li><li><a href="#skills">skills</a></li><li><a href="../grok-bot/prototype.html" data-scan>grok bots</a></li><li><a href="#shared">on x</a></li></ul></div>
+        <div class="k-rise-f" style="--i:2"><p>more</p><ul><li><a href="#stack">stack</a></li><li><a href="#journey">journey</a></li><li><a href="coffee.html" data-scan>coffee</a></li><li><a href="#contact">contact</a></li></ul></div>
+        <div class="k-rise-f" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li><li><a href="mailto:misterokappa12@gmail.com">email ↗</a></li></ul></div>
+      </nav>
+    </div>
+    <a class="k-mark" href="#top" aria-label="kappaemme.dev, back to the top"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
+    <p class="k-floor__status"><span>© 2026 Francesco Mistero<span class="k-floor__made"> · Made one commit at a time.</span></span><a href="#top">↑ back to top</a></p>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script>KM.boot();</script>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    if (/(^|\.)kappaemme\.dev$|\.vercel\.app$/.test(window.location.hostname)) {
+      var analyticsScript = document.createElement('script');
+      analyticsScript.defer = true;
+      analyticsScript.src = '/_vercel/insights/script.js';
+      document.head.appendChild(analyticsScript);
+    }
+  </script>
+
+</body>
+</html>

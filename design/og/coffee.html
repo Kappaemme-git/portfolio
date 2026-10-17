@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Support the next build — OG card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .card { position: relative; width: 1200px; height: 630px; overflow: hidden; padding: 57px 64px 53px; background: #F2F2EF; color: #0A0A0A; font-family: "Geist", sans-serif; }
+  .top { display: flex; justify-content: space-between; align-items: center; font: 500 20px/1 "Geist Mono", monospace; }
+  .top .path { display: flex; align-items: center; gap: 13px; }
+  .top .path::before { content: ""; width: 12px; height: 26px; background: #2474F7; }
+  .rule { height: 1px; margin-top: 34px; background: rgba(10,10,10,.24); }
+  h1 { position: absolute; top: 162px; left: 64px; width: 760px; margin: 0; font-size: 103px; line-height: .91; font-weight: 700; letter-spacing: -.068em; }
+  .accent { position: absolute; top: 162px; right: 64px; width: 262px; height: 313px; padding: 24px 23px 60px; display: flex; flex-direction: column; align-items: flex-start; border-radius: 18px; background: #0A0A0A; }
+  .accent::after { content: ""; position: absolute; right: 23px; bottom: 22px; width: 11px; height: 21px; background: #2474F7; }
+  .accent__path { color: #A5A5A5; font: 500 15px/1.2 "Geist Mono", monospace; }
+  .accent__title { margin-top: 28px; color: #FFF; font: 600 36px/1.02 "Geist", sans-serif; letter-spacing: -.055em; }
+  .accent__button { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 45px; margin-top: auto; border-radius: 999px; background: #FFF; color: #0A0A0A; font: 600 15px/1 "Geist", sans-serif; }
+  .bottom { position: absolute; left: 64px; right: 64px; bottom: 48px; display: flex; justify-content: space-between; align-items: center; padding-top: 23px; border-top: 1px solid rgba(10,10,10,.24); font: 500 19px/1 "Geist Mono", monospace; }
+  .bottom span:first-child { color: rgba(10,10,10,.62); }
+  .bottom span:last-child { color: #2474F7; }
+</style>
+</head>
+<body>
+<main class="card" aria-label="Support Kappaemme link preview">
+  <div class="top"><span class="path">~/coffee</span><span>Kappaemme</span></div>
+  <div class="rule"></div>
+  <h1>Support the<br>next build.</h1>
+  <div class="accent">
+    <span class="accent__path">~/coffee</span>
+    <span class="accent__title">Buy me a<br>coffee.</span>
+    <span class="accent__button">Donate with Stripe</span>
+  </div>
+  <div class="bottom"><span>Francesco Mistero · @Kappaemmedev</span><span>kappaemme.dev/coffee</span></div>
+</main>
+</body>
+</html>

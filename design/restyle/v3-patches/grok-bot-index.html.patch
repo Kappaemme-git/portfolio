@@ -1,0 +1,275 @@
+--- a/grok-bot/index.html
++++ b/grok-bot/index.html
+@@ -6,7 +6,7 @@
+ <title>Grok Bots — Kappaemme · Francesco Mistero</title>
+ <meta name="description" content="A small library of Grok Bots by Francesco Mistero (Kappaemme): Limit Coach watches Claude and Codex limits for LimitNotch, Crankobot finds first customers from public demand.">
+ <meta name="author" content="Francesco Mistero">
+-<meta name="theme-color" content="#000000">
++<meta name="theme-color" content="#F2F2EF">
+ <link rel="canonical" href="https://kappaemme.dev/grok-bot">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Grok Bots — Kappaemme">
+@@ -35,20 +35,27 @@
+ <style>
+   @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
+ 
+-  /* ══════════════ Boot intro (replaces the 6-layer curtain) ══════════════
+-     A short terminal log, then the scan line sweeps down and reveals the page. */
+-  .gb-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: #000; }
+-  html[data-boot] .gb-boot { display: block; animation: boot-out .8s var(--ease-io) 1s forwards; }
+-  html[data-boot] { --enter: 1.15s; }
++  /* ══════════════ Boot intro (v3): colour frames + terminal log + scan ══════════════
++     Night frame types the command, paper frame brings Limit Coach online,
++     blue frame brings Crankobot online, then the scan line sweeps down. */
++  .gb-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: var(--night); overflow: hidden; }
++  html[data-boot] .gb-boot { display: block; animation: boot-out .8s var(--ease-io) 1.25s forwards; }
++  html[data-boot] { --enter: 1.4s; }
+   @keyframes boot-out { to { transform: translateY(100%); } }
+-  .gb-boot__line { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--lc); box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); }
+-  .gb-boot__log { position: absolute; left: 0; right: 0; bottom: max(16vh, 7rem); display: grid; gap: .7rem; font: 500 clamp(.95rem, 2.6vw, 1.15rem)/1.2 var(--font-mono); color: var(--text-2); }
+-  .gb-boot__log p { opacity: 0; animation: boot-line .35s var(--ease-out) calc(.08s + var(--i) * .17s) both; }
+-  .gb-boot__log p:first-child { color: var(--text); }
+-  .gb-boot__log span { color: var(--lc-text); }
+-  .gb-boot__log i { display: inline-block; width: .55em; height: .55em; margin-right: .6rem; border-radius: 50%; background: var(--text); vertical-align: .05em; }
+-  .gb-boot__log i.lc { background: var(--lc); box-shadow: 0 0 10px var(--lc-glow); }
+-  .gb-boot__log em { font-style: normal; color: var(--live); }
++  .gb-boot__frame { position: absolute; inset: 0; display: grid; place-items: center; background: var(--f); visibility: hidden; animation: frame-on 1ms linear calc(var(--i) * .4s) forwards; }
++  @keyframes frame-on { to { visibility: visible; } }
++  .gb-boot__frame img { width: clamp(7rem, 24vw, 12rem); height: auto; animation: frame-pop .6s var(--spring) calc(var(--i) * .4s) both; }
++  @keyframes frame-pop { 0% { opacity: 0; transform: translateY(30%) scale(.5); } 35% { opacity: 1; } 100% { opacity: 1; transform: none; } }
++  .gb-boot__line { position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 2px; background: var(--lc); box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); }
++  .gb-boot__log { position: absolute; z-index: 2; left: 0; right: 0; bottom: max(12vh, 5.5rem); display: grid; gap: .7rem; font: 500 clamp(.95rem, 2.6vw, 1.15rem)/1.2 var(--font-mono);
++    animation: log-tint 1.2s step-end forwards; }
++  @keyframes log-tint { 0% { color: #F3F3EF; } 33.333% { color: #0A0A0A; } 66.667%, 100% { color: #FFFFFF; } }
++  .gb-boot__log p { opacity: 0; animation: boot-line .35s var(--ease-out) calc(.08s + var(--i) * .4s) both; }
++  .gb-boot__log span { opacity: .7; }
++  .gb-boot__log i { display: inline-block; width: .55em; height: .55em; margin-right: .6rem; border-radius: 50%; background: currentColor; vertical-align: .05em; }
++  .gb-boot__log i.lc { background: var(--lc); box-shadow: 0 0 0 1.5px currentColor; }
++  .gb-boot__log em { font-style: normal; }
++  .gb-boot__log em::before { content: ""; display: inline-block; width: .45em; height: .45em; margin-right: .45em; border-radius: 50%; background: var(--live); vertical-align: .1em; }
+   @keyframes boot-line { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+   .gb-boot.is-skip { animation: boot-skip .28s ease-out forwards !important; }
+   @keyframes boot-skip { to { opacity: 0; visibility: hidden; } }
+@@ -66,50 +73,47 @@
+   .gb-hero__fine { margin-top: 1.1rem; font: 500 .78rem/1.6 var(--font-mono); color: var(--text-3); }
+   .gb-hero__fine a { color: var(--text-2); }
+ 
+-  /* ══════════════ The stage: two large bots side by side ══════════════ */
++  /* ══════════════ The stage (dark band) + the bots' colour tiles (v3) ══════════════ */
+   .gb-stage { padding-top: 2.5rem; scroll-margin-top: var(--top-h); }
+   @media (min-width: 1024px) { .gb-stage { padding-top: 3.5rem; } }
+-  .gb-set { position: relative; padding: 3.5rem 1.1rem 1.75rem; border-radius: var(--r); background: #050505; box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+-  @media (min-width: 768px) { .gb-set { padding: 4.25rem 2.5rem 2.75rem; } }
+-  @media (min-width: 1100px) { .gb-set { padding: 4.75rem 3.75rem 3.5rem; } }
+-  .gb-set__head { position: absolute; top: 1.15rem; left: 1.1rem; right: 1.1rem; display: flex; justify-content: space-between; gap: 1rem; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+-  @media (min-width: 768px) { .gb-set__head { left: 1.5rem; right: 1.5rem; } }
++  .gb-set { position: relative; padding: 3.5rem 1rem 2rem; border-radius: var(--r-tile); background: var(--night); overflow: hidden; }
++  @media (min-width: 768px) { .gb-set { padding: 4.5rem 2.5rem 3rem; } }
++  .gb-set__head { position: absolute; top: 1.25rem; left: 1.25rem; right: 1.25rem; display: flex; justify-content: space-between; gap: 1rem; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
++  @media (min-width: 768px) { .gb-set__head { left: 1.75rem; right: 1.75rem; } }
+   .gb-set__head .k-live { color: var(--text-3); }
+-  .gb-cast { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: .75rem; row-gap: 2.5rem; grid-template-areas: "a b" "ia ia" "ib ib"; }
+-  @media (min-width: 900px) { .gb-cast { grid-template-areas: "a b" "ia ib"; column-gap: 4rem; row-gap: 3rem; } }
+-  .gb-cast > .k-actor { width: clamp(8.75rem, 36vw, 17.5rem); justify-self: center; }
+-  .gb-cast > .k-actor[data-bot="limit-coach"] { grid-area: a; }
+-  .gb-cast > .k-actor[data-bot="crankobot"] { grid-area: b; }
+-  .gb-cast > .gb-info[data-bot="limit-coach"] { grid-area: ia; }
+-  .gb-cast > .gb-info[data-bot="crankobot"] { grid-area: ib; }
+-  .gb-cast > .k-actor { z-index: 1; }
+-  .gb-horizon { grid-row: 1; grid-column: 1 / -1; align-self: end; height: 1px; margin-bottom: calc(clamp(8.75rem, 36vw, 17.5rem) * .07); background: linear-gradient(90deg, transparent, var(--line-2) 12%, var(--line-2) 88%, transparent); pointer-events: none; }
+-  @media (max-width: 899px) { .gb-info + .gb-info { padding-top: 2.5rem; border-top: 1px solid var(--line); } }
++  .gb-cast { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: .75rem; }
++  @media (min-width: 900px) { .gb-cast { column-gap: 1.25rem; } }
++  .gb-cast > .k-actor { z-index: 1; grid-row: 1; width: clamp(8.75rem, 34vw, 16.5rem); justify-self: center; }
++  .gb-cast > .k-actor:nth-child(1) { grid-column: 1; }
++  .gb-cast > .k-actor:nth-child(2) { grid-column: 2; }
++  .gb-horizon { grid-row: 1; grid-column: 1 / -1; align-self: end; height: 1px; margin-bottom: calc(clamp(8.75rem, 34vw, 16.5rem) * .07); background: linear-gradient(90deg, transparent, var(--line-2) 12%, var(--line-2) 88%, transparent); pointer-events: none; }
+ 
+-  .gb-info { display: grid; align-content: start; gap: 1rem; scroll-margin-top: calc(var(--top-h) + 1rem); }
+-  .gb-who { gap: .6rem; font-size: .86rem; }
+-  .gb-who .gbot { width: 1.6rem; flex: none; }
+-  .gb-info__who { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; }
+-  .gb-info h3 { max-width: 17ch; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 600; line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
++  /* each bot's info sits in its own colour tile, right under it */
++  .gb-tiles { display: grid; gap: 1rem; margin-top: 1rem; }
++  @media (min-width: 900px) { .gb-tiles { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
++  .gb-tile { display: flex; flex-direction: column; gap: 1.75rem; padding: 1.75rem 1.4rem 1.4rem; scroll-margin-top: calc(var(--top-h) + 1rem); }
++  @media (min-width: 768px) { .gb-tile { padding: 2.4rem 2.25rem 2rem; } }
++  .gb-info { display: grid; align-content: start; gap: 1rem; }
++  .gb-info__who { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem .75rem; font: 500 .86rem/1 var(--font-mono); }
++  .gb-chip { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; padding: .32rem; border-radius: .65rem; background: var(--night); flex: none; }
++  .gb-chip .gbot { width: 100%; }
++  .gb-info h3 { max-width: 17ch; font-size: clamp(1.9rem, 3.3vw, 2.75rem); font-weight: 600; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+   .gb-info .body { max-width: 46ch; font-size: 1.04rem; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+   .gb-handles li { position: relative; display: flex; gap: .65rem; padding: .62rem 0; font: 500 .8rem/1.35 var(--font-mono); color: var(--text-2); }
+   .gb-handles li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+   .gb-handles li span { color: var(--text-3); }
+   .gb-links { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: .4rem; }
+   .gb-proof { font: 500 .74rem/1.3 var(--font-mono); color: var(--text-3); }
+-  .gb-info[data-bot="limit-coach"] .gb-who + .k-tag { color: var(--lc-text); box-shadow: inset 0 0 0 1px rgba(36,116,247,.45); }
+ 
+-  /* examples (the Grok Bot app panels, now as a quiet row under the stage) */
+-  .gb-examples { display: grid; gap: 1rem; margin-top: 1rem; }
+-  @media (min-width: 900px) { .gb-examples { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+-  .gb-ex { padding: 1.25rem; }
++  /* the Grok Bot app panel inside each tile (dark object, as in the old tiles) */
++  .gb-ex { margin-top: auto; padding: 1.1rem; border-radius: 18px; background: var(--night); box-shadow: 0 30px 50px -32px rgba(10,10,10,.6); }
+   .gb-ex__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; font: 500 .74rem/1 var(--font-mono); color: var(--text-3); }
+-  .gb-ex__head .k-who { font-size: .76rem; }
+   /* LimitNotch: the notch is the bot's face */
+-  .gb-screen { position: relative; height: 12rem; border-radius: 10px; overflow: hidden; background: #151515; box-shadow: inset 0 0 0 1px var(--line); }
++  .gb-screen { position: relative; height: 12rem; border-radius: 10px; overflow: hidden; background: #1A1A1A; box-shadow: inset 0 0 0 1px var(--line); }
+   .gb-screen__bar { position: absolute; inset: 0 0 auto; height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 .8rem; font: 500 .62rem/1 var(--font-mono); color: var(--text-3); }
+   .gb-notch { position: absolute; top: 0; left: 50%; width: 15rem; height: 8.6rem; margin-left: -7.5rem; border-radius: 0 0 1.5rem 1.5rem; background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,.04); }
+   .gb-notch__eyes { position: absolute; top: .75rem; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 5.2rem; }
++  @media (max-width: 479px) { .gb-notch { width: 12rem; margin-left: -6rem; height: 8rem; } .gb-notch__eyes { padding: 0 3.8rem; } .gb-notch__value { font-size: 2rem; } }
+   .gb-notch__eye { width: .5rem; height: 1rem; border-radius: .3rem; background: var(--lc); box-shadow: 0 0 8px 1px var(--lc-glow); }
+   @media (prefers-reduced-motion: no-preference) { .gb-notch__eye { animation: bot-blink 4.8s infinite; } }
+   .gb-notch__read { position: absolute; inset: 2.5rem 0 0; display: flex; flex-direction: column; align-items: center; }
+@@ -123,19 +127,20 @@
+     html.js .is-in .gb-notch__read { opacity: 1; transform: none; }
+   }
+   /* Crankobot: files in its Grok Bot library */
+-  .gb-files { border-radius: 10px; background: var(--raise-2); padding: .3rem; }
++  .gb-files { border-radius: 10px; background: var(--raise); padding: .3rem; }
+   .gb-file { display: flex; align-items: center; gap: .7rem; padding: .62rem .7rem; font: 500 .8rem/1 var(--font-mono); color: var(--text-2); }
+   .gb-file + .gb-file { box-shadow: 0 -1px 0 var(--line); }
+   .gb-file svg { width: 15px; height: 15px; color: var(--text-3); flex: none; }
+-  .gb-msg { margin: .85rem 0 0 auto; width: fit-content; max-width: 85%; padding: .6rem .85rem; border-radius: 12px 12px 4px 12px; background: var(--text); color: #000; font-size: .9rem; font-weight: 500; }
++  .gb-msg { margin: .85rem 0 0 auto; width: fit-content; max-width: 85%; padding: .6rem .85rem; border-radius: 12px 12px 4px 12px; background: var(--text); color: var(--bg); font-size: .9rem; font-weight: 500; }
+   .gb-typing { display: flex; gap: 4px; margin: .7rem 0 0 .3rem; }
+   .gb-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); }
+   @media (prefers-reduced-motion: no-preference) { .gb-typing i { animation: typing 1.2s ease-in-out infinite; } .gb-typing i:nth-child(2) { animation-delay: .15s; } .gb-typing i:nth-child(3) { animation-delay: .3s; } }
+   @keyframes typing { 0%, 60%, 100% { transform: none; opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+ 
+   /* ══════════════ Under the hood ══════════════ */
+-  .gb-hood { display: grid; gap: 2.5rem; }
+-  @media (min-width: 1024px) { .gb-hood { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; align-items: end; } }
++  .gb-hood { display: grid; gap: 2.5rem; padding: 2rem 1.4rem 1.5rem; }
++  @media (min-width: 768px) { .gb-hood { padding: 3rem 2.5rem 2.5rem; } }
++  @media (min-width: 1024px) { .gb-hood { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; align-items: end; padding: 4rem; } }
+   .gb-hood .k-h2 { margin-top: 1.4rem; }
+   .gb-hood .k-lede { margin-top: 1.1rem; }
+   .gb-hood .k-btn { margin-top: 1.9rem; }
+@@ -178,6 +183,9 @@
+ 
+ <!-- ═══════════ Boot intro ═══════════ -->
+ <div class="gb-boot" aria-hidden="true">
++  <div class="gb-boot__frame" style="--i:0;--f:#0A0A0A"></div>
++  <div class="gb-boot__frame" style="--i:1;--f:#F2F2EF"><img src="assets/limit-coach.svg" alt="" width="100" height="100"></div>
++  <div class="gb-boot__frame" style="--i:2;--f:#2474F7"><img src="assets/crankobot.svg" alt="" width="100" height="100"></div>
+   <div class="gb-boot__line"></div>
+   <div class="wrap gb-boot__log">
+     <p style="--i:0"><span>$</span> cd ~/grok-bots</p>
+@@ -192,11 +200,11 @@
+ <!-- ═══════════ Top bar (sub-page) ═══════════ -->
+ <header class="k-top k-top--sub">
+   <div class="wrap k-top__in">
+-    <a class="k-brand" href="../index.html" data-scan aria-label="Kappaemme home"><svg class="k-brand__back" aria-hidden="true"><use href="#i-back"/></svg><span class="k-brand__mark"><img src="../images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
++    <a class="k-brand" href="../" data-scan aria-label="Kappaemme home"><svg class="k-brand__back" aria-hidden="true"><use href="#i-back"/></svg><span class="k-brand__mark"><img src="../images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+     <nav class="k-links" aria-label="Site">
+-      <a href="../index.html" data-scan><span class="t">home</span><span class="s">home</span></a>
++      <a href="../" data-scan><span class="t">home</span><span class="s">home</span></a>
+       <a href="#library" aria-current="page"><span class="t">grok bots</span><span class="s">bots</span></a>
+-      <a href="../coffee/index.html" data-scan><span class="t">coffee</span><span class="s">coffee</span></a>
++      <a href="../coffee/" data-scan><span class="t">coffee</span><span class="s">coffee</span></a>
+       <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="t">on x</span><span class="s">x</span><svg class="ic" aria-hidden="true"><use href="#i-ne"/></svg></a>
+       <span class="k-caret" aria-hidden="true"></span>
+     </nav>
+@@ -229,14 +237,14 @@
+         <p class="gb-set__head" aria-hidden="true"><span>grok bot · library</span><span class="k-live"><i></i><span id="gb-hint">2 online</span></span></p>
+         <div class="gb-cast" id="gb-cast"><!-- rendered from GROK_BOTS --></div>
+       </div>
+-      <div class="gb-examples" id="gb-examples" data-stagger><!-- rendered from GROK_BOTS --></div>
++      <div class="gb-tiles" id="gb-tiles" data-stagger><!-- rendered from GROK_BOTS: one colour tile per bot --></div>
+     </div>
+   </section>
+ 
+   <!-- ═══════════ Under the hood ═══════════ -->
+   <section class="k-section" id="hood" aria-labelledby="gb-runs-title">
+     <div class="wrap">
+-      <div class="gb-hood">
++      <div class="gb-hood k-tile k-tile--panel reveal">
+         <div>
+           <p class="k-path"><b>~/</b>under-the-hood</p>
+           <h2 class="k-h2 reveal" id="gb-runs-title">They run on Grok Bot.</h2>
+@@ -266,7 +274,7 @@
+           </ol>
+           <div class="gb-close__cta reveal">
+             <a class="k-btn" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="k-btn__label">Follow on X</span><span class="k-key"><svg aria-hidden="true"><use href="#i-x"/></svg></span></a>
+-            <p class="gb-close__fine">More of my work at <a href="https://kappaemme.dev/">kappaemme.dev</a>.</p>
++            <p class="gb-close__fine">More of my work at <a href="../" data-scan>kappaemme.dev</a>.</p>
+           </div>
+         </div>
+       </div>
+@@ -282,12 +290,12 @@
+     <div class="k-floor__top">
+       <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work. Everything else I make is on kappaemme.dev.</p>
+       <nav class="k-floor__nav" aria-label="Footer">
+-        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="../index.html" data-scan>home</a></li><li><a href="../index.html#products" data-scan>projects</a></li><li><a href="../index.html#skills" data-scan>skills</a></li><li><a href="../coffee/index.html" data-scan>coffee</a></li></ul></div>
++        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="../" data-scan>home</a></li><li><a href="../#products" data-scan>projects</a></li><li><a href="../#skills" data-scan>skills</a></li><li><a href="../coffee/" data-scan>coffee</a></li></ul></div>
+         <div class="k-rise-f" style="--i:2"><p>bots</p><ul id="gb-floor-bots"><li><a href="#library">grok bots</a></li></ul></div>
+         <div class="k-rise-f" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li><li><a href="https://x.ai/bot" target="_blank" rel="noopener">grok bot ↗</a></li></ul></div>
+       </nav>
+     </div>
+-    <a class="k-mark" href="https://kappaemme.dev/" aria-label="kappaemme.dev, back to the main site"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
++    <a class="k-mark" href="../" data-scan aria-label="kappaemme.dev, back to the main site"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
+     <p class="k-floor__status"><span>© 2026 Francesco Mistero<span class="k-floor__made"> · Made one commit at a time.</span></span><a href="#top">↑ back to top</a></p>
+   </div>
+ </footer>
+@@ -314,25 +322,15 @@
+     return '<li><a href="' + esc(b.links[0].url) + '" target="_blank" rel="noopener">' + esc(b.projectName.toLowerCase()) + " ↗</a></li>";
+   }).join(""));
+ 
+-  /* ── the stage: actors + info, side by side ── */
+-  function who(b) { return '<span class="k-who' + (b.id === "limit-coach" ? " k-who--lc" : "") + '"><i></i>' + esc(b.name) + "</span>"; }
+-  function whoMini(b) { return '<span class="k-who gb-who"><span data-bot-slot="' + b.id + '" data-class="gb-mini"></span>' + esc(b.name) + "</span>"; }
++  /* ── the stage: the two actors on the dark band ── */
+   $("#gb-cast").innerHTML = BOTS.map(function (b) {
+-    return '<div class="k-actor" data-bot="' + b.id + '" data-lift="-0.05"' + (b.id === "limit-coach" ? "" : "") + '>' +
++    return '<div class="k-actor" data-bot="' + b.id + '" data-lift="-0.05">' +
+         '<div class="k-actor__body" role="button" tabindex="-1" aria-label="' + esc(b.name) + '"><span data-bot-slot="' + b.id + '"></span></div><span class="k-actor__ring"></span></div>';
+-  }).join("") + '<span class="gb-horizon" aria-hidden="true"></span>' + BOTS.map(function (b) {
+-    return '<article class="gb-info" id="bot-' + b.id + '" data-bot="' + b.id + '" aria-labelledby="t-' + b.id + '">' +
+-      '<p class="gb-info__who">' + whoMini(b) + '<span class="k-tag">' + esc(b.subtitle) + "</span></p>" +
+-      '<h3 id="t-' + b.id + '">' + esc(b.headline) + "</h3>" +
+-      '<p class="body">' + esc(b.body) + "</p>" +
+-      '<ul class="gb-handles" data-grow>' + b.handles.map(function (h, k) { return '<li class="k-grow" style="--i:' + k + '"><span>▸</span>' + esc(h) + "</li>"; }).join("") + "</ul>" +
+-      '<div class="gb-links">' + b.links.map(function (l) {
+-        return '<a class="k-btn k-btn--ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener"><span class="k-btn__label">' + esc(l.label) + '</span><span class="k-key">' + ARROW + "</span></a>";
+-      }).join("") + (b.proof ? '<span class="gb-proof">' + esc(b.proof) + "</span>" : "") + "</div></article>";
+-  }).join("");
++  }).join("") + '<span class="gb-horizon" aria-hidden="true"></span>';
+ 
+-  /* ── examples: the Grok Bot app panels (values from the READMEs, tagged example) ── */
+-  $("#gb-examples").innerHTML = BOTS.map(function (b) {
++  /* ── one colour tile per bot, in the same order as the stage (data: tile = blue | light | dark) ── */
++  var TILE = { blue: "k-tile--blue", light: "k-tile--white", dark: "k-tile--panel" };
++  function example(b) {
+     var m = b.mock || {}, body = "";
+     if (m.type === "notch") {
+       body = '<div class="gb-screen" data-grow><div class="gb-screen__bar"><span>Finder</span><span>9:41</span></div>' +
+@@ -342,9 +340,21 @@
+     } else if (m.type === "files") {
+       body = '<div class="gb-files">' + m.files.map(function (f) { return '<div class="gb-file">' + FILE + "<span>" + esc(f) + "</span></div>"; }).join("") + "</div>" +
+         '<p class="gb-msg">' + esc(m.message) + '</p><div class="gb-typing" aria-hidden="true"><i></i><i></i><i></i></div>';
+-    }
++    } else return "";
+     var label = m.type === "notch" ? "LimitNotch, in the MacBook notch" : "Library";
+-    return '<div class="gb-ex k-card reveal"><p class="gb-ex__head">' + who(b) + "<span>" + esc(label) + '</span><span class="k-tag">example</span></p>' + body + "</div>";
++    return '<div class="gb-ex k-dark"><p class="gb-ex__head"><span>' + esc(label) + '</span><span class="k-tag">example</span></p>' + body + "</div>";
++  }
++  $("#gb-tiles").innerHTML = BOTS.map(function (b) {
++    return '<article class="gb-tile k-tile ' + (TILE[b.tile] || "k-tile--white") + ' reveal" id="bot-' + b.id + '" data-bot="' + b.id + '" aria-labelledby="t-' + b.id + '">' +
++      '<div class="gb-info">' +
++        '<p class="gb-info__who"><span class="gb-chip"><span data-bot-slot="' + b.id + '"></span></span>' + esc(b.name) + '<span class="k-tag">' + esc(b.subtitle) + "</span></p>" +
++        '<h3 id="t-' + b.id + '">' + esc(b.headline) + "</h3>" +
++        '<p class="body">' + esc(b.body) + "</p>" +
++        '<ul class="gb-handles" data-grow>' + b.handles.map(function (h, k) { return '<li class="k-grow" style="--i:' + k + '"><span>▸</span>' + esc(h) + "</li>"; }).join("") + "</ul>" +
++        '<div class="gb-links">' + b.links.map(function (l) {
++          return '<a class="k-btn" href="' + esc(l.url) + '" target="_blank" rel="noopener"><span class="k-btn__label">' + esc(l.label) + '</span><span class="k-key">' + ARROW + "</span></a>";
++        }).join("") + (b.proof ? '<span class="gb-proof">' + esc(b.proof) + "</span>" : "") + "</div>" +
++      "</div>" + example(b) + "</article>";
+   }).join("");
+ 
+   /* ── under the hood: one row per bot → its public repository ── */

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -8 100 112" width="100" height="112" role="img" aria-label="Crankobot">
+  <title>Crankobot</title>
+  <style>
+    .bob, .blink { transform-box: fill-box; transform-origin: 50% 50%; }
+    @media (prefers-reduced-motion: no-preference) {
+      .bob { animation: bob 3.4s ease-in-out infinite; }
+      .blink { animation: blink 5.6s infinite; }
+    }
+    @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6%); } }
+    @keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.12); } }
+  </style>
+  <defs><clipPath id="cb-body"><path d="M50 8.5C76.5 8.5 96.5 27.5 96.5 51.5C96.5 75.5 77 94 50.5 94C24 94 3.5 76 3.5 52C3.5 28 23.5 8.5 50 8.5Z"/></clipPath></defs>
+  <g class="bob" style="animation-delay:-1.1s">
+    <path d="M50 8.5C76.5 8.5 96.5 27.5 96.5 51.5C96.5 75.5 77 94 50.5 94C24 94 3.5 76 3.5 52C3.5 28 23.5 8.5 50 8.5Z" fill="#FFFFFF"/>
+    <g clip-path="url(#cb-body)"><g class="blink" fill="#050505" style="animation-delay:1.3s">
+      <rect x="54.5" y="28" width="9" height="20" rx="4.5" transform="rotate(-22 59 38)"/>
+      <rect x="75.25" y="23" width="6.5" height="19" rx="3.25" transform="rotate(-22 78.5 32.5)"/>
+    </g></g>
+  </g>
+</svg>

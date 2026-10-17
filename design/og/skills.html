@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Codex skills — OG card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .card { position: relative; width: 1200px; height: 630px; overflow: hidden; padding: 57px 64px 53px; background: #F2F2EF; color: #0A0A0A; font-family: "Geist", sans-serif; }
+  .top { display: flex; justify-content: space-between; align-items: center; font: 500 20px/1 "Geist Mono", monospace; }
+  .top .path { display: flex; align-items: center; gap: 13px; }
+  .top .path::before { content: ""; width: 12px; height: 26px; background: #2474F7; }
+  .rule { height: 1px; margin-top: 34px; background: rgba(10,10,10,.24); }
+  h1 { position: absolute; top: 175px; left: 64px; width: 455px; margin: 0; font-size: 109px; line-height: .9; font-weight: 700; letter-spacing: -.07em; }
+  .terminal { position: absolute; top: 153px; right: 64px; width: 585px; height: 338px; padding: 29px 32px; border-radius: 18px; background: #0A0A0A; color: #F2F2EF; font-family: "Geist Mono", monospace; }
+  .terminal::before { content: ""; position: absolute; top: 0; left: 32px; width: 50px; height: 4px; background: #2474F7; }
+  .prompt { margin: 0 0 29px; font-size: 24px; line-height: 1.25; font-weight: 500; white-space: nowrap; }
+  .prompt .blue { color: #6AA1FF; }
+  .prompt .cursor { display: inline-block; width: 11px; height: 22px; margin-left: 6px; vertical-align: -4px; background: #2474F7; }
+  .command { margin: 0 0 12px; font-size: 16px; line-height: 1.25; color: #D9D9D6; }
+  .command .blue { color: #6AA1FF; }
+  .skills { display: grid; gap: 15px; margin: 0; padding: 0; list-style: none; font-size: 17px; line-height: 1.25; color: #D9D9D6; }
+  .skills li { display: flex; align-items: center; gap: 13px; white-space: nowrap; }
+  .skills li::before { content: ""; width: 7px; height: 7px; flex: none; background: #2474F7; }
+  .terminal__footer { position: absolute; left: 32px; bottom: 26px; margin: 0; color: #858582; font-size: 15px; line-height: 1.2; }
+  .bottom { position: absolute; left: 64px; right: 64px; bottom: 48px; display: flex; justify-content: space-between; align-items: center; padding-top: 23px; border-top: 1px solid rgba(10,10,10,.24); font: 500 19px/1 "Geist Mono", monospace; }
+  .bottom span:first-child { color: rgba(10,10,10,.62); }
+  .bottom span:last-child { color: #2474F7; }
+</style>
+</head>
+<body>
+<main class="card" aria-label="Codex skills link preview">
+  <div class="top"><span class="path">~/skills</span><span>Kappaemme</span></div>
+  <div class="rule"></div>
+  <h1>Codex<br>skills.</h1>
+  <div class="terminal">
+    <p class="prompt"><span class="blue">$</span>use-Kappaemme's skill<span class="cursor" aria-hidden="true"></span></p>
+    <p class="command"><span class="blue">$</span> ls</p>
+    <ul class="skills">
+      <li>codex-first-customer-finder-skill</li>
+      <li>codex-complexity-optimizer</li>
+      <li>astra-ad-studio</li>
+      <li>app-store-review-guardian</li>
+    </ul>
+    <p class="terminal__footer">built for Codex</p>
+  </div>
+  <div class="bottom"><span>Open-source skills for Codex</span><span>kappaemme.dev/skills</span></div>
+</main>
+</body>
+</html>
