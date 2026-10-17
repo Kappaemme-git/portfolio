@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Codex skills — Kappaemme · Francesco Mistero</title>
+<meta name="description" content="Open-source Codex skills by Francesco Mistero (Kappaemme): the most starred skills and the recent releases, with live star counts from GitHub.">
+<meta name="author" content="Francesco Mistero">
+<meta name="theme-color" content="#F2F2EF">
+<link rel="canonical" href="https://kappaemme.dev/skills">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Codex skills — Kappaemme">
+<meta property="og:description" content="Codex skills, open source. Recent releases and the open-source skills developers have starred most.">
+<meta property="og:url" content="https://kappaemme.dev/skills">
+<link rel="icon" type="image/svg+xml" href="../images/kappaemme-favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<!--
+  Codex skills; shared light system in ../assets/. Skill content is static HTML (crawlable, works without JS);
+  star counts come from KM.loadStars() with the same fallbacks as the home.
+-->
+<script>
+  /* Boot once per session, or whenever we arrive through the scan transition (same rule as /grok-bot). */
+  (function () {
+    var d = document.documentElement; d.classList.add("js");
+    try {
+      var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var viaScan = sessionStorage.getItem("k-scan"); sessionStorage.removeItem("k-scan");
+      if (!reduce && (viaScan || !sessionStorage.getItem("ksk-booted"))) { d.setAttribute("data-boot", ""); sessionStorage.setItem("ksk-booted", "1"); }
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
+
+  /* ══════════════ Boot intro: colour frames + `ls` log + scan (pattern from /grok-bot) ══════════════
+     Paper frame types the command with a blue caret, white frame pops the first skill card,
+     blue frame fans the deck, while `ls` brings every skill online. Then the scan line sweeps down. */
+  .sk-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: var(--paper); overflow: hidden; }
+  html[data-boot] .sk-boot { display: block; animation: boot-out .8s var(--ease-io) 1.5s forwards; }
+  html[data-boot] { --enter: 1.65s; }
+  @keyframes boot-out { to { transform: translateY(100%); } }
+  .sk-boot__frame { position: absolute; inset: 0; background: var(--f); visibility: hidden; animation: frame-on 1ms linear calc(var(--i) * .4s) forwards; }
+  @keyframes frame-on { to { visibility: visible; } }
+  .sk-boot__line { position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 2px; background: var(--lc); box-shadow: 0 1px 0 var(--card), 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); }
+
+  /* centre art: a caret, then a deck of skill cards (the page's tiles in miniature) */
+  .sk-deck { position: absolute; left: 50%; top: 42%; width: clamp(5.6rem, 15vw, 8.5rem); aspect-ratio: 3 / 4; translate: -50% -50%; }
+  @media (max-width: 767px) { .sk-deck { top: 27%; } }
+  @media (max-height: 600px) { .sk-deck { display: none; } }
+  .sk-deck__caret { position: absolute; left: 50%; top: 50%; width: 32%; height: 40%; translate: -50% -50%; background: var(--lc); box-shadow: 0 0 28px var(--lc-glow); animation: caret-blink .5s steps(1) infinite; }
+  .sk-card { --r: 0deg; --x: 0%; position: absolute; inset: 0; display: flex; flex-direction: column; gap: 9%; padding: 12% 11%; border-radius: clamp(12px, 1.6vw, 18px); background: var(--c); color: var(--k);
+    transform: translateX(var(--x)) rotate(var(--r)); animation: card-pop .6s var(--spring) var(--at) both; }
+  .sk-card i { display: block; height: 7%; border-radius: 99px; background: currentColor; }
+  .sk-card i:nth-child(1) { width: 34%; height: 9%; margin-bottom: auto; }
+  .sk-card i:nth-child(2) { width: 88%; height: 10%; }
+  .sk-card i:nth-child(3) { width: 70%; opacity: .45; }
+  .sk-card i:nth-child(4) { width: 52%; opacity: .45; }
+  .sk-card--blue  { --c: var(--lc); --k: var(--ink); }
+  .sk-card--white { --c: var(--card); --k: var(--ink); box-shadow: inset 0 0 0 1px var(--line-2); }
+  .sk-card--ink   { --c: var(--ink); --k: #F3F3EF; }
+  .sk-boot__frame .sk-card--blue.is-held { animation: none; box-shadow: 0 0 0 1.5px var(--ink), 0 24px 50px -24px rgba(10,10,10,.5); z-index: 2; }
+  .sk-card--l { --x: -58%; --r: -9deg; }
+  .sk-card--r { --x: 58%; --r: 9deg; }
+  @keyframes card-pop { 0% { opacity: 0; transform: translate(0, 30%) scale(.5); } 35% { opacity: 1; } 100% { opacity: 1; transform: translateX(var(--x)) rotate(var(--r)); } }
+
+  /* the log: `cd`, `ls`, then each skill comes online; "built for Codex" is plain text */
+  .sk-boot__log { position: absolute; z-index: 2; left: 0; right: 0; bottom: max(10vh, 4.5rem); display: grid; gap: .7rem; font: 500 clamp(.8rem, 2.6vw, 1.05rem)/1.2 var(--font-mono); color: var(--ink); }
+  .sk-boot__log > p, .sk-boot__ls li { opacity: 0; animation: boot-line .35s var(--ease-out) var(--at) both; }
+  .sk-boot__ls { display: grid; gap: .4rem 2.5rem; margin: .1rem 0 .15rem; }
+  @media (min-width: 768px) { .sk-boot__ls { grid-template-columns: max-content max-content; grid-auto-flow: column; grid-template-rows: repeat(5, auto); } }
+  .sk-boot__ls li { display: flex; align-items: center; gap: .6rem; white-space: nowrap; }
+  .sk-boot__ls li::before { content: ""; width: .45em; height: .45em; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 1px currentColor; flex: none; }
+  .sk-boot__done { color: var(--ink); }
+  .sk-boot__done b { font-weight: 500; }
+  @keyframes boot-line { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .sk-boot.is-skip { animation: boot-skip .28s ease-out forwards !important; }
+  @keyframes boot-skip { to { opacity: 0; visibility: hidden; } }
+
+  /* ══════════════ Hero (same two-column head as /grok-bot) ══════════════ */
+  .sk-hero { padding-top: calc(var(--top-h) + 3rem); }
+  @media (min-width: 1024px) { .sk-hero { padding-top: calc(var(--top-h) + 4.25rem); } }
+  .sk-hero__grid { display: grid; gap: 1.5rem; }
+  @media (min-width: 1024px) { .sk-hero__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; align-items: end; } .sk-hero__grid > :first-child { grid-column: 1 / span 7; } .sk-hero__grid > :last-child { grid-column: 8 / -1; padding-bottom: .5rem; } }
+  .sk-hero h1 { margin-top: 1.4rem; font-size: clamp(3.3rem, 14vw, 7.5rem); font-weight: 600; line-height: .93; letter-spacing: -.058em; }
+  @media (min-width: 640px) { .sk-hero h1 { font-size: clamp(4.6rem, 9vw, 7.5rem); } }
+  .sk-hero__sub { font-size: 1.1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .sk-hero__sub span { display: block; }
+  @media (min-width: 768px) { .sk-hero__sub { font-size: 1.24rem; } }
+  .sk-hero__fine { margin-top: 1.1rem; font: 500 .78rem/1.6 var(--font-mono); color: var(--text-3); }
+  .sk-hero__fine a { color: var(--text-2); }
+
+  /* ══════════════ Groups (most starred / recent releases) ══════════════ */
+  .sk-group { scroll-margin-top: var(--top-h); }
+  .sk-group--first { padding-top: 4rem; }
+  @media (min-width: 1024px) { .sk-group--first { padding-top: 5.5rem; } }
+
+  /* bento: 1 col → 2 cols (768) → 12-col layouts (1024) */
+  .sk-bento { display: grid; gap: 1rem; }
+  @media (min-width: 768px) { .sk-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; } }
+  @media (min-width: 768px) and (max-width: 1023px) { .sk-bento > .sk-feature, .sk-bento > :last-child:nth-child(odd) { grid-column: 1 / -1; } }
+  @media (min-width: 1024px) {
+    .sk-bento { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .sk-bento--top > :nth-child(1) { grid-column: 1 / span 7; grid-row: span 2; }
+    .sk-bento--top > :nth-child(2), .sk-bento--top > :nth-child(3) { grid-column: 8 / -1; }
+    .sk-bento--top > :nth-child(4) { grid-column: 1 / span 6; }
+    .sk-bento--top > :nth-child(5) { grid-column: 7 / -1; }
+    .sk-bento--new > :nth-child(-n+3) { grid-column: span 4; }
+    .sk-bento--new > :nth-child(n+4) { grid-column: span 6; }
+  }
+
+  /* a skill tile: the whole tile is the GitHub link */
+  .sk-tile { display: flex; flex-direction: column; gap: .55rem; min-height: 15.5rem; padding: 1.4rem 1.4rem 1.55rem; color: var(--text); text-decoration: none; transition: transform .35s var(--ease-out), box-shadow .35s; }
+  @media (min-width: 768px) { .sk-tile { min-height: 17.5rem; padding: 1.75rem 1.8rem 1.9rem; } }
+  .sk-tile:hover { transform: translateY(-3px); }
+  .sk-tile.k-tile--white:hover { box-shadow: inset 0 0 0 1px var(--line-2), 0 18px 40px -26px rgba(10,10,10,.35); }
+  .sk-tile > .k-go { position: absolute; top: 1.1rem; right: 1.1rem; }
+  @media (min-width: 768px) { .sk-tile > .k-go { top: 1.4rem; right: 1.4rem; } }
+  .sk-tile__path { margin-top: auto; padding-top: 2.25rem; font: 500 .74rem/1 var(--font-mono); color: var(--text-3); }
+  .sk-tile__name { font-size: clamp(1.5rem, 2.25vw, 1.9rem); font-weight: 600; line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; overflow-wrap: anywhere; }
+  @media (max-width: 767px) { .sk-tile { min-height: 0; } .sk-tile .sk-tile__path { padding-top: 2.6rem; } .sk-tile .sk-stars + .sk-tile__path { padding-top: 1.75rem; } }
+  @media (min-width: 768px) { .sk-bento--new .sk-tile { min-height: 14.5rem; } }
+  .sk-tile__desc { max-width: 40ch; font-size: 1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+
+  /* star chip: a small black accent (white on the black tile) */
+  .sk-stars { align-self: flex-start; display: inline-flex; align-items: center; gap: .4rem; padding: .44rem .68rem; border-radius: 999px; background: var(--ink); color: #fff; font: 600 .74rem/1 var(--font-mono); white-space: nowrap; }
+  .sk-stars svg { width: 12px; height: 12px; }
+  .k-tile--night .sk-stars { background: #F3F3EF; color: var(--ink); }
+
+  /* the featured skill: big live star count on the blue tile */
+  .sk-feature { display: flex; flex-direction: column; justify-content: space-between; gap: 2.5rem; min-height: 26rem; padding: 1.6rem 1.4rem 1.5rem; }
+  @media (min-width: 768px) { .sk-feature { padding: 2.4rem 2.25rem 2.1rem; } }
+  @media (min-width: 1024px) { .sk-feature { min-height: 0; } }
+  .sk-feature__count { display: grid; gap: 1.1rem; }
+  .sk-feature__num { display: flex; align-items: flex-start; gap: .12em; font-size: clamp(4.75rem, 11vw, 9.5rem); font-weight: 600; line-height: .82; letter-spacing: -.065em; }
+  .sk-feature__num svg { width: .3em; height: .3em; margin-top: .02em; flex: none; }
+  .sk-feature__cap { display: flex; align-items: center; gap: .55rem; margin-top: .4rem; font: 500 .8rem/1 var(--font-mono); }
+  .sk-feature__cap .k-tag { color: var(--ink); }
+  .sk-feature__body { display: grid; gap: .65rem; }
+  .sk-feature .sk-tile__path { margin: 0; padding: 0; }
+  .sk-feature h3 { max-width: 15ch; font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 600; line-height: 1; letter-spacing: -.05em; text-wrap: balance; }
+  .sk-feature .sk-tile__desc { max-width: 38ch; font-size: 1.06rem; color: var(--ink); }
+  @media (min-width: 768px) { .sk-feature .sk-tile__desc { font-size: 1.16rem; } }
+  .sk-feature__cta { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.25rem; margin-top: 1.1rem; }
+  .sk-feature__also { font: 500 .78rem/1.4 var(--font-mono); }
+  .sk-feature__also a { color: var(--ink); }
+
+  .sk-note { margin-top: 1.25rem; font: 500 .78rem/1.5 var(--font-mono); color: var(--text-3); }
+
+  /* ══════════════ Closing ══════════════ */
+  .sk-close { padding-bottom: 6rem; }
+  @media (min-width: 768px) { .sk-close { padding-bottom: 8rem; } }
+  .sk-close__grid { display: grid; gap: 2.5rem; margin-top: 1.5rem; }
+  @media (min-width: 1024px) { .sk-close__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; align-items: end; margin-top: 2rem; } }
+  .sk-close h2 { max-width: 10ch; font-size: clamp(3rem, 7.4vw, 6rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; text-wrap: balance; }
+  .sk-close .k-lede { margin-top: 1.6rem; max-width: 36ch; }
+  /* reach rows: same as /coffee's .k-reach */
+  .k-reach li:last-child a { box-shadow: 0 1px 0 var(--line); }
+  .k-reach a { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .3rem 1rem; padding: 1.3rem 0; text-decoration: none; }
+  .k-reach a::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: 0 50%; }
+  .k-reach small { grid-column: 1; font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .k-reach span { grid-column: 1; font-size: clamp(1.3rem, 2.5vw, 1.9rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
+  .k-reach em { grid-column: 1; font: 500 .84rem/1.3 var(--font-mono); font-style: normal; color: var(--text-2); overflow-wrap: anywhere; }
+  .k-reach .k-go { grid-column: 2; grid-row: 1 / span 3; }
+
+  @media (prefers-reduced-motion: reduce) { .sk-boot { display: none !important; } .sk-tile:hover { transform: none; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.76.12 3.05.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.2.67.79.55C20.22 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.6 2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.2l-5.8 3.2 1.2-6.5L2.6 9.4l6.5-.8z"/></symbol>
+</svg>
+
+<!-- ═══════════ Boot intro ═══════════ -->
+<div class="sk-boot" aria-hidden="true">
+  <div class="sk-boot__frame" style="--i:0;--f:#F2F2EF"><div class="sk-deck"><span class="sk-deck__caret"></span></div></div>
+  <div class="sk-boot__frame" style="--i:1;--f:#FFFFFF"><div class="sk-deck"><span class="sk-card sk-card--blue" style="--at:.4s"><i></i><i></i><i></i><i></i></span></div></div>
+  <div class="sk-boot__frame" style="--i:2;--f:#2474F7"><div class="sk-deck">
+    <span class="sk-card sk-card--white sk-card--l" style="--at:.8s"><i></i><i></i><i></i><i></i></span>
+    <span class="sk-card sk-card--ink sk-card--r" style="--at:.9s"><i></i><i></i><i></i><i></i></span>
+    <span class="sk-card sk-card--blue is-held"><i></i><i></i><i></i><i></i></span>
+  </div></div>
+  <div class="sk-boot__line"></div>
+  <div class="wrap sk-boot__log">
+    <p style="--at:.06s">$ cd ~/codex-skills</p>
+    <p style="--at:.34s">$ ls</p>
+    <ul class="sk-boot__ls">
+      <li style="--at:.48s">codex-first-customer-finder-skill</li>
+      <li style="--at:.53s">codex-startup-pressure-test-skill</li>
+      <li style="--at:.58s">codex-complexity-optimizer</li>
+      <li style="--at:.63s">local-client-prospector-skill</li>
+      <li style="--at:.68s">codex-bug-reproducer</li>
+      <li style="--at:.73s">astra-ad-studio</li>
+      <li style="--at:.78s">codex-code-avengers</li>
+      <li style="--at:.83s">codex-dev-team</li>
+      <li style="--at:.88s">startup-feedback-engine</li>
+      <li style="--at:.93s">app-store-review-guardian</li>
+    </ul>
+    <p class="sk-boot__done" style="--at:1.08s"><b>10 skills online</b> · built for Codex</p>
+  </div>
+</div>
+
+<a class="k-skip" href="#main">Skip to content</a>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
+
+<!-- ═══════════ Top bar (sub-page) ═══════════ -->
+<header class="k-top k-top--sub">
+  <div class="wrap k-top__in">
+    <a class="k-brand" href="../" data-scan aria-label="Kappaemme home"><svg class="k-brand__back" aria-hidden="true"><use href="#i-back"/></svg><span class="k-brand__mark"><img src="../images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+    <nav class="k-links" aria-label="Site">
+      <a href="../" data-scan><span class="t">home</span><span class="s">home</span></a>
+      <a href="#top" aria-current="page"><span class="t">skills</span><span class="s">skills</span></a>
+      <a href="../grok-bot/" data-scan><span class="t">grok bots</span><span class="s">bots</span></a>
+      <a href="../coffee/" data-scan><span class="t">coffee</span><span class="s">coffee</span></a>
+      <a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><span class="t">on x</span><span class="s">x</span><svg class="ic" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      <span class="k-caret" aria-hidden="true"></span>
+    </nav>
+    <a class="k-top__gh" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-gh"/></svg>Kappaemme-git</a>
+  </div>
+</header>
+
+<div class="site-content">
+<main id="main">
+
+  <!-- ═══════════ Hero ═══════════ -->
+  <section class="sk-hero" id="top" aria-labelledby="sk-title">
+    <div class="wrap sk-hero__grid">
+      <div>
+        <p class="k-path k-rise" style="--d:.02s"><b>~/</b>codex-skills</p>
+        <h1 class="k-rise" id="sk-title" style="--d:.08s">Codex <span class="k-dim">skills.</span></h1>
+      </div>
+      <div>
+        <p class="sk-hero__sub k-rise" style="--d:.16s"><span>I share what I learn through Codex skills.</span><span>Recent releases and the open-source skills developers have starred most.</span></p>
+        <p class="sk-hero__fine k-rise" style="--d:.24s">Built by Francesco Mistero, built for Codex. Read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>. Star counts refresh from GitHub on load.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Most starred ═══════════ -->
+  <section class="k-section sk-group sk-group--first" id="most-starred" aria-labelledby="sk-top-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>most-starred<span class="k-count">5 skills</span></p>
+        <h2 class="k-h2 reveal" id="sk-top-title">Most starred.</h2>
+        <p class="k-lede reveal">The open-source skills developers have starred most.</p>
+      </header>
+
+      <div class="sk-bento sk-bento--top" data-stagger>
+        <!-- featured: blue tile, live count as the headline number (fallback 1k+, as on the home) -->
+        <article class="sk-feature k-tile k-tile--blue reveal" data-stars-repo="codex-first-customer-finder-skill" aria-labelledby="sk-s1">
+          <div class="sk-feature__count">
+            <p class="sk-feature__num"><span data-stars data-stars-short>1k+</span><svg aria-hidden="true"><use href="#i-star"/></svg></p>
+            <p class="sk-feature__cap">stars on GitHub <span class="k-tag">most starred</span></p>
+          </div>
+          <div class="sk-feature__body">
+            <p class="sk-tile__path">Kappaemme-git /</p>
+            <h3 id="sk-s1">codex-first-<wbr>customer-finder-<wbr>skill</h3>
+            <p class="sk-tile__desc">Find evidence-backed first customers and draft outreach from public signals.</p>
+            <div class="sk-feature__cta">
+              <a class="k-btn" href="https://github.com/Kappaemme-git/codex-first-customer-finder-skill" target="_blank" rel="noopener"><span class="k-btn__label">Open on GitHub</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a>
+              <p class="sk-feature__also">Crankobot runs on it. <a class="u-link" href="../grok-bot/#bot-crankobot" data-scan>Meet the bot</a></p>
+            </div>
+          </div>
+        </article>
+
+        <a class="sk-tile k-tile k-tile--white reveal" data-stars-repo="codex-startup-pressure-test-skill" href="https://github.com/Kappaemme-git/codex-startup-pressure-test-skill" target="_blank" rel="noopener">
+          <span class="sk-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>900+ stars</span></span>
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">codex-startup-<wbr>pressure-test-<wbr>skill</span>
+          <span class="sk-tile__desc">Pressure-test startup ideas before building the MVP.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+
+        <a class="sk-tile k-tile k-tile--night reveal" data-stars-repo="codex-complexity-optimizer" href="https://github.com/Kappaemme-git/codex-complexity-optimizer" target="_blank" rel="noopener">
+          <span class="sk-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>900+ stars</span></span>
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">codex-complexity-<wbr>optimizer</span>
+          <span class="sk-tile__desc">Analyze code complexity and identify safe performance improvements.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+
+        <a class="sk-tile k-tile k-tile--white reveal" data-stars-repo="local-client-prospector-skill" href="https://github.com/Kappaemme-git/local-client-prospector-skill" target="_blank" rel="noopener">
+          <span class="sk-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>150+ stars</span></span>
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">local-client-<wbr>prospector-skill</span>
+          <span class="sk-tile__desc">Find and qualify local businesses that could use a better website.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+
+        <a class="sk-tile k-tile k-tile--white reveal" data-stars-repo="codex-bug-reproducer" href="https://github.com/Kappaemme-git/codex-bug-reproducer" target="_blank" rel="noopener">
+          <span class="sk-stars"><svg aria-hidden="true"><use href="#i-star"/></svg><span data-stars>70+ stars</span></span>
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">codex-bug-<wbr>reproducer</span>
+          <span class="sk-tile__desc">Reproduce bugs and prove fixes with focused regression evidence.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+      </div>
+      <p class="sk-note reveal">Star counts refresh from GitHub on load.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ Recent releases ═══════════ -->
+  <section class="k-section sk-group" id="recent" aria-labelledby="sk-new-title">
+    <div class="wrap">
+      <header class="k-head">
+        <p class="k-path"><b>~/</b>recent-releases<span class="k-count">5 skills</span></p>
+        <h2 class="k-h2 reveal" id="sk-new-title">Recent releases.</h2>
+        <p class="k-lede reveal">The newest skills in the library, open source on GitHub.</p>
+      </header>
+
+      <div class="sk-bento sk-bento--new" data-stagger>
+        <a class="sk-tile k-tile k-tile--blue reveal" href="https://github.com/Kappaemme-git/astra-ad-studio" target="_blank" rel="noopener">
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">astra-ad-<wbr>studio</span>
+          <span class="sk-tile__desc">Create finished ads, campaign variants and motion previews inside Codex.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+        <a class="sk-tile k-tile k-tile--white reveal" href="https://github.com/Kappaemme-git/codex-code-avengers" target="_blank" rel="noopener">
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">codex-code-<wbr>avengers</span>
+          <span class="sk-tile__desc">Coordinate six review roles for evidence-backed code reviews.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+        <a class="sk-tile k-tile k-tile--white reveal" href="https://github.com/Kappaemme-git/codex-dev-team" target="_blank" rel="noopener">
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">codex-dev-<wbr>team</span>
+          <span class="sk-tile__desc">Run a five-role collaborative engineering workflow in Codex.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+        <a class="sk-tile k-tile k-tile--white reveal" href="https://github.com/Kappaemme-git/startup-feedback-engine" target="_blank" rel="noopener">
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">startup-feedback-<wbr>engine</span>
+          <span class="sk-tile__desc">Turn customer feedback into prioritized product opportunities.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+        <a class="sk-tile k-tile k-tile--white reveal" href="https://github.com/Kappaemme-git/app-store-review-guardian" target="_blank" rel="noopener">
+          <span class="sk-tile__path">Kappaemme-git /</span>
+          <span class="sk-tile__name">app-store-<wbr>review-guardian</span>
+          <span class="sk-tile__desc">Audit an iOS app before App Store submission.</span>
+          <span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Closing ═══════════ -->
+  <section class="k-section sk-close" aria-labelledby="sk-close-title">
+    <div class="wrap">
+      <p class="k-path"><b>~/</b>next</p>
+      <div class="sk-close__grid">
+        <div>
+          <h2 class="reveal" id="sk-close-title">Read the code <span class="k-dim">on GitHub.</span></h2>
+          <p class="k-lede reveal">Published Codex skills used and starred by developers around the world.</p>
+        </div>
+        <ul class="k-reach reveal" data-grow>
+          <li><a class="k-grow" style="--i:0" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener"><small>github</small><span>All repositories on GitHub</span><em>github.com/Kappaemme-git</em><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+          <li><a class="k-grow" style="--i:1" href="../" data-scan><small>home</small><span>More of my work</span><em>kappaemme.dev</em><span class="k-go"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- ═══════════ The floor (shared footer) ═══════════ -->
+<footer class="k-floor" aria-label="Site footer">
+  <div class="wrap k-floor__in">
+    <div class="k-floor__top">
+      <p class="k-floor__lead k-rise-f" style="--i:0">I build small apps, tools and bots, try them in the real world and keep the ones that work. Everything else I make is on kappaemme.dev.</p>
+      <nav class="k-floor__nav" aria-label="Footer">
+        <div class="k-rise-f" style="--i:1"><p>index</p><ul><li><a href="../" data-scan>home</a></li><li><a href="../#products" data-scan>projects</a></li><li><a href="../grok-bot/" data-scan>grok bots</a></li><li><a href="../coffee/" data-scan>coffee</a></li></ul></div>
+        <div class="k-rise-f" style="--i:2"><p>skills</p><ul><li><a href="#most-starred">most starred</a></li><li><a href="#recent">recent releases</a></li><li><a href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">all repositories ↗</a></li></ul></div>
+        <div class="k-rise-f k-floor__nav-x" style="--i:3"><p>elsewhere</p><ul><li><a href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">github ↗</a></li><li><a href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">x · @Kappaemmedev ↗</a></li></ul></div>
+      </nav>
+    </div>
+    <a class="k-mark" href="../" data-scan aria-label="kappaemme.dev, back to the main site"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a>
+    <p class="k-floor__status"><span>© 2026 Francesco Mistero<span class="k-floor__made"> · Made one commit at a time.</span></span><a href="#top">↑ back to top</a></p>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = KM.$;
+  KM.boot();   /* reveal + stagger, hairlines, typed floor, live stars (KM.loadStars), rAF loop */
+
+  /* ── boot intro: skippable, same contract as /grok-bot ── */
+  var boot = $(".sk-boot"), root = document.documentElement;
+  if (boot && root.hasAttribute("data-boot")) {
+    var done = false;
+    var finish = function () { if (done) return; done = true; boot.style.display = "none"; };
+    boot.addEventListener("animationend", function (e) { if (e.target === boot) finish(); });
+    var skip = function () {
+      if (done) return;
+      boot.classList.add("is-skip"); root.style.setProperty("--enter", "0s");
+      setTimeout(finish, 300);
+    };
+    ["keydown", "wheel", "touchstart", "pointerdown"].forEach(function (ev) { window.addEventListener(ev, skip, { once: true, passive: true }); });
+    setTimeout(finish, 2900);
+  }
+})();
+</script>
+</body>
+</html>

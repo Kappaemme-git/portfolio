@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════
-   kappaemme.dev — shared system v3 (/coffee, /grok-bot)
+   kappaemme.dev — shared system v3 (/coffee, /grok-bot, /skills)
    Source of truth for Codex → assets/site.css. Spec: design/restyle/SPEC.md §v3
    Paper base; small dark objects and blue blocks re-scope the same tokens.
    Signature motif: the caret (nav, terminal, scan line, typed wordmark). Everything animates transform/opacity only.
@@ -170,9 +170,10 @@ button { font: inherit; color: inherit; }
 .k-top__gh svg { width: 14px; height: 14px; }
 @media (min-width: 1024px) { .k-links { display: flex; } .k-menu { display: none !important; } }
 @media (min-width: 1280px) { .k-top__gh { display: inline-flex; } }
-/* sub-pages: 4 links, visible from 640 */
+/* sub-pages: five links, visible from 640 */
 .k-top--sub .k-links { display: flex; }
 @media (max-width: 639px) { .k-top--sub .k-links .t { display: none; } .k-top--sub .k-links a { padding: .75rem .55rem; font-size: .74rem; } }
+@media (max-width: 389px) { .k-top--sub .k-links a { padding: .75rem .42rem; } }
 @media (min-width: 640px) { .k-top--sub .k-links .s { display: none; } }
 
 .k-menu {

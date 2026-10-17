@@ -350,6 +350,7 @@
      ════════════════════════════════════════════════════════════════ */
   .k-skills { display: grid; gap: 1rem; }
   @media (min-width: 1024px) { .k-skills { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+  .k-skills__more { display: flex; justify-content: center; margin-top: 1.75rem; }
   .k-skills .k-card { display: flex; flex-direction: column; }
   .k-card__title { display: flex; align-items: center; gap: .6rem; padding-bottom: 1.1rem; font-size: 1.45rem; font-weight: 800; letter-spacing: -.035em; }
   .k-skills .k-row { grid-template-columns: 1.6rem minmax(0, 1fr) 2.5rem; grid-template-areas: "n main go" ". meta go"; }
@@ -851,6 +852,7 @@
           <p class="k-skills__foot"><a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">All repositories on GitHub ↗</a></p>
         </div>
       </div>
+      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" href="skills/"><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
     </div>
   </section>
 
@@ -1054,7 +1056,7 @@
       <nav class="footer-nav" aria-label="Footer">
         <ul class="footer-rise" style="--i:1">
           <li><a class="footer-link" href="#products">Projects</a></li>
-          <li><a class="footer-link" href="#skills">Skills</a></li>
+          <li><a class="footer-link" href="skills/">Skills</a></li>
           <li><a class="footer-link" href="grok-bot/">Grok Bots</a></li>
           <li><a class="footer-link" href="#shared">On X</a></li>
         </ul>
