@@ -233,13 +233,6 @@
   .wrap { margin: 0 auto; padding: 0 1.25rem; }
   @media (min-width: 640px) { .wrap { padding: 0 2rem; } }
 
-  .gb-pill-tag {
-    display: inline-flex; align-items: center; gap: .5rem;
-    padding: .45rem .9rem; border-radius: 999px;
-    background: #fff; color: var(--ink);
-    font-size: .88rem; font-weight: 700; letter-spacing: -.01em; text-decoration: none;
-  }
-
   .h-display { font-weight: 800; letter-spacing: -.05em; line-height: .95; text-wrap: balance; }
   .lede { font-size: 1.15rem; line-height: 1.5; color: var(--text-2); text-wrap: balance; }
 
@@ -293,7 +286,6 @@
   .gb-hero__fine + .gb-hero__fine { margin-top: .9rem; color: var(--text-3); }
   .u-link { text-decoration: underline; text-decoration-color: rgba(255,255,255,.5); text-underline-offset: 4px; text-decoration-thickness: 1px; transition: text-decoration-color .2s, text-underline-offset .26s var(--ease-out); color: #fff; }
   .u-link:hover { text-decoration-color: #fff; text-underline-offset: 2px; }
-  .gb-hero__next { margin-top: auto; padding-top: 4rem; }
 
   /* hero items also stagger in after the curtain (lighter than the crew pop) */
   .gb-rise { animation: rise .7s var(--ease-out) calc(var(--intro-end) + .25s + var(--d, 0s)) both; }
@@ -362,30 +354,9 @@
     100% { opacity: 0; translate: 0 -10px; }
   }
 
-  /* ── Builder ─────────────────────────────────────────── */
-  .gb-builder { max-width: 72rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; text-align: center; }
-  @media (min-width: 768px) { .gb-builder { padding-bottom: 8rem; } }
-  .gb-builder h2 { margin: 1.5rem auto 0; max-width: 14ch; font-size: clamp(2.6rem, 7.4vw, 5.6rem); }
-  .gb-builder .lede { margin: 1.5rem auto 0; max-width: 40ch; font-size: 1.12rem; }
-  @media (min-width: 640px) { .gb-builder .lede { font-size: 1.25rem; } }
-  .gb-stats { display: grid; grid-template-columns: 1fr; gap: 1rem; max-width: 54rem; margin: 2.75rem auto 0; }
-  @media (min-width: 640px) { .gb-stats { grid-template-columns: repeat(3, 1fr); } }
-  .gb-stat {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem;
-    min-height: 6.5rem; padding: 1.25rem 1rem; border-radius: 1rem; text-decoration: none;
-    transition: transform .4s var(--pop);
-  }
-  .gb-stat:hover { transform: translateY(-3px) rotate(-1deg); }
-  .gb-stat strong { font-size: clamp(1.5rem, 2.5vw, 2.05rem); font-weight: 800; letter-spacing: -.05em; line-height: 1; white-space: nowrap; }
-  .gb-stat span { font-size: .95rem; font-weight: 600; }
-  .gb-stat--blue  { background: var(--lc); color: #fff; }
-  .gb-stat--light { background: var(--paper); color: var(--ink); }
-  .gb-stat--dark  { background: var(--panel); color: #fff; box-shadow: inset 0 0 0 1px var(--line); }
-  .gb-stat--dark span { color: var(--text-2); }
-
   /* ── Library ─────────────────────────────────────────── */
-  .gb-library { max-width: 76rem; margin: 0 auto; padding: 0 1rem 6rem; }
-  @media (min-width: 640px) { .gb-library { padding: 0 2rem 8rem; } }
+  .gb-library { max-width: 76rem; margin: 0 auto; padding: 2rem 1rem 6rem; }
+  @media (min-width: 640px) { .gb-library { padding: 3rem 2rem 8rem; } }
   .gb-library > h2 { margin: 0 auto; max-width: 13ch; text-align: center; font-size: clamp(2.5rem, 7vw, 5rem); }
   .gb-library > .lede { margin: 1.25rem auto 0; max-width: 40ch; text-align: center; }
   .gb-tiles { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 3rem; }
@@ -566,13 +537,15 @@
   .site-footer__top { display: flex; flex: 1; align-items: center; width: 100%; max-width: 96rem; margin: 0 auto; padding: 3rem 1.5rem 1.75rem; }
   @media (min-width: 768px) { .site-footer__top { padding: 3.5rem 2.5rem 1.75rem; } }
   .site-footer h2 {
-    display: flex; flex-direction: column; width: 100%;
-    font-size: clamp(3rem, 12.5vw, 9rem); font-weight: 500; line-height: .88; letter-spacing: -.045em;
+    width: 100%;
+    font-size: clamp(2.25rem, 11.3vw, 9rem); font-weight: 500; line-height: .88; letter-spacing: -.045em;
   }
-  @media (min-width: 640px) { .site-footer h2 { flex-direction: row; align-items: baseline; justify-content: space-between; } }
+  .footer-wordmark { display: inline-flex; align-items: center; white-space: nowrap; color: var(--ink); text-decoration: none; }
+  .footer-wordmark:hover, .footer-wordmark:focus-visible { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .12em; }
   .footer-word { --p: clamp(0, calc((var(--reveal, 1) - .6) * 3), 1); opacity: var(--p); transform: translateX(calc((var(--p) - 1) * 5vw)); }
-  .footer-word-b { --p: clamp(0, calc((var(--reveal, 1) - .66) * 3), 1); transform: translateX(calc((1 - var(--p)) * 5vw)); align-self: flex-end; }
-  @media (min-width: 640px) { .footer-word-b { align-self: auto; } }
+  .footer-word-b { --p: clamp(0, calc((var(--reveal, 1) - .66) * 3), 1); transform: translateX(calc((1 - var(--p)) * 5vw)); }
+  .footer-wordmark__arrow { --p: clamp(0, calc((var(--reveal, 1) - .72) * 3), 1); width: .25em; height: .25em; margin-left: .12em; flex: none; opacity: var(--p); transform: translateX(calc((1 - var(--p)) * 5vw)); transition: translate .3s var(--ease-out); }
+  .footer-wordmark:hover .footer-wordmark__arrow, .footer-wordmark:focus-visible .footer-wordmark__arrow { translate: 2px -2px; }
   .footer-rule { height: 1px; width: 100%; background: rgba(10,10,10,.28); transform-origin: 0 50%; transform: scaleX(clamp(0, calc((var(--reveal, 1) - .56) * 3.4), 1)); }
   .site-footer__bottom { width: 100%; max-width: 96rem; margin: 0 auto; padding: 1.75rem 1.5rem 5.5rem; }
   @media (min-width: 768px) { .site-footer__bottom { padding: 2.25rem 2.5rem 2.25rem; } }
@@ -645,6 +618,7 @@
     .gb-bubble { animation-name: bubble-still; }
     body { padding-bottom: 0; }
     .site-footer { position: static; height: auto; }
+    .footer-wordmark:hover .footer-wordmark__arrow, .footer-wordmark:focus-visible .footer-wordmark__arrow { translate: none; }
   }
   @keyframes fade { 0% { opacity: 0; } 100% { opacity: 1; } }
   @keyframes intro-curtain-fade { to { opacity: 0; visibility: hidden; pointer-events: none; } }
@@ -762,20 +736,6 @@
       <p class="gb-hero__fine gb-rise" style="--d:.32s">Built by Francesco Mistero. Follow the build <a class="u-link" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener">on X</a>, or read the code <a class="u-link" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener">on GitHub</a>.</p>
       <p class="gb-hero__fine gb-rise" style="--d:.38s">Two bots so far. New ones land here first.</p>
 
-      <div class="gb-hero__next gb-rise" style="--d:.5s">
-        <a class="gb-pill-tag" href="#builder">Who builds them</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ Builder ═══════════ -->
-  <section class="gb-builder" id="builder" aria-labelledby="gb-builder-title">
-    <h2 class="h-display reveal" id="gb-builder-title">A CS student who ships in public.</h2>
-    <p class="lede reveal">I'm Francesco, aka Kappaemme. I study Computer Science at Federico II in Naples. Since October 2025 I build iPhone apps, websites, open-source tools and Codex skills, and I share every step on X.</p>
-    <div class="gb-stats">
-      <div class="gb-stat gb-stat--blue reveal" style="transition-delay:0ms"><strong>Federico II</strong><span>Computer Science, Naples</span></div>
-      <a class="gb-stat gb-stat--light reveal" style="transition-delay:80ms" href="https://github.com/Kappaemme-git" target="_blank" rel="noopener" data-cursor-ink><strong>Codex skills</strong><span>open source on GitHub</span></a>
-      <a class="gb-stat gb-stat--dark reveal" style="transition-delay:160ms" href="https://x.com/Kappaemmedev" target="_blank" rel="noopener"><strong>@Kappaemmedev</strong><span>building in public on X</span></a>
     </div>
   </section>
 
@@ -839,7 +799,7 @@
 <footer class="site-footer" aria-label="Site footer" data-cursor-ink>
   <div class="site-footer__inner">
     <div class="site-footer__top">
-      <h2><span class="footer-word">Keep</span><span class="sr-only"> </span><span class="footer-word footer-word-b">building.</span></h2>
+      <h2><a class="footer-wordmark" href="https://kappaemme.dev/" aria-label="kappaemme.dev, back to the main site"><span class="footer-word">kappaemme</span><span class="footer-word footer-word-b">.dev</span><svg class="footer-wordmark__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></h2>
     </div>
     <div class="footer-rule" aria-hidden="true"></div>
     <div class="site-footer__bottom">

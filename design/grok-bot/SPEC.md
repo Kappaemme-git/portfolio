@@ -2,6 +2,10 @@
 
 Design hand-off for the `/grok-bot` page of kappaemme.dev. The production implementation is in `../../grok-bot/`; this folder remains the visual reference.
 
+## Changelog
+
+- **2026-10-17:** Replaced the footer's “Keep building.” heading with a linked, animated `kappaemme.dev` wordmark and arrow. Removed the builder section, its three stat cards and the hero's “Who builds them” pill; the library now follows the hero with adjusted spacing. Applied to both production and prototype. This supersedes the older builder and footer descriptions below.
+
 | File | What it is |
 |---|---|
 | `prototype.html` | Working design prototype. All CSS and JS are inline; it reads the shared data file in `../../grok-bot/`. Final copy. |
