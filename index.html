@@ -30,6 +30,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script>
+  try { if (sessionStorage.getItem("k-scan")) { sessionStorage.removeItem("k-scan"); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.setAttribute("data-scan", "in"); } } catch (e) {}
+</script>
 <style>
   /* ════════════════════════════════════════════════════════════════
      SHARED — tokens (identical in coffee.html; see SPEC §2–§4)
@@ -75,6 +78,7 @@
     /* Motion — same tokens as /grok-bot */
     --ease-out:  cubic-bezier(.22, 1, .36, 1);
     --ease-soft: cubic-bezier(.2, .8, .2, 1);
+    --ease-io:   cubic-bezier(.65, 0, .35, 1);
     --pop:       cubic-bezier(.3, 1.7, .5, 1);
 
     /* Layout */
@@ -126,7 +130,7 @@
     position: fixed; inset: 0 0 auto; z-index: 50; height: var(--top-h);
     border-bottom: 1px solid transparent;
     transition: background-color .35s, border-color .35s, opacity .3s;
-    animation: top-in .5s var(--ease-out) .05s backwards;
+    animation: top-in .5s var(--ease-out) calc(var(--enter, 0s) + .05s) backwards;
   }
   .k-top.is-scrolled {
     background: rgba(242,242,239,.82); border-bottom-color: var(--line);
@@ -270,11 +274,11 @@
   @media (min-width: 1024px) { .k-portrait { aspect-ratio: 4 / 5; } }
   .k-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; }
 
-  /* entrance (same rise as /grok-bot, without the curtain) */
-  .k-rise { animation: rise .7s var(--ease-out) var(--d, 0s) both; }
+  /* entrance follows the arrival scan when there is one */
+  .k-rise { animation: rise .7s var(--ease-out) calc(var(--enter, 0s) + var(--d, 0s)) both; }
   @keyframes rise { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
   .k-portrait.k-rise { animation-duration: .9s; }
-  .k-portrait.k-rise img { animation: settle 1.4s var(--ease-out) var(--d, 0s) both; }
+  .k-portrait.k-rise img { animation: settle 1.4s var(--ease-out) calc(var(--enter, 0s) + var(--d, 0s)) both; }
   @keyframes settle { 0% { transform: scale(1.06); } 100% { transform: none; } }
 
   /* ════════════════════════════════════════════════════════════════
@@ -403,36 +407,13 @@
     66% { transform: translateY(0) scale(1.06, .94); } 82% { transform: scale(.98, 1.02); } 100% { transform: none; }
   }
 
-  /* CTA that wakes up into Crankobot — copied from /grok-bot (.gb-cta) */
+  /* Bots CTA keeps its white pill while the shared scan handles navigation. */
   .gb-cta {
-    position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center;
-    min-height: 3.5rem; padding: 0 1.75rem; border-radius: 999px; border: 0; background: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 3.5rem; padding: 0 1.75rem; border-radius: 999px; border: 0; background: #fff; cursor: pointer;
     font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; text-decoration: none; color: var(--ink);
   }
-  .gb-cta::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; margin: auto; width: 100%; border-radius: 999px; background: #fff;
-    transition: transform .4s cubic-bezier(.6, 0, .25, 1) .18s;
-  }
-  .gb-cta:hover::before { background: #e9e9e6; box-shadow: 0 14px 40px -16px rgba(255,255,255,.35); }
-  .gb-cta[data-wake]::before { transform: scaleX(var(--wake-scale, .33)); border-radius: 50%; }
-  .gb-cta__letters { display: inline-flex; white-space: pre; }
-  .gb-cta__l { display: inline-block; transition: transform .36s cubic-bezier(.55, 0, .35, 1) calc(var(--i) * 10ms), opacity .22s ease-in calc(var(--i) * 10ms + .12s); }
-  .gb-cta[data-wake] .gb-cta__l { transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(.15); opacity: 0; }
-  .gb-cta__face { position: absolute; top: 50%; left: 50%; display: flex; gap: 6px; transform: translate(-50%, -58%) scale(0); transition: transform .32s var(--pop) .3s; }
-  .gb-cta[data-wake] .gb-cta__face { transform: translate(-30%, -64%) scale(1); }
-  .gb-cta__eye { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .gb-cta__pupil { width: 6px; height: 15px; border-radius: 3px; background: var(--ink); transform: rotate(18deg); }
-  .gb-cta__eye:last-child .gb-cta__pupil { width: 5px; }
-  .gb-cta__brow { width: 11px; height: 3.5px; border-radius: 2px; background: var(--ink); opacity: 0; transform: translateY(-4px); transition: opacity .15s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
-  .gb-cta[data-grumpy] .gb-cta__eye:first-child .gb-cta__brow { opacity: 1; transform: translateY(1px) rotate(28deg); }
-  .gb-cta[data-grumpy] .gb-cta__eye:last-child .gb-cta__brow { opacity: 1; transform: translateY(1px) rotate(-28deg); }
-  .gb-bubble {
-    position: absolute; z-index: 60; pointer-events: none; white-space: nowrap; padding: .55rem .9rem; border-radius: 1rem;
-    background: #fff; color: var(--ink); border: 2px solid var(--ink); font-size: .98rem; font-weight: 700; line-height: 1.25;
-    box-shadow: 0 12px 28px -14px rgba(0,0,0,.6); transform-origin: var(--tail, 50%) 120%; animation: bubble 1.8s ease-out forwards;
-  }
-  .gb-bubble::after { content: ""; position: absolute; top: 100%; left: var(--tail, 50%); width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #fff; border: 2px solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  @keyframes bubble { 0% { opacity: 0; transform: scale(.4) rotate(-6deg); } 12% { opacity: 1; transform: scale(1.08) rotate(2deg); } 20% { transform: scale(1) rotate(0); } 82% { opacity: 1; transform: translateY(-3px); } 100% { opacity: 0; transform: translateY(-10px); } }
+  .gb-cta:hover { background: #e9e9e6; box-shadow: 0 14px 40px -16px rgba(255,255,255,.35); }
 
   /* ════════════════════════════════════════════════════════════════
      04 Shared on X
@@ -619,6 +600,30 @@
   .footer-mark img { width: 100%; height: 100%; filter: invert(1); }
   .footer-meta__right { display: flex; align-items: center; gap: 1.25rem; }
 
+  /* Black terminal scan, matching the shared subpage transition. */
+  .k-scan { position: fixed; inset: 0; z-index: 3600; pointer-events: none; visibility: hidden; overflow: hidden; color: #F2F2EF; }
+  .k-scan__fill { position: absolute; inset: 0; background: #0A0A0A; transform-origin: 50% 0; transform: scaleY(0); }
+  .k-scan__line { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #2474F7; box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px #2474F7; transform: translateY(-6px); }
+  .k-scan__prompt { position: absolute; z-index: 1; top: 50%; left: 50%; display: flex; align-items: center; gap: .45em; max-width: calc(100vw - 2rem); font: 500 clamp(.95rem, 3vw, 1.3rem)/1.2 var(--font-mono); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; }
+  .k-scan__sig { color: #2474F7; }
+  .k-scan__cmd { display: inline-block; clip-path: inset(0 100% 0 0); }
+  .k-scan__cursor { width: .5em; height: 1em; background: #2474F7; opacity: 0; }
+  .k-scan.is-out { visibility: visible; pointer-events: auto; }
+  .k-scan.is-out .k-scan__fill { transition: transform .38s var(--ease-io); transform: scaleY(1); }
+  .k-scan.is-out .k-scan__line { transition: transform .38s var(--ease-io); transform: translateY(100vh); }
+  .k-scan.is-out .k-scan__prompt { animation: scan-prompt-in .08s linear .27s both; }
+  .k-scan.is-out .k-scan__cmd { animation: scan-type .25s steps(var(--chars, 12), end) .3s both; }
+  .k-scan.is-out .k-scan__cursor { animation: scan-cursor .45s steps(1) .3s infinite; }
+  @keyframes scan-prompt-in { to { opacity: 1; } }
+  @keyframes scan-type { to { clip-path: inset(0 0 0 0); } }
+  @keyframes scan-cursor { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  html[data-scan="in"] .k-scan { visibility: visible; pointer-events: auto; }
+  html[data-scan="in"] .k-scan__fill { transform: none; animation: scan-fill-in .48s var(--ease-io) forwards; }
+  html[data-scan="in"] .k-scan__line { transform: translateY(0); animation: scan-line-in .48s var(--ease-io) forwards; }
+  @keyframes scan-fill-in { to { transform: translateY(100%); } }
+  @keyframes scan-line-in { 85% { opacity: 1; } to { transform: translateY(100vh); opacity: 0; } }
+  html[data-scan="in"] { --enter: .38s; }
+
   /* ════════════════════════════════════════════════════════════════
      Reduced motion — everything reads, nothing moves
      ════════════════════════════════════════════════════════════════ */
@@ -628,12 +633,11 @@
     .k-rise, .k-top, .k-portrait.k-rise img { animation: none !important; }
     .reveal--armed, .reveal--armed .reveal__art { opacity: 1; transform: none; }
     .k-tile:hover .k-tile__art, .k-stat:hover, .k-tech:hover, .k-post:hover, .k-crew__item:hover .k-label { transform: none; }
-    .gb-bubble { animation-name: bubble-still; }
+    html[data-scan] .k-scan { display: none; }
     body { padding-bottom: 0; }
     .site-footer { position: static; height: auto; }
     .site-footer__top { padding-top: 5rem; }
   }
-  @keyframes bubble-still { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
 </style>
 </head>
 <body>
@@ -651,15 +655,16 @@
 </svg>
 
 <a class="k-skip" href="#main">Skip to content</a>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div><div class="k-scan__prompt"><span class="k-scan__sig">$</span><span class="k-scan__cmd"></span><span class="k-scan__cursor"></span></div></div>
 
 <!-- ═══════════ Top bar ═══════════ -->
 <header class="k-top">
   <div class="wrap k-top__in">
-    <a class="k-brand" href="./" aria-label="Kappaemme home"><span class="k-brand__mark"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
+    <a class="k-brand" href="./" data-scan data-scan-reload aria-label="Kappaemme home"><span class="k-brand__mark"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
     <nav class="k-links" aria-label="Sections">
       <a data-spy="products" href="#products">projects</a>
       <a data-spy="skills" href="#skills">skills</a>
-      <a data-spy="grok-bots" href="grok-bot/">grok bots</a>
+      <a data-spy="grok-bots" href="grok-bot/" data-scan>grok bots</a>
       <a data-spy="shared" href="#shared">on x</a>
       <a data-spy="stack" href="#stack">stack</a>
       <a data-spy="journey" href="#journey">journey</a>
@@ -677,7 +682,7 @@
     <ol class="k-sheet__list">
       <li style="--i:0"><a class="k-sheet__l" data-spy="products" href="#products">projects</a></li>
       <li style="--i:1"><a class="k-sheet__l" data-spy="skills" href="#skills">skills</a></li>
-      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="grok-bot/">grok bots</a></li>
+      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="grok-bot/" data-scan>grok bots</a></li>
       <li style="--i:3"><a class="k-sheet__l" data-spy="shared" href="#shared">on x</a></li>
       <li style="--i:4"><a class="k-sheet__l" data-spy="stack" href="#stack">stack</a></li>
       <li style="--i:5"><a class="k-sheet__l" data-spy="journey" href="#journey">journey</a></li>
@@ -852,7 +857,7 @@
           <p class="k-skills__foot"><a class="u-link" href="https://github.com/Kappaemme-git?tab=repositories" target="_blank" rel="noopener">All repositories on GitHub ↗</a></p>
         </div>
       </div>
-      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" href="skills/"><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
+      <div class="k-skills__more reveal"><a class="k-btn k-btn--ghost" href="skills/" data-scan><span class="k-btn__label">See all skills</span><span class="k-key"><svg aria-hidden="true"><use href="#i-ne"/></svg></span></a></div>
     </div>
   </section>
 
@@ -865,19 +870,19 @@
           <h2 class="k-h2" id="k-grok-title">My Grok Bots.</h2>
           <p class="k-lede">Small bots I build and run inside Grok Bot. Each one does one job. The code is on GitHub.</p>
           <div class="k-grok__cta">
-            <a class="gb-cta" href="grok-bot/" data-wakeable>Meet the bots</a>
+            <a class="gb-cta" href="grok-bot/" data-scan>Meet the bots</a>
             <p class="k-grok__fine">New ones land there first.</p>
           </div>
         </div>
         <div class="k-gpanel reveal__art">
           <p class="k-gpanel__head"><span>Library</span><span>kappaemme.dev/grok-bot</span></p>
           <ul class="k-crew" aria-label="Bots in the library">
-            <li><a class="k-crew__item" href="grok-bot/#bot-limit-coach">
+            <li><a class="k-crew__item" href="grok-bot/#bot-limit-coach" data-scan>
               <span class="k-crew__bot"><img src="grok-bot/assets/limit-coach-animated.svg" alt="" width="100" height="112"></span>
               <span class="k-label k-label--blue">Limit Coach</span>
               <small>Claude + Codex limits</small>
             </a></li>
-            <li><a class="k-crew__item" href="grok-bot/#bot-crankobot">
+            <li><a class="k-crew__item" href="grok-bot/#bot-crankobot" data-scan>
               <span class="k-crew__bot"><img src="grok-bot/assets/crankobot-animated.svg" alt="" width="100" height="112"></span>
               <span class="k-label k-label--white">Crankobot</span>
               <small>First Customer Finder</small>
@@ -1012,7 +1017,7 @@
             <a class="k-btn k-btn--ghost" href="#products">My work</a>
             <a class="k-btn k-btn--ghost" href="mailto:misterokappa12@gmail.com">Contact me</a>
           </div>
-          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" href="coffee/">More on the coffee page</a>.</p>
+          <p class="k-coffee__fine">Donations go through Stripe. <a class="u-link" href="coffee/" data-scan>More on the coffee page</a>.</p>
         </div>
         <ol class="k-steps" data-grow>
           <li class="k-grow" style="--i:0"><span>Build</span><span><b>I ship small products fast.</b>VibeDesk, ShipSlap and PocketFlow started from simple ideas, real usage and fast iteration.</span></li>
@@ -1048,7 +1053,7 @@
 <footer class="site-footer" aria-label="Site footer">
   <div class="site-footer__inner">
     <div class="site-footer__top">
-      <h2><a class="k-mark" href="./" aria-label="kappaemme.dev, back to the top"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a></h2>
+      <h2><a class="k-mark" href="./" data-scan data-scan-reload aria-label="kappaemme.dev, back to the top"><span data-type>kappaemme.dev</span><span class="k-mark__caret" aria-hidden="true"></span></a></h2>
     </div>
     <div class="footer-rule" aria-hidden="true"></div>
     <div class="site-footer__bottom">
@@ -1056,14 +1061,14 @@
       <nav class="footer-nav" aria-label="Footer">
         <ul class="footer-rise" style="--i:1">
           <li><a class="footer-link" href="#products">Projects</a></li>
-          <li><a class="footer-link" href="skills/">Skills</a></li>
-          <li><a class="footer-link" href="grok-bot/">Grok Bots</a></li>
+          <li><a class="footer-link" href="skills/" data-scan>Skills</a></li>
+          <li><a class="footer-link" href="grok-bot/" data-scan>Grok Bots</a></li>
           <li><a class="footer-link" href="#shared">On X</a></li>
         </ul>
         <ul class="footer-rise" style="--i:2">
           <li><a class="footer-link" href="#stack">Stack</a></li>
           <li><a class="footer-link" href="#journey">Journey</a></li>
-          <li><a class="footer-link" href="coffee/">Coffee</a></li>
+          <li><a class="footer-link" href="coffee/" data-scan>Coffee</a></li>
           <li><a class="footer-link" href="#contact">Contact</a></li>
         </ul>
         <ul class="footer-rise" style="--i:3">
@@ -1088,6 +1093,47 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var hasIO = "IntersectionObserver" in window;
+
+  /* ───────────── Black scan transition, matching assets/site.js ───────────── */
+  var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer;
+  function path(url) { return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, ""); }
+  function clearScan() {
+    if (!scan) return;
+    clearTimeout(arrivalTimer);
+    scan.classList.remove("is-out"); scan.style.display = "none";
+    document.documentElement.removeAttribute("data-scan");
+  }
+  if (scan && document.documentElement.getAttribute("data-scan") === "in") {
+    $(".k-scan__fill", scan).addEventListener("animationend", clearScan, { once: true });
+    arrivalTimer = setTimeout(clearScan, 650);
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[data-scan]");
+    if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
+    var url = new URL(a.href, location.href);
+    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || (path(url) === path(location) && (url.hash || !a.hasAttribute("data-scan-reload")))) return;
+    e.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    var page = path(url).split("/").pop();
+    var command = "cd ~" + (page === "grok-bot" ? "/grok-bots" : page === "skills" || page === "coffee" ? "/" + page : "");
+    var cmd = $(".k-scan__cmd", scan);
+    cmd.textContent = command;
+    cmd.style.setProperty("--chars", command.length);
+    clearTimeout(arrivalTimer);
+    scan.style.display = "";
+    document.documentElement.removeAttribute("data-scan");
+    scan.offsetHeight; /* commit the hidden start frame before the wipe */
+    scan.classList.add("is-out");
+    leaveTimer = setTimeout(function () {
+      try { sessionStorage.setItem("k-scan", "1"); } catch (err) {}
+      location.assign(url.href);
+    }, 620);
+  });
+  window.addEventListener("pageshow", function (e) {
+    if (!e.persisted) return;
+    clearTimeout(leaveTimer); leaving = false; clearScan();
+  });
 
   /* ───────────── Stagger siblings by 80ms ───────────── */
   $$("[data-stagger]").forEach(function (group) {
@@ -1217,48 +1263,6 @@
     document.addEventListener("visibilitychange", function () { running = !document.hidden; if (running) requestAnimationFrame(tick); });
     requestAnimationFrame(tick);
   }
-
-  /* ───────────── "Meet the bots" wakes up into Crankobot (as /grok-bot) ───────────── */
-  var LINES = ["Hey, I was reading replies.", "Shh. Scanning for demand.", "Fine. I'm up.", "You woke me mid-search."];
-  var WAKE_MS = 700, BUBBLE_MS = 1800, said = 0;
-  $$("[data-wakeable]").forEach(function (cta) {
-    var label = cta.textContent;
-    cta.setAttribute("aria-label", label);
-    cta.innerHTML = '<span class="gb-cta__letters" aria-hidden="true">' + label.split("").map(function (ch, i) {
-      return '<span class="gb-cta__l" style="--i:' + i + '">' + (ch === " " ? "&nbsp;" : esc(ch)) + "</span>";
-    }).join("") + '</span><span class="gb-cta__face" aria-hidden="true"><span class="gb-cta__eye"><span class="gb-cta__brow"></span><span class="gb-cta__pupil"></span></span><span class="gb-cta__eye"><span class="gb-cta__brow"></span><span class="gb-cta__pupil"></span></span></span>';
-    cta.addEventListener("click", function (e) {
-      if (reduce || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-      e.preventDefault();
-      if (cta.hasAttribute("data-wake")) return;
-      var r = cta.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      $$(".gb-cta__l", cta).forEach(function (l) {
-        var lr = l.getBoundingClientRect();
-        l.style.setProperty("--dx", (cx - (lr.left + lr.width / 2)).toFixed(1) + "px");
-        l.style.setProperty("--dy", (cy - (lr.top + lr.height / 2)).toFixed(1) + "px");
-      });
-      cta.style.setProperty("--wake-scale", (r.height / r.width).toFixed(4));
-      cta.setAttribute("data-wake", "");
-      setTimeout(function () {
-        cta.setAttribute("data-grumpy", "");
-        var rr = cta.getBoundingClientRect(), b = document.createElement("div");
-        b.className = "gb-bubble"; b.setAttribute("aria-hidden", "true");
-        b.textContent = LINES[said++ % LINES.length];
-        document.body.appendChild(b);
-        var w = b.offsetWidth, mid = rr.left + rr.width / 2, left = Math.min(Math.max(mid - w / 2, 12), window.innerWidth - w - 12);
-        b.style.left = left + window.scrollX + "px";
-        b.style.top = rr.top + window.scrollY - b.offsetHeight - 16 + "px";
-        b.style.setProperty("--tail", Math.min(Math.max(mid - left, 16), w - 16) + "px");
-      }, WAKE_MS);
-      // then go to the Grok Bot page while the bubble is still up
-      setTimeout(function () { window.location.href = cta.getAttribute("href"); }, WAKE_MS + 650);
-    });
-  });
-  // bfcache: coming back restores the pill
-  window.addEventListener("pageshow", function () {
-    $$("[data-wakeable]").forEach(function (cta) { cta.removeAttribute("data-wake"); cta.removeAttribute("data-grumpy"); });
-    $$(".gb-bubble").forEach(function (b) { b.remove(); });
-  });
 
   /* ───────────── Footer reveal (as /grok-bot) ───────────── */
   var footer = $(".site-footer"), content = $(".site-content");

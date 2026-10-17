@@ -21,13 +21,14 @@
   star counts come from KM.loadStars() with the same fallbacks as the home.
 -->
 <script>
-  /* Boot once per session, or whenever we arrive through the scan transition (same rule as /grok-bot). */
+  /* Boot once per session; a cross-page arrival gets its own scan reveal. */
   (function () {
     var d = document.documentElement; d.classList.add("js");
     try {
       var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
       var viaScan = sessionStorage.getItem("k-scan"); sessionStorage.removeItem("k-scan");
-      if (!reduce && (viaScan || !sessionStorage.getItem("ksk-booted"))) { d.setAttribute("data-boot", ""); sessionStorage.setItem("ksk-booted", "1"); }
+      if (!reduce && viaScan) d.setAttribute("data-scan", "in");
+      if (!reduce && !sessionStorage.getItem("ksk-booted")) { d.setAttribute("data-boot", ""); sessionStorage.setItem("ksk-booted", "1"); }
     } catch (e) {}
   })();
 </script>
@@ -35,16 +36,14 @@
 <style>
   @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
 
-  /* ══════════════ Boot intro: colour frames + `ls` log + scan (pattern from /grok-bot) ══════════════
-     Paper frame types the command with a blue caret, white frame pops the first skill card,
-     blue frame fans the deck, while `ls` brings every skill online. Then the scan line sweeps down. */
-  .sk-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: var(--paper); overflow: hidden; }
+  /* Black boot frames, blue caret and card deck, then the scan reveals the page. */
+  .sk-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: #0A0A0A; overflow: hidden; }
   html[data-boot] .sk-boot { display: block; animation: boot-out .8s var(--ease-io) 1.5s forwards; }
   html[data-boot] { --enter: 1.65s; }
   @keyframes boot-out { to { transform: translateY(100%); } }
-  .sk-boot__frame { position: absolute; inset: 0; background: var(--f); visibility: hidden; animation: frame-on 1ms linear calc(var(--i) * .4s) forwards; }
-  @keyframes frame-on { to { visibility: visible; } }
-  .sk-boot__line { position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 2px; background: var(--lc); box-shadow: 0 1px 0 var(--card), 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); }
+  .sk-boot__frame { position: absolute; inset: 0; background: var(--f); opacity: 0; animation: frame-on 1ms linear calc(var(--i) * .4s) forwards; }
+  @keyframes frame-on { to { opacity: 1; } }
+  .sk-boot__line { position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 2px; background: #2474F7; box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px #2474F7; }
 
   /* centre art: a caret, then a deck of skill cards (the page's tiles in miniature) */
   .sk-deck { position: absolute; left: 50%; top: 42%; width: clamp(5.6rem, 15vw, 8.5rem); aspect-ratio: 3 / 4; translate: -50% -50%; }
@@ -60,24 +59,25 @@
   .sk-card i:nth-child(4) { width: 52%; opacity: .45; }
   .sk-card--blue  { --c: var(--lc); --k: var(--ink); }
   .sk-card--white { --c: var(--card); --k: var(--ink); box-shadow: inset 0 0 0 1px var(--line-2); }
-  .sk-card--ink   { --c: var(--ink); --k: #F3F3EF; }
-  .sk-boot__frame .sk-card--blue.is-held { animation: none; box-shadow: 0 0 0 1.5px var(--ink), 0 24px 50px -24px rgba(10,10,10,.5); z-index: 2; }
+  .sk-card--ink   { --c: #202020; --k: #F3F3EF; }
+  .sk-boot__frame .sk-card--blue.is-held { animation: none; box-shadow: 0 0 0 1.5px rgba(242,242,239,.35), 0 24px 50px -24px rgba(10,10,10,.5); z-index: 2; }
   .sk-card--l { --x: -58%; --r: -9deg; }
   .sk-card--r { --x: 58%; --r: 9deg; }
   @keyframes card-pop { 0% { opacity: 0; transform: translate(0, 30%) scale(.5); } 35% { opacity: 1; } 100% { opacity: 1; transform: translateX(var(--x)) rotate(var(--r)); } }
 
   /* the log: `cd`, `ls`, then each skill comes online; "built for Codex" is plain text */
-  .sk-boot__log { position: absolute; z-index: 2; left: 0; right: 0; bottom: max(10vh, 4.5rem); display: grid; gap: .7rem; font: 500 clamp(.8rem, 2.6vw, 1.05rem)/1.2 var(--font-mono); color: var(--ink); }
+  .sk-boot__log { position: absolute; z-index: 2; left: 0; right: 0; bottom: max(10vh, 4.5rem); display: grid; gap: .7rem; font: 500 clamp(.8rem, 2.6vw, 1.05rem)/1.2 var(--font-mono); color: #F2F2EF; }
+  .sk-boot__log p span { color: #2474F7; }
   .sk-boot__log > p, .sk-boot__ls li { opacity: 0; animation: boot-line .35s var(--ease-out) var(--at) both; }
   .sk-boot__ls { display: grid; gap: .4rem 2.5rem; margin: .1rem 0 .15rem; }
   @media (min-width: 768px) { .sk-boot__ls { grid-template-columns: max-content max-content; grid-auto-flow: column; grid-template-rows: repeat(5, auto); } }
   .sk-boot__ls li { display: flex; align-items: center; gap: .6rem; white-space: nowrap; }
-  .sk-boot__ls li::before { content: ""; width: .45em; height: .45em; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 1px currentColor; flex: none; }
-  .sk-boot__done { color: var(--ink); }
+  .sk-boot__ls li::before { content: ""; width: .45em; height: .45em; border-radius: 50%; background: #2474F7; box-shadow: 0 0 0 1px currentColor; flex: none; }
+  .sk-boot__done { color: #F2F2EF; }
   .sk-boot__done b { font-weight: 500; }
   @keyframes boot-line { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   .sk-boot.is-skip { animation: boot-skip .28s ease-out forwards !important; }
-  @keyframes boot-skip { to { opacity: 0; visibility: hidden; } }
+  @keyframes boot-skip { to { opacity: 0; } }
 
   /* ══════════════ Hero (same two-column head as /grok-bot) ══════════════ */
   .sk-hero { padding-top: calc(var(--top-h) + 3rem); }
@@ -144,6 +144,8 @@
   .sk-feature .sk-tile__desc { max-width: 38ch; font-size: 1.06rem; color: var(--ink); }
   @media (min-width: 768px) { .sk-feature .sk-tile__desc { font-size: 1.16rem; } }
   .sk-feature__cta { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.25rem; margin-top: 1.1rem; }
+  .sk-feature .k-btn, .sk-feature .k-btn:hover { background: #FFFFFF; color: #2474F7; }
+  .sk-feature .k-key { background: rgba(36,116,247,.1); box-shadow: inset 0 0 0 1px rgba(36,116,247,.3), inset 0 -2px 0 rgba(36,116,247,.22); }
   .sk-feature__also { font: 500 .78rem/1.4 var(--font-mono); }
   .sk-feature__also a { color: var(--ink); }
 
@@ -179,17 +181,17 @@
 
 <!-- ═══════════ Boot intro ═══════════ -->
 <div class="sk-boot" aria-hidden="true">
-  <div class="sk-boot__frame" style="--i:0;--f:#F2F2EF"><div class="sk-deck"><span class="sk-deck__caret"></span></div></div>
-  <div class="sk-boot__frame" style="--i:1;--f:#FFFFFF"><div class="sk-deck"><span class="sk-card sk-card--blue" style="--at:.4s"><i></i><i></i><i></i><i></i></span></div></div>
-  <div class="sk-boot__frame" style="--i:2;--f:#2474F7"><div class="sk-deck">
+  <div class="sk-boot__frame" style="--i:0;--f:#0A0A0A"><div class="sk-deck"><span class="sk-deck__caret"></span></div></div>
+  <div class="sk-boot__frame" style="--i:1;--f:#141414"><div class="sk-deck"><span class="sk-card sk-card--blue" style="--at:.4s"><i></i><i></i><i></i><i></i></span></div></div>
+  <div class="sk-boot__frame" style="--i:2;--f:#0A0A0A"><div class="sk-deck">
     <span class="sk-card sk-card--white sk-card--l" style="--at:.8s"><i></i><i></i><i></i><i></i></span>
     <span class="sk-card sk-card--ink sk-card--r" style="--at:.9s"><i></i><i></i><i></i><i></i></span>
     <span class="sk-card sk-card--blue is-held"><i></i><i></i><i></i><i></i></span>
   </div></div>
   <div class="sk-boot__line"></div>
   <div class="wrap sk-boot__log">
-    <p style="--at:.06s">$ cd ~/codex-skills</p>
-    <p style="--at:.34s">$ ls</p>
+    <p style="--at:.06s"><span>$</span> cd ~/codex-skills</p>
+    <p style="--at:.34s"><span>$</span> ls</p>
     <ul class="sk-boot__ls">
       <li style="--at:.48s">codex-first-customer-finder-skill</li>
       <li style="--at:.53s">codex-startup-pressure-test-skill</li>
@@ -207,7 +209,7 @@
 </div>
 
 <a class="k-skip" href="#main">Skip to content</a>
-<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div><div class="k-scan__prompt"><span class="k-scan__sig">$</span><span class="k-scan__cmd"></span><span class="k-scan__cursor"></span></div></div>
 
 <!-- ═══════════ Top bar (sub-page) ═══════════ -->
 <header class="k-top k-top--sub">
@@ -400,12 +402,13 @@
     boot.addEventListener("animationend", function (e) { if (e.target === boot) finish(); });
     var skip = function () {
       if (done) return;
-      boot.classList.add("is-skip"); root.style.setProperty("--enter", "0s");
+      boot.classList.add("is-skip"); root.style.setProperty("--enter", "0s"); KM.skipScan();
       setTimeout(finish, 300);
     };
     ["keydown", "wheel", "touchstart", "pointerdown"].forEach(function (ev) { window.addEventListener(ev, skip, { once: true, passive: true }); });
     setTimeout(finish, 2900);
   }
+  window.addEventListener("pageshow", function (e) { if (e.persisted && boot) { boot.style.display = "none"; root.removeAttribute("data-boot"); } });
 })();
 </script>
 </body>

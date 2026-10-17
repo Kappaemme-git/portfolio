@@ -20,13 +20,14 @@
   Grok Bots library; shared light system in ../assets/. Bot data: bots.data.js.
 -->
 <script>
-  /* Boot once per session, or whenever we arrive through the scan transition. */
+  /* Boot once per session; a cross-page arrival gets its own scan reveal. */
   (function () {
     var d = document.documentElement; d.classList.add("js");
     try {
       var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
       var viaScan = sessionStorage.getItem("k-scan"); sessionStorage.removeItem("k-scan");
-      if (!reduce && (viaScan || !sessionStorage.getItem("kgb-booted"))) { d.setAttribute("data-boot", ""); sessionStorage.setItem("kgb-booted", "1"); }
+      if (!reduce && viaScan) d.setAttribute("data-scan", "in");
+      if (!reduce && !sessionStorage.getItem("kgb-booted")) { d.setAttribute("data-boot", ""); sessionStorage.setItem("kgb-booted", "1"); }
     } catch (e) {}
   })();
 </script>
@@ -35,30 +36,27 @@
 <style>
   @media (max-width: 639px) { .k-top--sub .k-brand__name { display: none; } }
 
-  /* ══════════════ Boot intro (v3): colour frames + terminal log + scan ══════════════
-     Paper frame types the command, white frame brings Limit Coach online,
-     blue frame brings Crankobot online, then the scan line sweeps down. */
-  .gb-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: var(--paper); overflow: hidden; }
+  /* Black boot frames bring the two bots online before the scan reveals the page. */
+  .gb-boot { position: fixed; inset: 0; z-index: 2900; display: none; background: #0A0A0A; overflow: hidden; }
   html[data-boot] .gb-boot { display: block; animation: boot-out .8s var(--ease-io) 1.25s forwards; }
   html[data-boot] { --enter: 1.4s; }
   @keyframes boot-out { to { transform: translateY(100%); } }
-  .gb-boot__frame { position: absolute; inset: 0; display: grid; place-items: center; background: var(--f); visibility: hidden; animation: frame-on 1ms linear calc(var(--i) * .4s) forwards; }
-  @keyframes frame-on { to { visibility: visible; } }
+  .gb-boot__frame { position: absolute; inset: 0; display: grid; place-items: center; background: var(--f); opacity: 0; animation: frame-on 1ms linear calc(var(--i) * .4s) forwards; }
+  @keyframes frame-on { to { opacity: 1; } }
   .gb-boot__frame img { width: clamp(7rem, 24vw, 12rem); height: auto; animation: frame-pop .6s var(--spring) calc(var(--i) * .4s) both; }
   @keyframes frame-pop { 0% { opacity: 0; transform: translateY(30%) scale(.5); } 35% { opacity: 1; } 100% { opacity: 1; transform: none; } }
-  .gb-boot__line { position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 2px; background: var(--lc); box-shadow: 0 1px 0 var(--card), 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); }
+  .gb-boot__line { position: absolute; z-index: 2; top: 0; left: 0; right: 0; height: 2px; background: #2474F7; box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px #2474F7; }
   .gb-boot__log { position: absolute; z-index: 2; left: 0; right: 0; bottom: max(12vh, 5.5rem); display: grid; gap: .7rem; font: 500 clamp(.95rem, 2.6vw, 1.15rem)/1.2 var(--font-mono);
-    animation: log-tint 1.2s step-end forwards; }
-  @keyframes log-tint { 0% { color: var(--ink); } 33.333% { color: var(--ink); } 66.667%, 100% { color: #050505; } }
+    color: #F2F2EF; }
   .gb-boot__log p { opacity: 0; animation: boot-line .35s var(--ease-out) calc(.08s + var(--i) * .4s) both; }
-  .gb-boot__log span { opacity: 1; }
+  .gb-boot__log span { color: #2474F7; }
   .gb-boot__log i { display: inline-block; width: .55em; height: .55em; margin-right: .6rem; border-radius: 50%; background: currentColor; vertical-align: .05em; }
   .gb-boot__log i.lc { background: var(--lc); box-shadow: 0 0 0 1.5px currentColor; }
   .gb-boot__log em { font-style: normal; }
-  .gb-boot__log em::before { content: ""; display: inline-block; width: .45em; height: .45em; margin-right: .45em; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 1px currentColor; vertical-align: .1em; }
+  .gb-boot__log em::before { content: ""; display: inline-block; width: .45em; height: .45em; margin-right: .45em; border-radius: 50%; background: #2474F7; box-shadow: 0 0 0 1px currentColor; vertical-align: .1em; }
   @keyframes boot-line { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   .gb-boot.is-skip { animation: boot-skip .28s ease-out forwards !important; }
-  @keyframes boot-skip { to { opacity: 0; visibility: hidden; } }
+  @keyframes boot-skip { to { opacity: 0; } }
 
   /* ══════════════ Hero (left-aligned, two-column head) ══════════════ */
   .gb-hero { padding-top: calc(var(--top-h) + 3rem); }
@@ -191,9 +189,9 @@
 
 <!-- ═══════════ Boot intro ═══════════ -->
 <div class="gb-boot" aria-hidden="true">
-  <div class="gb-boot__frame" style="--i:0;--f:#F2F2EF"></div>
-  <div class="gb-boot__frame" style="--i:1;--f:#FFFFFF"><img src="assets/limit-coach.svg" alt="" width="100" height="100"></div>
-  <div class="gb-boot__frame" style="--i:2;--f:#2474F7"><img src="assets/crankobot.svg" alt="" width="100" height="100"></div>
+  <div class="gb-boot__frame" style="--i:0;--f:#0A0A0A"></div>
+  <div class="gb-boot__frame" style="--i:1;--f:#141414"><img src="assets/limit-coach.svg" alt="" width="100" height="100"></div>
+  <div class="gb-boot__frame" style="--i:2;--f:#0A0A0A"><img src="assets/crankobot.svg" alt="" width="100" height="100"></div>
   <div class="gb-boot__line"></div>
   <div class="wrap gb-boot__log">
     <p style="--i:0"><span>$</span> cd ~/grok-bots</p>
@@ -203,7 +201,7 @@
 </div>
 
 <a class="k-skip" href="#main">Skip to content</a>
-<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
+<div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div><div class="k-scan__prompt"><span class="k-scan__sig">$</span><span class="k-scan__cmd"></span><span class="k-scan__cursor"></span></div></div>
 
 <!-- ═══════════ Top bar (sub-page) ═══════════ -->
 <header class="k-top k-top--sub">
@@ -386,12 +384,13 @@
     boot.addEventListener("animationend", function (e) { if (e.target === boot) finish(); });
     var skip = function () {
       if (done) return;
-      boot.classList.add("is-skip"); root.style.setProperty("--enter", "0s");
+      boot.classList.add("is-skip"); root.style.setProperty("--enter", "0s"); KM.skipScan();
       setTimeout(finish, 300);
     };
     ["keydown", "wheel", "touchstart", "pointerdown"].forEach(function (ev) { window.addEventListener(ev, skip, { once: true, passive: true }); });
     setTimeout(finish, 2600);
   } else setTimeout(wake, 600);
+  window.addEventListener("pageshow", function (e) { if (e.persisted && boot) { boot.style.display = "none"; root.removeAttribute("data-boot"); } });
 })();
 </script>
 </body>

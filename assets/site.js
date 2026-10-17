@@ -139,33 +139,46 @@
       }).catch(function () { /* keep the verified fallback labels */ });
   };
 
-  /* ───────────── Scan transition on page-to-page links ───────────── */
-  var scan = $(".k-scan");
-  if (scan && html().getAttribute("data-scan") === "in") {
-    var fill = $(".k-scan__fill", scan);
-    fill.addEventListener("animationend", function () { scan.style.display = "none"; });
-    setTimeout(function () { scan.style.display = "none"; }, 2500);
+  /* ───────────── Black scan transition on cross-page links ───────────── */
+  var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer;
+  function path(url) { return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, ""); }
+  function clearScan() {
+    if (!scan) return;
+    clearTimeout(arrivalTimer);
+    scan.classList.remove("is-out"); scan.style.display = "none";
+    document.documentElement.removeAttribute("data-scan");
   }
-  function html() { return document.documentElement; }
-  $$("a[data-scan]").forEach(function (a) {
-    var busy = a.getAttribute("data-busy-text");
-    if (busy && !$(".k-btn__busy", a)) a.insertAdjacentHTML("beforeend", '<span class="k-btn__busy" aria-hidden="true">' + esc(busy) + "</span>");
-    a.addEventListener("click", function (e) {
-      if (reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      e.preventDefault();
-      if (a.hasAttribute("data-busy")) return;
-      a.setAttribute("data-busy", "");
-      scan.style.display = ""; html().removeAttribute("data-scan");
-      setTimeout(function () { scan.classList.add("is-out"); }, 180);
-      setTimeout(function () {
-        try { sessionStorage.setItem("k-scan", "1"); } catch (err) {}
-        window.location.href = a.href;
-      }, 820);
-    });
+  KM.skipScan = clearScan;
+  if (scan && document.documentElement.getAttribute("data-scan") === "in") {
+    $(".k-scan__fill", scan).addEventListener("animationend", clearScan, { once: true });
+    arrivalTimer = setTimeout(clearScan, 650);
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[data-scan]");
+    if (!a || reduce || !scan || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
+    var url = new URL(a.href, location.href);
+    if (!/^(https?:|file:)$/.test(url.protocol) || url.protocol !== location.protocol || url.origin !== location.origin || (path(url) === path(location) && (url.hash || !a.hasAttribute("data-scan-reload")))) return;
+    e.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    var page = path(url).split("/").pop();
+    var command = "cd ~" + (page === "grok-bot" ? "/grok-bots" : page === "skills" || page === "coffee" ? "/" + page : "");
+    var cmd = $(".k-scan__cmd", scan);
+    cmd.textContent = command;
+    cmd.style.setProperty("--chars", command.length);
+    clearTimeout(arrivalTimer);
+    scan.style.display = "";
+    document.documentElement.removeAttribute("data-scan");
+    scan.offsetHeight; /* commit the hidden start frame before the wipe */
+    scan.classList.add("is-out");
+    leaveTimer = setTimeout(function () {
+      try { sessionStorage.setItem("k-scan", "1"); } catch (err) {}
+      location.assign(url.href);
+    }, 620);
   });
   window.addEventListener("pageshow", function (e) {
     if (!e.persisted) return;
-    if (scan) { scan.classList.remove("is-out"); scan.style.display = "none"; }
+    clearTimeout(leaveTimer); leaving = false; clearScan();
     $$("a[data-busy]").forEach(function (a) { a.removeAttribute("data-busy"); });
   });
 
