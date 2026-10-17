@@ -1,14 +1,12 @@
 /*
  * Grok Bot library — single source of truth for every bot on the page.
  *
- * To add a bot: append one object to the array. The hero crew, library tiles,
- * under-the-hood cards, closing crew and repository links render from here.
- * Intro frames are configured below, in this same file, to preserve their
- * exact six-beat cinematic sequence.
+ * To add a bot: append one object to the array. The stage, examples,
+ * repository rows and footer bot links render from here.
  *
  * Avatar geometry lives in a 100 × 100 viewBox:
  *   shape "circle" → <circle cx=50 cy=50 r=45>
- *   shape "blob"   → soft, slightly squashed circle (see BLOB in index.html)
+ *   shape "blob"   → soft, slightly squashed circle (see BLOB in assets/site.js)
  *   eyes           → capsules: centre (cx, cy), width w, height h, rotation rot (deg)
  * Eyes are clipped to the body, so cursor-follow can never push them outside.
  *
@@ -107,16 +105,3 @@ window.GROK_BOTS = [
     }
   }
 ];
-
-/* The six intro beats are data as well; their order and grounds match SPEC.md. */
-window.GROK_BOT_INTRO = [
-  { bg: "#0A0A0A", fg: "#FFFFFF", botIds: ["limit-coach"], word: "Watches my limits." },
-  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"], word: "Finds first customers." },
-  { bg: "#F2F2EF", fg: "#0A0A0A", botIds: ["limit-coach"], word: "Lives in the notch." },
-  { bg: "#161616", fg: "#FFFFFF", botIds: ["limit-coach", "crankobot"], word: "Runs on Grok Bot." },
-  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"], word: "Reads public demand." },
-  { bg: "#F2F2EF", fg: "#0A0A0A", botIds: ["limit-coach"], word: "Built in public." }
-];
-
-/* Empty slots shown after the real bots, so the library reads as a library. */
-window.GROK_BOT_SLOTS = 2;
