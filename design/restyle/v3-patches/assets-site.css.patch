@@ -1,0 +1,175 @@
+--- a/assets/site.css
++++ b/assets/site.css
+@@ -1,30 +1,40 @@
+ /* ══════════════════════════════════════════════════════════════════════
+-   kappaemme.dev — shared dark system (home, /coffee, /grok-bot)
+-   Source of truth for Codex → /assets/site.css. Spec: design/restyle/SPEC.md
++   kappaemme.dev — shared system v3 HYBRID (home, /coffee, /grok-bot)
++   Source of truth for Codex → assets/site.css. Spec: design/restyle/SPEC.md §v3
++   Paper base; dark objects (.k-dark & friends) and blue blocks (.k-blue) re-scope
++   the same tokens, so every v2 component and animation works unchanged.
+    Signature motif: the caret (nav, terminal, scan line, typed wordmark). Everything animates transform/opacity only.
+    ══════════════════════════════════════════════════════════════════════ */
+ 
+ :root {
+-  color-scheme: dark;
++  color-scheme: light;
+ 
+   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+ 
+-  /* Ground */
+-  --bg:      #000000;               /* every page */
+-  --raise:   #0B0B0B;               /* cards, panels */
+-  --raise-2: #141414;               /* Grok Bot app panel, nested */
+-  --floor:   #0E0E0E;               /* the footer floor under the page */
+-  --text:    #F3F3EF;               /* off-white */
+-  --text-2:  rgba(243,243,239,.66); /* ledes  ≈ 10:1 */
+-  --text-3:  rgba(243,243,239,.50); /* meta   ≈ 5.9:1 */
+-  --line:    rgba(255,255,255,.09);
+-  --line-2:  rgba(255,255,255,.16);
+-  --line-3:  rgba(255,255,255,.30);
++  /* Palette (v3) */
++  --paper:   #F2F2EF;               /* page ground */
++  --paper-2: #E8E8E3;
++  --card:    #FFFFFF;
++  --ink:     #0A0A0A;
++  --night:   #0A0A0A;               /* dark objects: terminal, stage, floor, night tiles */
++  --panel:   #161616;               /* "Under the hood" tile, nested dark panels */
+ 
++  /* Ground — scoped tokens (light by default; see the scopes below) */
++  --bg:      var(--paper);
++  --raise:   var(--card);           /* cards on paper */
++  --raise-2: var(--paper-2);        /* nested (quote boxes) */
++  --floor:   var(--night);          /* the footer floor under the page */
++  --text:    var(--ink);
++  --text-2:  rgba(10,10,10,.68);    /* ledes ≈ 6.7:1 */
++  --text-3:  rgba(10,10,10,.60);    /* meta  ≈ 5.0:1 */
++  --line:    rgba(10,10,10,.10);
++  --line-2:  rgba(10,10,10,.18);
++  --line-3:  rgba(10,10,10,.34);
++
+   /* Accents */
+   --lc:      #2474F7;               /* Limit Coach — the one strong colour */
+-  --lc-text: #6AA1FF;               /* LC tint for small text on black (≈7.6:1) */
++  --lc-text: #1A5FD6;               /* LC for small text on paper (≈5.2:1) */
+   --lc-glow: rgba(36,116,247,.5);
+   --live:    #10A37F;               /* "live" green from the original site */
+   --zac:     #0B193E;
+@@ -36,6 +46,7 @@
+   --r:    16px;                     /* cards */
+   --r-sm: 12px;                     /* buttons, screens */
+   --r-xs: 7px;                      /* keycaps, chips */
++  --r-tile: 28px;                   /* colour blocks (v3) */
+ 
+   /* Motion */
+   --ease-out:  cubic-bezier(.22, 1, .36, 1);
+@@ -55,6 +66,31 @@
+ @media (min-width: 768px)  { :root { --section-y: 8rem; --floor-h: 30rem; } }
+ @media (min-width: 1024px) { :root { --section-y: 9rem; } }
+ 
++/* ── Scopes (v3) ─────────────────────────────────────────────────────────
++   Dark objects on paper re-scope the tokens to the v2 dark values;
++   Limit Coach blocks re-scope them to white-on-blue. */
++.k-dark, .k-floor, .k-term, .k-stage, .gb-set, .gb-boot, .k-tile--night, .k-tile--panel {
++  color-scheme: dark;
++  --bg: var(--night); --raise: var(--panel); --raise-2: #1F1F1F;
++  --text: #F3F3EF; --text-2: rgba(243,243,239,.68); --text-3: rgba(243,243,239,.52);
++  --line: rgba(255,255,255,.10); --line-2: rgba(255,255,255,.18); --line-3: rgba(255,255,255,.32);
++  --lc-text: #6AA1FF;
++  color: var(--text);
++}
++.k-blue, .k-tile--blue {
++  --bg: var(--lc); --raise: rgba(255,255,255,.12); --raise-2: rgba(10,10,10,.16);
++  --text: #FFFFFF; --text-2: rgba(255,255,255,.9); --text-3: rgba(255,255,255,.8);
++  --line: rgba(255,255,255,.24); --line-2: rgba(255,255,255,.36); --line-3: rgba(255,255,255,.62);
++  --lc-text: #FFFFFF;
++  color: var(--text);
++}
++/* Colour blocks — the Grok Bot tile family: blue, white, night, panel. Nothing else. */
++.k-tile { position: relative; border-radius: var(--r-tile); overflow: hidden; }
++.k-tile--blue  { background: var(--lc); }
++.k-tile--white { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
++.k-tile--night { background: var(--night); }
++.k-tile--panel { background: var(--panel); }
++
+ *, *::before, *::after { box-sizing: border-box; }
+ html { scroll-behavior: smooth; scroll-padding-top: calc(var(--top-h) + 1.5rem); -webkit-text-size-adjust: 100%; }
+ html, body { margin: 0; background: var(--bg); color: var(--text); overscroll-behavior-y: none; overflow-x: clip; }
+@@ -72,7 +108,7 @@
+ ::selection { background: var(--lc); color: #fff; }
+ :focus-visible { outline: 2px solid var(--lc); outline-offset: 3px; border-radius: 4px; }
+ .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+-.k-skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; padding: .7rem 1rem; border-radius: var(--r-sm); background: var(--text); color: #000; font: 500 .85rem var(--font-mono); text-decoration: none; }
++.k-skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; padding: .7rem 1rem; border-radius: var(--r-sm); background: var(--text); color: var(--bg); font: 500 .85rem var(--font-mono); text-decoration: none; }
+ .k-skip:focus { top: 1rem; }
+ 
+ .wrap { width: 100%; max-width: calc(var(--wrap) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+@@ -102,15 +138,15 @@
+   animation: top-in .5s var(--ease-out) calc(var(--enter) + .05s) backwards;
+ }
+ .k-top.is-scrolled {
+-  background: rgba(0,0,0,.74); border-bottom-color: var(--line);
++  background: rgba(242,242,239,.82); border-bottom-color: var(--line);
+   -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
+ }
+ @keyframes top-in { 0% { opacity: 0; transform: translateY(-8px); } }
+ .k-top__in { display: flex; align-items: center; gap: 1.5rem; height: 100%; }
+ .k-brand { display: inline-flex; align-items: center; gap: .7rem; min-height: 44px; text-decoration: none; font: 500 .82rem/1 var(--font-mono); letter-spacing: .01em; }
+ .k-brand__mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; box-shadow: inset 0 0 0 1px var(--line-2); transition: box-shadow .25s, background-color .25s; }
+-.k-brand__mark img { width: 20px; height: 12px; filter: invert(1); }
+-.k-brand:hover .k-brand__mark { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px var(--line-3); }
++.k-brand__mark img { width: 20px; height: 12px; }
++.k-brand:hover .k-brand__mark { background: rgba(10,10,10,.05); box-shadow: inset 0 0 0 1px var(--line-3); }
+ .k-brand__back { width: 15px; height: 15px; color: var(--text-3); transition: transform .3s var(--ease-out), color .2s; }
+ .k-brand:hover .k-brand__back { transform: translateX(-2px); color: var(--text); }
+ 
+@@ -191,23 +227,23 @@
+ .k-btn {
+   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .85rem;
+   min-height: 3.25rem; padding: 0 .55rem 0 1.25rem; border: 0; border-radius: var(--r-sm); cursor: pointer; white-space: nowrap;
+-  background: var(--text); color: #000; text-decoration: none;
++  background: var(--text); color: var(--bg); text-decoration: none;
+   font: 600 1rem/1 var(--font-sans); letter-spacing: -.01em;
+   transition: background-color .2s, transform .3s var(--ease-out), box-shadow .3s;
+ }
+-.k-btn:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 10px 30px -14px rgba(255,255,255,.35); }
++.k-btn:hover { background: color-mix(in srgb, var(--text) 84%, var(--bg)); transform: translateY(-1px); box-shadow: 0 10px 30px -14px color-mix(in srgb, var(--text) 45%, transparent); }
+ .k-btn:active { transform: translateY(0); }
+ .k-key {
+   display: inline-grid; place-items: center; min-width: 2.15rem; height: 2.15rem; padding: 0 .45rem; border-radius: var(--r-xs);
+-  font: 500 .82rem/1 var(--font-mono); background: rgba(0,0,0,.06);
+-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.16), inset 0 -2px 0 rgba(0,0,0,.14);
++  font: 500 .82rem/1 var(--font-mono); background: color-mix(in srgb, currentColor 12%, transparent);
++  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 26%, transparent), inset 0 -2px 0 color-mix(in srgb, currentColor 22%, transparent);
+   transition: transform .15s;
+ }
+-.k-btn:active .k-key { transform: translateY(1px); box-shadow: inset 0 0 0 1px rgba(0,0,0,.16); }
++.k-btn:active .k-key { transform: translateY(1px); box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 26%, transparent); }
+ .k-key svg { width: 14px; height: 14px; }
+ .k-btn--ghost { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1px var(--line-2); }
+-.k-btn--ghost:hover { background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px var(--line-3); }
+-.k-btn--ghost .k-key { background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px var(--line-2), inset 0 -2px 0 rgba(255,255,255,.07); }
++.k-btn--ghost:hover { background: color-mix(in srgb, var(--text) 5%, transparent); box-shadow: inset 0 0 0 1px var(--line-3); }
++.k-btn--ghost .k-key { background: color-mix(in srgb, var(--text) 5%, transparent); box-shadow: inset 0 0 0 1px var(--line-2), inset 0 -2px 0 var(--line); }
+ .k-btn--plain { padding: 0 1.25rem; }
+ .k-btn > svg { width: 17px; height: 17px; }
+ /* busy state while the scan transition runs: label becomes a typed mono line */
+@@ -239,7 +275,7 @@
+ .k-row__meta { grid-area: meta; display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; }
+ .k-go { grid-area: go; justify-self: end; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--line-2); transition: background-color .25s, color .25s, box-shadow .25s; }
+ .k-go svg { width: 14px; height: 14px; transition: transform .3s var(--ease-out); }
+-a:hover > .k-go, a:focus-visible > .k-go { background: var(--text); color: #000; box-shadow: none; }
++a:hover > .k-go, a:focus-visible > .k-go { background: var(--text); color: var(--bg); box-shadow: none; }
+ a:hover > .k-go svg { transform: translate(1px, -1px); }
+ 
+ /* hairlines that draw in */
+@@ -300,7 +336,7 @@
+    and on arrival the page is revealed behind the line as it continues.
+    ══════════════════════════════════════════════════════════════════════ */
+ .k-scan { position: fixed; inset: 0; z-index: 3600; pointer-events: none; visibility: hidden; overflow: hidden; }
+-.k-scan__fill { position: absolute; inset: 0; background: #000; transform-origin: 50% 0; transform: scaleY(0); }
++.k-scan__fill { position: absolute; inset: 0; background: var(--night); transform-origin: 50% 0; transform: scaleY(0); }
+ .k-scan__line { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--lc); box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px var(--lc); transform: translateY(-6px); }
+ .k-scan.is-out { visibility: visible; pointer-events: auto; }
+ .k-scan.is-out .k-scan__fill { transition: transform .6s var(--ease-io); transform: scaleY(1); }

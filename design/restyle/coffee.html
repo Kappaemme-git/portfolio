@@ -6,13 +6,17 @@
 <title>Buy me a coffee | Kappaemme</title>
 <meta name="description" content="Support Kappaemme with a small donation through Stripe.">
 <meta name="author" content="Francesco Mistero">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#F2F2EF">
+<meta property="og:type" content="website" />
+  <meta property="og:title" content="Buy me a coffee | Kappaemme" />
+  <meta property="og:description" content="A small support page for Francesco Mistero, CS student and indie hacker." />
+  <meta property="og:image" content="https://kappaemmedev.vercel.app/images/og-logo.png" />
 <link rel="icon" type="image/svg+xml" href="../../coffee/km-logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <!--
-  RESTYLE PROTOTYPE (dark) — /coffee (coffee/index.html). Spec: design/restyle/SPEC.md §8
+  Coffee support page; shared dark system in ../assets/.
 -->
 <script>
   document.documentElement.classList.add("js");
@@ -47,9 +51,9 @@
 
   .c-reasons { display: grid; gap: 1rem; }
   @media (min-width: 768px) { .c-reasons { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; } }
-  .c-reason { display: flex; flex-direction: column; min-height: 13rem; padding: 1.5rem 1.4rem 1.6rem; transition: box-shadow .3s; }
+  .c-reason { display: flex; flex-direction: column; min-height: 13rem; padding: 1.5rem 1.4rem 1.6rem; transition: transform .35s var(--ease-out); }
   @media (min-width: 768px) { .c-reason { min-height: 17rem; padding: 1.9rem 1.75rem 2rem; } }
-  .c-reason:hover { box-shadow: inset 0 0 0 1px var(--line-3); }
+  .c-reason:hover { transform: translateY(-3px); }
   .c-reason > span { font: 500 .74rem/1 var(--font-mono); color: var(--lc-text); }
   .c-reason h3 { margin-top: auto; padding-top: 2.25rem; font-size: clamp(1.55rem, 2.4vw, 2rem); font-weight: 600; line-height: 1.05; letter-spacing: -.04em; text-wrap: balance; }
   .c-reason p { margin-top: .75rem; font-size: 1rem; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
@@ -78,7 +82,6 @@
 </svg>
 
 <a class="k-skip" href="#main">Skip to content</a>
-<div class="k-cursor" aria-hidden="true"></div>
 <div class="k-scan" aria-hidden="true"><div class="k-scan__fill"></div><div class="k-scan__line"></div></div>
 
 <!-- ═══════════ Top bar (sub-page) ═══════════ -->
@@ -131,9 +134,9 @@
         <h2 class="k-h2 reveal" id="why-title">Why it helps.</h2>
       </header>
       <div class="c-reasons" data-stagger>
-        <article class="c-reason k-card reveal"><span>build</span><h3>I ship small products fast.</h3><p>VibeDesk, ShipSlap and PocketFlow started from simple ideas, real usage and fast iteration.</p></article>
-        <article class="c-reason k-card reveal"><span>learn</span><h3>I keep raising the bar.</h3><p>I study Computer Science at Federico II and use every project to sharpen the next one.</p></article>
-        <article class="c-reason k-card reveal"><span>repeat</span><h3>Your support becomes momentum.</h3><p>Every small donation helps cover tools, experiments and the time to keep building in public.</p></article>
+        <article class="c-reason k-tile k-tile--blue reveal"><span>build</span><h3>I ship small products fast.</h3><p>VibeDesk, ShipSlap and pocketflow started from simple ideas, real usage and fast iteration.</p></article>
+        <article class="c-reason k-tile k-tile--night reveal"><span>learn</span><h3>I keep raising the bar.</h3><p>I study Computer Science at Federico II and use every project to sharpen the next one.</p></article>
+        <article class="c-reason k-tile k-tile--white reveal"><span>repeat</span><h3>Your support becomes momentum.</h3><p>Every small donation helps cover tools, experiments and the time to keep building in public.</p></article>
       </div>
     </div>
   </section>

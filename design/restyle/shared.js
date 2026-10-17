@@ -7,7 +7,6 @@
   "use strict";
   var KM = window.KM = window.KM || {};
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer = window.matchMedia("(pointer: fine)").matches;
   var hasIO = "IntersectionObserver" in window;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -170,23 +169,10 @@
     $$("a[data-busy]").forEach(function (a) { a.removeAttribute("data-busy"); });
   });
 
-  /* ───────────── Pointer, cursor, parallax, bots: one rAF loop ───────────── */
+  /* ───────────── Pointer, parallax, bots: one rAF loop ───────────── */
   var mouse = { x: window.innerWidth / 2, y: window.innerHeight * .35, t: -1e9 };
   window.addEventListener("pointermove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.t = performance.now(); }, { passive: true });
   window.addEventListener("pointerdown", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.t = performance.now(); }, { passive: true });
-
-  var cursor = $(".k-cursor"), cur = { x: -100, y: -100, vx: 0, vy: 0 };
-  var useCursor = !!cursor && finePointer && !reduce;
-  if (useCursor) {
-    html().classList.add("has-cursor");
-    window.addEventListener("pointermove", function (e) {
-      cursor.classList.add("is-on");
-      var t = e.target; if (!t || !t.closest) return;
-      cursor.classList.toggle("is-hot", !!t.closest("a[href], button, [data-hot], .gbot"));
-      cursor.classList.toggle("is-blue", !!t.closest('[data-cursor-blue], .gbot[data-bot="limit-coach"]'));
-    }, { passive: true });
-    html().addEventListener("pointerleave", function () { cursor.classList.remove("is-on"); });
-  } else if (cursor) cursor.remove();
 
   var para = [], actors = [];
   KM.initMotion = function () {
@@ -264,14 +250,6 @@
       a.sq += (Math.min(Math.abs(vel) * .004, .05) - a.sq) * .15;        // squash with speed
       a.lift += ((a.liftT || 0) - a.lift) * .2;
       if (a.body) a.body.style.transform = "translate3d(0," + a.lift.toFixed(1) + "px,0) rotate(" + a.lean.toFixed(2) + "deg) scale(" + (1 + a.sq * .6).toFixed(3) + "," + (1 - a.sq).toFixed(3) + ")";
-    }
-    if (useCursor) {
-      var k = 1100, c = 52, m = .3, h = dt / 2;
-      for (var s = 0; s < 2; s++) {
-        cur.vx += ((mouse.x - cur.x) * k - cur.vx * c) / m * h; cur.vy += ((mouse.y - cur.y) * k - cur.vy * c) / m * h;
-        cur.x += cur.vx * h; cur.y += cur.vy * h;
-      }
-      cursor.style.transform = "translate3d(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px,0)";
     }
     for (i = 0; i < para.length; i++) {
       p = para[i];

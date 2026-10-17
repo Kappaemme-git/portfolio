@@ -1,6 +1,147 @@
-# kappaemme.dev restyle (dark): design spec
+# kappaemme.dev restyle: design spec
 
-Design hand-off for the whole site: home, `/coffee` and `/grok-bot`. **This replaces the earlier light "paper" direction.** Codex implements it in `index.html`, `coffee/index.html` and `grok-bot/index.html`. Nothing in those files has been changed by design.
+> **Current direction: v3 hybrid (below).** Everything from v2 dark (sections further down) still applies unless v3 overrides it. That includes the motion, the caret motif, the components, the content and the accessibility. v3 changes only the **palette, the grounds and the colour blocks**, and makes internal links clean relative URLs.
+
+---
+
+## v3 hybrid
+
+Francesco loves the v2 animations and interactions, but black-on-black was too much. v3 brings back the **light paper base** of the first version. Black appears only where it creates an effect, and the colour blocks of the old Grok Bot page come back. **Every v2 animation and interaction is kept exactly:**
+- `~/` section labels;
+- the nav caret underline;
+- the `cd ~/grok-bots` busy label and blue scan transition;
+- the boot log;
+- the bot stage (eye tracking, blink, float, scroll sway and squash, tap hop);
+- the typed `kappaemme.dev` floor with its blinking blue caret;
+- the skills terminal;
+- the system cursor (no custom cursor).
+
+### v3.1 How it works: token scopes
+`:root` now holds the **light** values of the same tokens the v2 components already use (`--bg`, `--raise`, `--text`, `--line`, …). Two scopes re-assign them:
+- **Dark objects** (`.k-dark`, `.k-floor`, `.k-term`, `.k-stage`, `.gb-set`, `.gb-boot`, `.k-tile--night`, `.k-tile--panel`) get the v2 dark values back. Inside them every component looks exactly as in v2.
+- **Blue blocks** (`.k-blue`, `.k-tile--blue`) get white-on-Limit-Coach-blue values.
+
+So **no component CSS had to be rewritten.** Only the tokens and a handful of hard-coded dark colours changed.
+
+### v3.2 Palette
+
+| Token | Value | Use |
+|---|---|---|
+| `--paper` = `--bg` | `#F2F2EF` | Page ground on home, `/coffee`, `/grok-bot`; `theme-color` |
+| `--paper-2` = `--raise-2` | `#E8E8E3` | Nested (X quote boxes) |
+| `--card` = `--raise` | `#FFFFFF` | Cards, white tiles |
+| `--ink` = `--text` | `#0A0A0A` | Type, primary buttons |
+| `--text-2` / `--text-3` | ink 68% / 60% | Ledes (≈6.7:1) / meta and the dim half of headlines (≈5.0:1) |
+| `--line` / `--line-2` / `--line-3` | ink 10% / 18% / 34% | Hairlines, rings |
+| `--lc-text` | `#1A5FD6` (paper), `#6AA1FF` (dark), `#FFF` (blue) | `~/`, kickers, the 1.8M+ stat |
+| `--night` | `#0A0A0A` | Terminal, stage, floor, scan fill, night tiles |
+| `--panel` | `#161616` | "Under the hood" tile |
+| `--lc` | `#2474F7` | Limit Coach blocks, nav caret, scan line, footer caret |
+| `--live` | `#10A37F` | **Only** the small live/online dots and terminal ✓ |
+| `--r-tile` | `28px` | Colour blocks |
+
+**Tile family**, and nothing else:
+
+| Class | Ground |
+|---|---|
+| `.k-tile--blue` | `#2474F7` |
+| `.k-tile--white` | `#FFFFFF` + hairline |
+| `.k-tile--night` | `#0A0A0A` |
+| `.k-tile--panel` | `#161616` |
+
+No green, red or coral tiles. Bot rules hold: Limit Coach never on blue (its chip sits on a night square), Crankobot only on dark or blue.
+
+### v3.3 Where the dark and colour moments are (light dominates)
+
+| Page | Paper | White | Blue `#2474F7` | Night `#0A0A0A` / Panel `#161616` |
+|---|---|---|---|---|
+| Home | hero, projects, skill list, on X, stack, journey, contact | skills teaser tile, project/post cards, coffee card | **Grok Bots teaser tile** (white type, white keycap with blue label) | terminal *object* inside the skills tile, bot stage *object* inside the blue tile, floor |
+| `/coffee` | hero, contact | donation panel, "repeat" tile | "build" tile | "learn" tile, KM logo screen, floor |
+| `/grok-bot` | hero, closing | **Crankobot tile** | **Limit Coach tile** | boot night frame, **stage band**, the Grok Bot app panels inside the tiles, **"Under the hood" panel tile**, floor |
+
+### v3.4 Signature elements re-tuned for paper
+- **Nav:** the scrolled top bar is paper 82% + blur with an ink hairline. The brand mark is no longer inverted. The blue caret underline is unchanged.
+- **Buttons:** primary is an ink keycap with a paper label; on blue it is a white keycap with a blue label. Keycaps derive from `currentColor`, so they work on any ground.
+- **Terminal:** stays a dark object (`--night`) with a soft drop shadow, sitting in a white tile.
+- **Scan:** unchanged. A blue line sweeps down over a `--night` fill. On paper this reads as a deliberate dark wipe, and it hands off seamlessly to the boot's first (night) frame.
+- **Floor:** dark `#0A0A0A` under the paper page. The page's rounded bottom lifts off it. The typed wordmark is off-white, ".dev" is dimmed, and the blue caret blinks.
+- **Boot (`/grok-bot`):** the same log, now over **the old coloured intro frames** (0.4s each): night (`$ cd ~/grok-bots`), paper + Limit Coach (`limit-coach online`), blue + Crankobot (`crankobot online`). Then the scan sweeps down. See `../grok-bot/SPEC.md` §v3.
+
+### v3.5 Clean relative URLs (works on raw.githack previews and Vercel)
+Never use root-absolute paths (`/grok-bot/` breaks githack), and never `…/index.html`.
+
+| From | To home | Sections | Coffee | Grok Bots |
+|---|---|---|---|---|
+| home (`index.html`) | `#top` | `#skills` etc. | `coffee/` | `grok-bot/` |
+| `/coffee/` | `../` | `../#skills` etc. | `#top` | `../grok-bot/` |
+| `/grok-bot/` | `../` | `../#products`, `../#skills` | `../coffee/` | `#library` |
+
+The footer wordmark and "More of my work at kappaemme.dev" on sub-pages now use `../` with `data-scan`. Canonical and OG URLs stay absolute (`https://kappaemme.dev/…`).
+
+### v3.6 Codex checklist (incremental, against commit 9de31fe)
+Exact unified diffs are in **`design/restyle/v3-patches/`**. Each one was generated from the prototypes with the path mapping and verified with `git apply --check` on a 9de31fe worktree. You can apply them directly (`git apply design/restyle/v3-patches/*.patch`) or follow the list below.
+
+**`assets/site.css`** (`assets-site.css.patch`; it is identical to `design/restyle/shared.css`):
+- [ ] `:root`: `color-scheme: light`. Add `--paper --paper-2 --card --ink --night --panel --r-tile`. Re-point `--bg --raise --raise-2 --floor --text --text-2 --text-3 --line* --lc-text` to the light values (§v3.2).
+- [ ] Add the **scope block** after the media queries: the dark scope selector list, the blue scope, `.k-tile` and its four variants.
+- [ ] Remove hard-coded dark colours:
+
+  | Rule | Change |
+  |---|---|
+  | `.k-skip`, `.k-btn`, `a:hover > .k-go` | `color: var(--bg)` |
+  | `.k-top.is-scrolled` | `rgba(242,242,239,.82)` |
+  | `.k-brand__mark img` | no `invert` |
+  | `.k-brand:hover .k-brand__mark` | ink 5% |
+  | `.k-btn:hover`, `.k-key`, `.k-btn--ghost*` | `color-mix(... currentColor / var(--text) ...)` |
+  | `.k-scan__fill` | `var(--night)` |
+- [ ] Nothing else changes: all animations, timings and the floor maths are untouched.
+
+**`assets/site.js`:** no change.
+
+**`index.html`** (`index.html.patch`):
+- [ ] `theme-color` `#F2F2EF`.
+- [ ] `.k-term`: `background: var(--night)` + drop shadow.
+- [ ] `.k-stage`: `background: var(--night)`, 18px radius, drop shadow.
+- [ ] `.k-tech:hover` uses ink 3%.
+- [ ] Skills teaser: `k-card` → `k-tile k-tile--white`. Grok teaser: `k-card` → `k-tile k-tile--blue`.
+- [ ] Stack icon colours for paper: C `#00599C`, React `#149ECA`, PostgreSQL `#4169E1`, Stripe `#635BFF`.
+- [ ] Links: `grok-bot/index.html` → `grok-bot/`, `coffee/index.html` → `coffee/` (nav, sheet, teaser CTA, coffee fine print, footer).
+
+**`coffee/index.html`** (`coffee-index.html.patch`):
+- [ ] `theme-color` `#F2F2EF`.
+- [ ] Why-donate cards: build → `k-tile k-tile--blue`, learn → `k-tile k-tile--night`, repeat → `k-tile k-tile--white`. The hover becomes a 3px lift.
+- [ ] Links: `../index.html` → `../`, `../index.html#x` → `../#x`, `../grok-bot/index.html` → `../grok-bot/`.
+
+**`grok-bot/index.html`** (`grok-bot-index.html.patch`; details in `../grok-bot/SPEC.md` §v3):
+- [ ] `theme-color` `#F2F2EF`.
+- [ ] Boot: add the three `.gb-boot__frame` layers (night / paper + `assets/limit-coach.svg` / blue + `assets/crankobot.svg`) and the new boot CSS. Timings: 0.4s per frame, scan at 1.25s, `--enter: 1.4s`. The log text colour follows the frame.
+- [ ] Stage: `.gb-set` becomes the night band (`--r-tile`) with the actors only; the actors are pinned to grid columns 1 and 2.
+- [ ] **Colour tiles:** `#gb-examples` → `#gb-tiles`. The render code builds one `article.gb-tile.k-tile` per bot, coloured from `bots.data.js` (`tile: blue → k-tile--blue`, `light → k-tile--white`, `dark → k-tile--panel`). Each tile holds the info (night chip with the mini avatar, name, subtitle tag, headline, body, handles, GitHub keycap, proof) and its Grok Bot app panel (`.gb-ex.k-dark`) at the bottom.
+- [ ] "Under the hood": `.gb-hood` gets `k-tile k-tile--panel reveal` + padding.
+- [ ] Mobile notch scales below 480px.
+- [ ] Links: `../index.html*` → `../…`, `../coffee/index.html` → `../coffee/`. Closing "kappaemme.dev" and the floor wordmark use `../` + `data-scan` (was `https://kappaemme.dev/`).
+
+**QA:**
+- [ ] 390 / 768 / 1024 / 1440 with no overflow (the prototypes pass at 390 and 1440).
+- [ ] Contrast spot-checks: ink-3 on paper and white-80% on blue are used for meta only.
+- [ ] Reduced motion: no boot or scan, and the floor is static.
+- [ ] On touch, tapping a bot makes it hop.
+- [ ] Links work on raw.githack and Vercel.
+
+### v3.7 Screenshots (`.shots/restyle-v3/`)
+- **Home:**
+  - `home-desktop-01…13`, plus `-full`;
+  - `home-mobile-*` (sections, menu, footer lifting and revealed);
+  - the scan, frame by frame: `home-scan-03-scan-1-busy`, `-04-scan-2-sweep`, `-05/06-arrive` (boot frames) and `-07-arrived`.
+- **Coffee:** `coffee-desktop-*`, `coffee-mobile-*`.
+- **Grok Bot:** `grok-desktop-01/02-boot-*`, `-03-hero`, `-04-library` (stage), `-05/06-gb-tiles` (colour tiles), `-07-hood`, `-09/10-stage-look-*` (eye tracking), `-11/12-footer`, plus `grok-mobile-*`.
+- **Reduced motion:** `reduced-home-*`.
+
+---
+
+# v2 dark (superseded where v3 says so)
+
+Design hand-off for the whole site: home, `/coffee` and `/grok-bot`. Codex implemented it at commit 9de31fe. The custom cursor described below was dropped in implementation; v3 keeps the system cursor.
 
 | File | What it is |
 |---|---|

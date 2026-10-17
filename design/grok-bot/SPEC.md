@@ -1,6 +1,80 @@
-# Grok Bot library (dark, diversified): design spec
+# Grok Bot library: design spec
 
-Design hand-off for `/grok-bot` (`grok-bot/index.html`). This version **replaces** the Tobia-derived design: the 6-layer curtain, the centred crew, the wake-up CTA, the tile gallery with ghost slots, the mobile sticky bar and the paper footer. The shared system (tokens, top bar, scan, floor, cursor, bot physics) lives in `../restyle/shared.css` and `../restyle/shared.js`; see `../restyle/SPEC.md`.
+> **Current direction: v3 hybrid (below).** The v2 sections further down still describe the motion, data flow, bot physics, content and accessibility. v3 changes the grounds and brings back the colour tiles. The shared palette, the scopes and the Codex checklist for `assets/` are in `../restyle/SPEC.md` §v3.
+
+---
+
+## v3 hybrid
+
+**Kept exactly from v2:**
+- the boot log text and timing feel;
+- the scan line;
+- the left-aligned hero;
+- the stage with two large bots (eye tracking, blink, float, scroll sway and squash, hover hop, tap boop, the hint "they follow your cursor" / "tap a bot", the wake hop after the boot);
+- the typed floor;
+- the `~/` labels;
+- the nav caret;
+- data-driven rendering from `bots.data.js`;
+- **no placeholder slots**.
+
+### v3.1 Page composition (paper base, colour blocks)
+1. **Boot**: the log is now played over **the old coloured intro frames**, 0.4s each.
+
+   | # | Frame | Bot | Log line |
+   |---|---|---|---|
+   | 0 | night `#0A0A0A` | — | `$ cd ~/grok-bots` |
+   | 1 | paper `#F2F2EF` | Limit Coach pops (`assets/limit-coach.svg`, spring .6s) | `limit-coach ● online` |
+   | 2 | blue `#2474F7` | Crankobot pops (`assets/crankobot.svg`) | `crankobot ● online` |
+
+   At 1.25s the whole overlay slides down (`translateY(100%)`, .8s `--ease-io`); its 2px blue top edge is the scan line. The log colour steps with the frame (off-white → ink → white). Limit Coach's log dot gets a `currentColor` ring so it survives the blue frame. `--enter: 1.4s`. It is skippable as before and plays once per session or after a scan.
+2. **Hero** on paper (unchanged layout).
+3. **Stage band** (`.gb-set`): a night `#0A0A0A` block, 28px radius, holding only the two actors, the horizon and the head row. Actors are pinned to grid columns 1 and 2 (the horizon spans both).
+4. **Colour tiles** (`#gb-tiles`, 2 columns ≥900, stacked below), one per bot, directly under its bot, coloured from data:
+
+   | Bot | Tile | Button |
+   |---|---|---|
+   | Limit Coach | **blue** | white keycap with a blue label |
+   | Crankobot | **white** (+ hairline) | ink keycap |
+
+   Each tile holds:
+   - a 2.2rem **night chip** with the bot's mini avatar (so Limit Coach never sits on blue);
+   - name + subtitle tag;
+   - the headline (Geist 600, `clamp(1.9rem, 3.3vw, 2.75rem)`) and the body;
+   - the handles (hairlines draw in);
+   - the GitHub keycap and the proof;
+   - at the bottom, its **Grok Bot app panel**, a night object with the `example` tag: the LimitNotch notch or Crankobot's library files plus the message.
+
+   This mirrors the old blue featured tile and light tile with dark panels inside. The notch scales down below 480px.
+5. **Under the hood**: a **panel `#161616` tile** (the old dark tile) with the copy, the "Get Grok Bot" ghost keycap and the per-bot repo rows, followed by the note on paper.
+6. **Closing** on paper: the "Follow on X" ink keycap, and "More of my work at kappaemme.dev" (`../`, scan).
+7. **Floor**: dark, typed wordmark → `../` (scan).
+
+Tile colours used: blue `#2474F7`, white / paper, night `#0A0A0A`, panel `#161616`. Nothing else. Green `#10a37f` is used only for the online / live dots.
+
+### v3.2 Codex checklist for `grok-bot/index.html` (against 9de31fe)
+Apply `../restyle/v3-patches/grok-bot-index.html.patch` (verified with `git apply --check`), or by hand:
+- [ ] `theme-color` → `#F2F2EF`.
+- [ ] Replace the boot CSS block with the v3 one (`.gb-boot`, `.gb-boot__frame`, `frame-on`, `frame-pop`, `log-tint`; boot-out delay 1.25s; `--enter: 1.4s`). Add the three frame `div`s before `.gb-boot__line`, with `assets/limit-coach.svg` and `assets/crankobot.svg`.
+- [ ] Replace the stage CSS block with the v3 one: `.gb-set` night band, actors pinned to columns 1/2, `.gb-tiles`, `.gb-tile`, `.gb-chip`, info, `.gb-ex` night panel, notch, files. In `.gb-msg`, `color: var(--bg)`.
+- [ ] Markup: `#gb-examples` → `<div class="gb-tiles" id="gb-tiles" data-stagger>`.
+- [ ] Script:
+  - `#gb-cast` renders the actors + horizon only;
+  - a new `TILE` map + `example(b)` + `#gb-tiles` render;
+  - remove the `who`/`whoMini` helpers and the old examples render.
+- [ ] `.gb-hood`: add `k-tile k-tile--panel reveal` and the padding rules.
+- [ ] Links:
+  - `../index.html` → `../`, `../index.html#x` → `../#x`;
+  - `../coffee/index.html` → `../coffee/`;
+  - the closing "kappaemme.dev" link and the `.k-mark` wordmark → `../` with `data-scan`.
+
+  Canonical and OG URLs stay absolute.
+- [ ] `bots.data.js`: no change needed. `tile` already says `blue` / `light`, which drives the tile colour.
+
+---
+
+# v2 dark (superseded where v3 says so)
+
+Design hand-off for `/grok-bot` (`grok-bot/index.html`), implemented at 9de31fe. v2 replaced the Tobia-derived design (6-layer curtain, centred crew, wake-up CTA, tile gallery with ghost slots, mobile sticky bar, paper footer). The custom cursor described below was dropped in implementation.
 
 ## Changelog
 - **2026-10-17 (b):**
