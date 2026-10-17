@@ -106,12 +106,9 @@ window.GROK_BOTS = [
   }
 ];
 
-/* Six full-bleed intro beats, 0.9s each. */
+/* Three full-bleed intro beats, 0.8s each. */
 window.GROK_BOT_INTRO = [
-  { bg: "#0A0A0A", fg: "#FFFFFF", botIds: ["limit-coach"], word: "Watches my limits." },
-  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"], word: "Finds first customers." },
-  { bg: "#F2F2EF", fg: "#0A0A0A", botIds: ["limit-coach"], word: "Lives in the notch." },
-  { bg: "#161616", fg: "#FFFFFF", botIds: ["limit-coach", "crankobot"], word: "Runs on Grok Bot." },
-  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"], word: "Reads public demand." },
-  { bg: "#F2F2EF", fg: "#0A0A0A", botIds: ["limit-coach"], word: "Built in public." }
+  { bg: "#0A0A0A", fg: "#FFFFFF", botIds: ["limit-coach"] },
+  { bg: "#2474F7", fg: "#FFFFFF", botIds: ["crankobot"] },
+  { bg: "#0A0A0A", fg: "#FFFFFF", botIds: [], word: "Welcome to my bots!" }
 ];

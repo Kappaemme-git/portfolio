@@ -7,10 +7,22 @@
 <meta name="description" content="Support Kappaemme with a small donation through Stripe.">
 <meta name="author" content="Francesco Mistero">
 <meta name="theme-color" content="#F2F2EF">
-<meta property="og:type" content="website" />
-  <meta property="og:title" content="Buy me a coffee | Kappaemme" />
-  <meta property="og:description" content="A small support page for Francesco Mistero, CS student and indie hacker." />
-  <meta property="og:image" content="https://kappaemmedev.vercel.app/images/og-logo.png" />
+<link rel="canonical" href="https://kappaemme.dev/coffee/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Buy me a coffee | Kappaemme">
+<meta property="og:description" content="Support the next build: a small donation helps Francesco Mistero keep making useful digital products.">
+<meta property="og:url" content="https://kappaemme.dev/coffee/">
+<meta property="og:image" content="https://kappaemme.dev/images/og/coffee.png">
+<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og/coffee.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Support the next build card in cream and black with a blue accent.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@Kappaemmedev">
+<meta name="twitter:title" content="Buy me a coffee | Kappaemme">
+<meta name="twitter:description" content="Support the next build: a small donation helps Francesco Mistero keep making useful digital products.">
+<meta name="twitter:image" content="https://kappaemme.dev/images/og/coffee.png">
+<meta name="twitter:image:alt" content="Support the next build card in cream and black with a blue accent.">
 <link rel="icon" type="image/svg+xml" href="km-logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -70,6 +82,12 @@
   .k-reach span { grid-column: 1; font-size: clamp(1.3rem, 2.5vw, 1.9rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
   .k-reach em { grid-column: 1; font: 500 .84rem/1.3 var(--font-mono); font-style: normal; color: var(--text-2); overflow-wrap: anywhere; }
   .k-reach .k-go { grid-column: 2; grid-row: 1 / span 3; }
+  @media (max-width: 639px) {
+    .c-hero h1, .k-contact h2 { overflow-wrap: anywhere; }
+    .c-actions .k-btn { max-width: 100%; }
+    .c-reason { min-width: 0; }
+    .k-reach em { font-size: .94rem; }
+  }
 </style>
 </head>
 <body>
@@ -117,7 +135,7 @@
         </div>
       </div>
       <aside class="c-panel k-card k-rise" style="--d:.22s" aria-label="Donation panel">
-        <div class="c-panel__art"><img src="km-logo.png" alt="Kappaemme logo" width="400" height="400"></div>
+        <div class="c-panel__art"><img src="km-logo.png" alt="Kappaemme logo" width="400" height="400" loading="lazy" decoding="async"></div>
         <div class="c-panel__body">
           <span class="k-tag">support page</span>
           <h2>Support my next project.</h2>

@@ -48,8 +48,12 @@
   /* ───────────── Top bar ───────────── */
   var top = $(".k-top");
   function onScrollTop() { if (top) top.classList.toggle("is-scrolled", window.scrollY > 8); }
+  var topScrollFrame = 0;
+  function scheduleTopScroll() {
+    if (!topScrollFrame) topScrollFrame = requestAnimationFrame(function () { topScrollFrame = 0; onScrollTop(); });
+  }
   onScrollTop();
-  window.addEventListener("scroll", onScrollTop, { passive: true });
+  window.addEventListener("scroll", scheduleTopScroll, { passive: true });
 
   /* nav caret: under the current page (sub-pages) or the section in view (home) */
   var linksBox = $(".k-links"), caret = $(".k-caret");
@@ -228,6 +232,11 @@
     if (svg && !(e.relatedTarget && svg.contains(e.relatedTarget))) hop(svg, "hop");
   });
   document.addEventListener("click", function (e) { var svg = e.target.closest && e.target.closest(".k-actor__body"); if (svg) hop($(".gbot", svg), "boop"); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var body = e.target.closest && e.target.closest(".k-actor__body");
+    if (body) { e.preventDefault(); hop($(".gbot", body), "boop"); }
+  });
 
   var glance = { x: 0, y: 0, next: 0 }, last = performance.now(), lastSy = window.scrollY, vel = 0;
   var running = !reduce && !document.hidden;

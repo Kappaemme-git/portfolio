@@ -14,17 +14,17 @@
 <meta property="og:title" content="Kappaemme — Francesco Mistero">
 <meta property="og:description" content="iPhone apps, websites, open-source tools and Codex skills by Francesco Mistero.">
 <meta property="og:url" content="https://kappaemme.dev/">
-<meta property="og:image" content="https://kappaemme.dev/images/og-preview.png">
-<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og-preview.png">
+<meta property="og:image" content="https://kappaemme.dev/images/og/home.png">
+<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og/home.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
+<meta property="og:image:alt" content="Kappaemme.dev wordmark with a blue block cursor on a cream card.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@Kappaemmedev">
 <meta name="twitter:title" content="Kappaemme — Francesco Mistero">
 <meta name="twitter:description" content="iPhone apps, websites, open-source tools and Codex skills by Francesco Mistero.">
-<meta name="twitter:image" content="https://kappaemme.dev/images/og-preview.png">
-<meta name="twitter:image:alt" content="Francesco Mistero, Kappaemme, with his laptop.">
+<meta name="twitter:image" content="https://kappaemme.dev/images/og/home.png">
+<meta name="twitter:image:alt" content="Kappaemme.dev wordmark with a blue block cursor on a cream card.">
 
 <link rel="icon" type="image/svg+xml" href="images/kappaemme-favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -549,7 +549,7 @@
   .reveal--armed, .reveal--armed .reveal__art { transition: opacity .85s var(--ease-out), transform .9s var(--ease-out); }
   .reveal--armed .reveal__art { opacity: 0; transform: translateY(16px) rotate(-3.5deg) scale(.94); transition-delay: .12s; }
   .reveal--in, .reveal--in .reveal__art { opacity: 1; transform: none; }
-  [data-parallax] { will-change: transform; }
+  @media (prefers-reduced-motion: no-preference) { [data-parallax] { will-change: transform; } }
 
   /* ════════════════════════════════════════════════════════════════
      SHARED — footer, fixed underneath, revealed as the page lifts off it
@@ -622,6 +622,22 @@
   @keyframes scan-line-in { 85% { opacity: 1; } to { transform: translateY(100vh); opacity: 0; } }
   html[data-scan="in"] { --enter: .38s; }
 
+  @media (max-width: 639px) {
+    :root { --footer-h: 43rem; }
+    main [id] { scroll-margin-top: calc(var(--top-h) + 1.5rem); }
+    .k-sheet__foot a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; }
+    .k-mark { align-items: center; min-height: 44px; font-size: clamp(2rem, 8.6vw, 3.5rem); }
+    .footer-link { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; padding: .3rem 0; font-size: .9rem; white-space: normal; overflow-wrap: anywhere; }
+    .footer-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .footer-nav > * { min-width: 0; }
+    .k-row { grid-template-columns: 1.6rem minmax(0, 1fr) 2.75rem; }
+    .k-row__go { width: 2.75rem; height: 2.75rem; }
+    .k-row__desc, .k-quote p { font-size: 1rem; }
+    .k-stat span, .k-crew__item small, .k-post__open { font-size: .95rem; }
+    .k-pill-link { min-height: 44px; }
+    .k-reach span { overflow-wrap: anywhere; }
+  }
+
   /* ════════════════════════════════════════════════════════════════
      Reduced motion — everything reads, nothing moves
      ════════════════════════════════════════════════════════════════ */
@@ -661,12 +677,12 @@
     <a class="k-brand" href="./" aria-label="Kappaemme home"><span class="k-brand__mark"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12"></span><span class="k-brand__name">kappaemme</span></a>
     <nav class="k-links" aria-label="Sections">
       <a data-spy="products" href="#products">projects</a>
-      <a data-spy="skills" href="#skills">skills</a>
-      <a data-spy="grok-bots" href="grok-bot/">grok bots</a>
+      <a data-scan href="skills/">skills</a>
+      <a href="grok-bot/">grok bots</a>
       <a data-spy="shared" href="#shared">on x</a>
       <a data-spy="stack" href="#stack">stack</a>
       <a data-spy="journey" href="#journey">journey</a>
-      <a data-spy="coffee" href="#coffee">coffee</a>
+      <a data-scan href="coffee/">coffee</a>
       <a data-spy="contact" href="#contact">contact</a>
       <span class="k-caret" aria-hidden="true"></span>
     </nav>
@@ -679,12 +695,12 @@
   <nav aria-label="Sections">
     <ol class="k-sheet__list">
       <li style="--i:0"><a class="k-sheet__l" data-spy="products" href="#products">projects</a></li>
-      <li style="--i:1"><a class="k-sheet__l" data-spy="skills" href="#skills">skills</a></li>
-      <li style="--i:2"><a class="k-sheet__l" data-spy="grok-bots" href="grok-bot/">grok bots</a></li>
+      <li style="--i:1"><a class="k-sheet__l" data-scan href="skills/">skills</a></li>
+      <li style="--i:2"><a class="k-sheet__l" href="grok-bot/">grok bots</a></li>
       <li style="--i:3"><a class="k-sheet__l" data-spy="shared" href="#shared">on x</a></li>
       <li style="--i:4"><a class="k-sheet__l" data-spy="stack" href="#stack">stack</a></li>
       <li style="--i:5"><a class="k-sheet__l" data-spy="journey" href="#journey">journey</a></li>
-      <li style="--i:6"><a class="k-sheet__l" data-spy="coffee" href="#coffee">coffee</a></li>
+      <li style="--i:6"><a class="k-sheet__l" data-scan href="coffee/">coffee</a></li>
       <li style="--i:7"><a class="k-sheet__l" data-spy="contact" href="#contact">contact</a></li>
     </ol>
   </nav>
@@ -731,7 +747,7 @@
       <div class="k-features" data-stagger>
         <a class="k-tile k-tile--zac reveal" href="https://apps.apple.com/it/app/metodo-zac/id6800744272" aria-label="Metodo ZAC, iPhone app. View on the App Store">
           <div class="k-tile__copy">
-            <p class="k-tile__label"><img class="k-tile__chip" src="images/metodo-zac-app-icon.jpg" alt="" width="64" height="64">Metodo ZAC<span class="k-badge k-badge--on-dark">iPhone app</span></p>
+            <p class="k-tile__label"><img class="k-tile__chip" src="images/metodo-zac-app-icon.jpg" alt="" width="64" height="64" loading="lazy" decoding="async">Metodo ZAC<span class="k-badge k-badge--on-dark">iPhone app</span></p>
             <h3>Coach-led workouts, progress tracking and check-ins.</h3>
             <span class="k-pill-link">View on the App Store <svg aria-hidden="true"><use href="#i-ne"/></svg></span>
           </div>
@@ -739,7 +755,7 @@
         </a>
         <a class="k-tile k-tile--vibe reveal" href="https://www.vibedesk.online/" aria-label="VibeDesk, web app. Visit the website">
           <div class="k-tile__copy">
-            <p class="k-tile__label"><img class="k-tile__chip" src="images/vibedesk-icon.png" alt="" width="64" height="64">VibeDesk<span class="k-badge k-badge--on-dark">Web app</span></p>
+            <p class="k-tile__label"><img class="k-tile__chip" src="images/vibedesk-icon.png" alt="" width="64" height="64" loading="lazy" decoding="async">VibeDesk<span class="k-badge k-badge--on-dark">Web app</span></p>
             <h3>A study and work companion I am currently building.</h3>
             <span class="k-pill-link">Visit the website <svg aria-hidden="true"><use href="#i-ne"/></svg></span>
           </div>
@@ -876,12 +892,12 @@
           <p class="k-gpanel__head"><span>Library</span><span>kappaemme.dev/grok-bot</span></p>
           <ul class="k-crew" aria-label="Bots in the library">
             <li><a class="k-crew__item" href="grok-bot/#bot-limit-coach">
-              <span class="k-crew__bot"><img src="grok-bot/assets/limit-coach-animated.svg" alt="" width="100" height="112"></span>
+              <span class="k-crew__bot"><img src="grok-bot/assets/limit-coach-animated.svg" alt="" width="100" height="112" loading="lazy" decoding="async"></span>
               <span class="k-label k-label--blue">Limit Coach</span>
               <small>Claude + Codex limits</small>
             </a></li>
             <li><a class="k-crew__item" href="grok-bot/#bot-crankobot">
-              <span class="k-crew__bot"><img src="grok-bot/assets/crankobot-animated.svg" alt="" width="100" height="112"></span>
+              <span class="k-crew__bot"><img src="grok-bot/assets/crankobot-animated.svg" alt="" width="100" height="112" loading="lazy" decoding="async"></span>
               <span class="k-label k-label--white">Crankobot</span>
               <small>First Customer Finder</small>
             </a></li>
@@ -908,33 +924,33 @@
 
       <div class="k-posts" data-stagger>
         <a class="k-post reveal" href="https://x.com/gdb/status/2084074129930772953" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Feedback Engine">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for customer feedback → roadmap</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS CUSTOMER FEEDBACK INTO A ROADMAP!</p><span class="k-mono">Startup Feedback Engine</span></span>
+          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS CUSTOMER FEEDBACK INTO A ROADMAP!</p><span class="k-mono">Startup Feedback Engine</span></span>
           <span class="k-post__meta"><span>♡ 732</span><span>138K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
         </a>
         <a class="k-post reveal" href="https://x.com/gdb/status/2076686329686171666" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about First Customer Finder">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">Codex for finding customers for your startup:</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS YOUR STARTUP'S FIRST CUSTOMERS!</p><span class="k-mono">First Customer Finder</span></span>
+          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS YOUR STARTUP'S FIRST CUSTOMERS!</p><span class="k-mono">First Customer Finder</span></span>
           <span class="k-post__meta"><span>♡ 3.7K</span><span>692K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
         </a>
         <a class="k-post reveal" href="https://x.com/gdb/status/2055646916499714488" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Complexity Optimizer">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for improving computational complexity</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS COMPLEXITY HOTSPOTS IN YOUR CODEBASE!</p><span class="k-mono">Complexity Optimizer</span></span>
+          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT FINDS COMPLEXITY HOTSPOTS IN YOUR CODEBASE!</p><span class="k-mono">Complexity Optimizer</span></span>
           <span class="k-post__meta"><span>♡ 1.7K</span><span>331K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
         </a>
         <a class="k-post reveal" href="https://x.com/gdb/status/2055285857628676399" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Local Client Prospector">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for finding local businesses who may need help building a website:</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS LOCAL SEARCH INTO CLIENT LEADS!</p><span class="k-mono">Local Client Prospector</span></span>
+          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL THAT TURNS LOCAL SEARCH INTO CLIENT LEADS!</p><span class="k-mono">Local Client Prospector</span></span>
           <span class="k-post__meta"><span>♡ 1.5K</span><span>292K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
         </a>
         <a class="k-post reveal" href="https://x.com/gdb/status/2050972114077843772" target="_blank" rel="noopener noreferrer" aria-label="Open Greg Brockman's X post about Startup Pressure Test">
-          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
+          <span class="k-who"><img class="k-avatar" src="https://pbs.twimg.com/profile_images/1347621377503711233/bHg3ipfD_x96.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Greg Brockman <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@gdb</small></span><svg class="k-post__x" aria-hidden="true"><use href="#i-x"/></svg></span>
           <span class="k-post__text">codex for startup ideas</span>
-          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL TO BRUTALLY TEST ANY STARTUP IDEA!</p><span class="k-mono">Startup Pressure Test</span></span>
+          <span class="k-quote"><span class="k-who"><img class="k-avatar" src="images/me.jpg" alt="" loading="lazy" decoding="async" width="40" height="40"><span><b>Kappaemme <svg class="k-verified" aria-label="Verified account"><use href="#i-check"/></svg></b><small>@Kappaemmedev</small></span></span><p>CODEX SKILL TO BRUTALLY TEST ANY STARTUP IDEA!</p><span class="k-mono">Startup Pressure Test</span></span>
           <span class="k-post__meta"><span>♡ 2.3K</span><span>395K views</span><span class="k-post__open">View on X <svg aria-hidden="true"><use href="#i-ne"/></svg></span></span>
         </a>
       </div>
@@ -1077,7 +1093,7 @@
       </nav>
       <div class="footer-meta">
         <span>© 2026 Francesco Mistero <span class="footer-meta__made">· Made one commit at a time.</span></span>
-        <span class="footer-meta__right"><a class="footer-link" href="#top">Back to the top ↑</a><span class="footer-mark" aria-hidden="true"><img src="images/kappaemme-mark.svg" alt=""></span></span>
+        <span class="footer-meta__right"><a class="footer-link" href="#top">Back to the top ↑</a><span class="footer-mark" aria-hidden="true"><img src="images/kappaemme-mark.svg" alt="" width="20" height="12" loading="lazy" decoding="async"></span></span>
       </div>
     </div>
   </div>
@@ -1174,8 +1190,12 @@
   /* ───────────── Top bar + section caret ───────────── */
   var topBar = $(".k-top");
   function onScrollTop() { topBar.classList.toggle("is-scrolled", window.scrollY > 8); }
+  var topScrollFrame = 0;
+  function scheduleTopScroll() {
+    if (!topScrollFrame) topScrollFrame = requestAnimationFrame(function () { topScrollFrame = 0; onScrollTop(); });
+  }
   onScrollTop();
-  window.addEventListener("scroll", onScrollTop, { passive: true });
+  window.addEventListener("scroll", scheduleTopScroll, { passive: true });
 
   var linksBox = $(".k-links"), caret = $(".k-caret");
   var navLinks = $$(".k-links [data-spy]"), sheetLinks = $$(".k-sheet [data-spy]");
@@ -1198,9 +1218,9 @@
   }
   if (hasIO) {
     var spyIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) setActive(en.target.id === "top" ? null : en.target.id); });
+      entries.forEach(function (en) { if (en.isIntersecting) setActive(["top", "skills", "coffee"].indexOf(en.target.id) > -1 ? null : en.target.id); });
     }, { rootMargin: "-45% 0px -54% 0px" });
-    ["top"].concat(navLinks.map(function (l) { return l.dataset.spy; })).forEach(function (id) {
+    ["top", "skills", "coffee"].concat(navLinks.map(function (l) { return l.dataset.spy; })).forEach(function (id) {
       var s = document.getElementById(id); if (s) spyIO.observe(s);
     });
   }

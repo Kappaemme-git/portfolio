@@ -94,6 +94,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--top-h) + 1.5rem); -webkit-text-size-adjust: 100%; }
 html, body { margin: 0; background: var(--bg); color: var(--text); overscroll-behavior-y: none; overflow-x: clip; }
+main [id] { scroll-margin-top: calc(var(--top-h) + 1.5rem); }
 body {
   font-family: var(--font-sans); font-weight: 400; font-size: 1rem; line-height: 1.55; letter-spacing: -.005em;
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
@@ -172,8 +173,14 @@ button { font: inherit; color: inherit; }
 @media (min-width: 1280px) { .k-top__gh { display: inline-flex; } }
 /* sub-pages: five links, visible from 640 */
 .k-top--sub .k-links { display: flex; }
-@media (max-width: 639px) { .k-top--sub .k-links .t { display: none; } .k-top--sub .k-links a { padding: .75rem .55rem; font-size: .74rem; } }
-@media (max-width: 389px) { .k-top--sub .k-links a { padding: .75rem .42rem; } }
+@media (max-width: 639px) {
+  .k-top--sub .k-top__in { gap: .65rem; }
+  .k-top--sub .k-brand { flex: none; }
+  .k-top--sub .k-links { min-width: 0; justify-content: flex-end; }
+  .k-top--sub .k-links .t { display: none; }
+  .k-top--sub .k-links a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0 .55rem; font-size: .74rem; }
+}
+@media (max-width: 389px) { .k-top--sub .k-top__in { gap: .4rem; } .k-top--sub .k-links a { padding: 0 .34rem; font-size: .72rem; } }
 @media (min-width: 640px) { .k-top--sub .k-links .s { display: none; } }
 
 .k-menu {
@@ -291,10 +298,10 @@ a:hover > .k-go svg { transform: translate(1px, -1px); }
 .k-rise { animation: rise .75s var(--ease-out) calc(var(--enter) + var(--d, 0s)) both; }
 @keyframes rise { 0% { opacity: 0; transform: translateY(16px); } 100% { opacity: 1; transform: none; } }
 .reveal--armed { opacity: 0; transform: translateY(26px); }
-.reveal--armed, .reveal--armed .reveal__art { transition: opacity .85s var(--ease-out), transform .9s var(--ease-out); }
+.reveal--armed, .reveal--armed .reveal__art { transition: opacity .85s var(--ease-out), transform .9s var(--ease-out); will-change: opacity, transform; }
 .reveal--armed .reveal__art { opacity: 0; transform: translateY(14px) scale(.96); transition-delay: .12s; }
 .reveal--in, .reveal--in .reveal__art { opacity: 1; transform: none; }
-[data-parallax] { will-change: transform; }
+@media (prefers-reduced-motion: no-preference) { [data-parallax] { will-change: transform; } }
 
 /* ══════════════════════════════════════════════════════════════════════
    Bots (inline SVG from grok-bot/bots.data.js — exact Grok Bot avatars)
@@ -317,7 +324,8 @@ a:hover > .k-go svg { transform: translate(1px, -1px); }
 
 /* actor = a bot standing on the stage, with a hairline ring under it */
 .k-actor { position: relative; display: grid; justify-items: center; }
-.k-actor__body { position: relative; z-index: 1; width: 100%; cursor: pointer; will-change: transform; }
+.k-actor__body { position: relative; z-index: 1; width: 100%; cursor: pointer; touch-action: manipulation; }
+@media (prefers-reduced-motion: no-preference) { .k-actor__body { will-change: transform; } }
 .k-actor__ring {
   width: 74%; height: 0; padding-bottom: 14%; margin-top: -6%; border-radius: 50%;
   box-shadow: inset 0 0 0 1px var(--line-2); transform-origin: 50% 50%;
@@ -393,6 +401,20 @@ html[data-scan="in"] { --enter: .38s; }
 .k-rise-f { --p: clamp(0, calc((var(--reveal, 1) - .05 - .08 * var(--i, 0)) * 6), 1); opacity: var(--p); transform: translateY(calc((1 - var(--p)) * 18px)); }
 .k-floor:focus-within .k-rise-f, .k-floor:focus-within .k-mark__c, .k-floor:focus-within .k-mark__caret { opacity: 1; transform: none; }
 body[data-floor-open] .k-top { opacity: 0; pointer-events: none; }
+
+@media (max-width: 639px) {
+  :root { --floor-h: 46rem; }
+  .k-floor__top > *, .k-floor__nav > * { min-width: 0; }
+  .k-floor__nav a { display: flex; align-items: center; min-width: 44px; min-height: 44px; padding: .3rem 0; font-size: .94rem; overflow-wrap: anywhere; }
+  .k-floor__status a { display: inline-flex; align-items: center; min-height: 44px; }
+  .k-mark { font-size: clamp(2rem, 8.6vw, 3.5rem); }
+  .k-sheet__foot a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; }
+  .k-btn { max-width: 100%; min-width: 0; padding-top: .5rem; padding-bottom: .5rem; white-space: normal; line-height: 1.25; text-align: center; }
+  .k-key { flex: none; }
+  .k-go { width: 2.75rem; height: 2.75rem; }
+  .k-row { grid-template-columns: minmax(0, 1fr) 2.75rem; }
+  .k-row__desc { font-size: 1rem; }
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    Reduced motion

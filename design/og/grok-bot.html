@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>My Grok Bots — OG card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .card { position: relative; width: 1200px; height: 630px; overflow: hidden; padding: 57px 64px 53px; background: #F2F2EF; color: #0A0A0A; font-family: "Geist", sans-serif; }
+  .top { display: flex; justify-content: space-between; align-items: center; font: 500 20px/1 "Geist Mono", monospace; }
+  .top .path { display: flex; align-items: center; gap: 13px; }
+  .top .path::before { content: ""; width: 12px; height: 26px; background: #2474F7; }
+  .rule { height: 1px; margin-top: 34px; background: rgba(10,10,10,.24); }
+  h1 { position: absolute; top: 164px; left: 64px; width: 520px; margin: 0; font-size: 109px; line-height: .9; font-weight: 700; letter-spacing: -.07em; }
+  .bots { position: absolute; top: 162px; right: 64px; display: flex; align-items: end; gap: 18px; }
+  .bot { display: grid; place-items: center; width: 239px; height: 292px; border-radius: 20px; }
+  .bot--blue { background: #E8E8E3; }
+  .bot--black { background: #0A0A0A; }
+  .bot svg { width: 194px; height: 194px; }
+  .bottom { position: absolute; left: 64px; right: 64px; bottom: 48px; display: flex; justify-content: space-between; align-items: center; padding-top: 23px; border-top: 1px solid rgba(10,10,10,.24); font: 500 19px/1 "Geist Mono", monospace; }
+  .bottom span:first-child { color: rgba(10,10,10,.62); }
+  .bottom span:last-child { color: #2474F7; }
+</style>
+</head>
+<body>
+<main class="card" aria-label="My Grok Bots link preview">
+  <div class="top"><span class="path">~/grok-bot</span><span>Kappaemme</span></div>
+  <div class="rule"></div>
+  <h1>My Grok<br>Bots.</h1>
+  <div class="bots">
+    <div class="bot bot--blue" aria-label="Limit Coach">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Limit Coach">
+        <title>Limit Coach</title>
+        <defs><clipPath id="lc-body"><circle cx="50" cy="50" r="45"/></clipPath></defs>
+        <circle cx="50" cy="50" r="45" fill="#2474F7"/>
+        <g clip-path="url(#lc-body)" fill="#050505">
+          <rect x="50" y="24.5" width="10" height="21" rx="5" transform="rotate(-37 55 35)"/>
+          <rect x="72" y="16.5" width="7" height="19" rx="3.5" transform="rotate(-37 75.5 26)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="bot bot--black" aria-label="Crankobot">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Crankobot">
+        <title>Crankobot</title>
+        <defs><clipPath id="cb-body"><path d="M50 8.5C76.5 8.5 96.5 27.5 96.5 51.5C96.5 75.5 77 94 50.5 94C24 94 3.5 76 3.5 52C3.5 28 23.5 8.5 50 8.5Z"/></clipPath></defs>
+        <path d="M50 8.5C76.5 8.5 96.5 27.5 96.5 51.5C96.5 75.5 77 94 50.5 94C24 94 3.5 76 3.5 52C3.5 28 23.5 8.5 50 8.5Z" fill="#FFFFFF"/>
+        <g clip-path="url(#cb-body)" fill="#050505">
+          <rect x="54.5" y="28" width="9" height="20" rx="4.5" transform="rotate(-22 59 38)"/>
+          <rect x="75.25" y="23" width="6.5" height="19" rx="3.25" transform="rotate(-22 78.5 32.5)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="bottom"><span>Limit Coach · Crankobot</span><span>kappaemme.dev/grok-bot</span></div>
+</main>
+</body>
+</html>

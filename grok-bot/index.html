@@ -7,11 +7,22 @@
 <meta name="description" content="A small library of Grok Bots by Francesco Mistero (Kappaemme): Limit Coach watches Claude and Codex limits for LimitNotch, Crankobot finds first customers from public demand.">
 <meta name="author" content="Francesco Mistero">
 <meta name="theme-color" content="#0A0A0A">
-<link rel="canonical" href="https://kappaemme.dev/grok-bot">
+<link rel="canonical" href="https://kappaemme.dev/grok-bot/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Grok Bots — Kappaemme">
 <meta property="og:description" content="Meet Limit Coach and Crankobot, small Grok Bots built in public by Francesco Mistero.">
-<meta property="og:url" content="https://kappaemme.dev/grok-bot">
+<meta property="og:url" content="https://kappaemme.dev/grok-bot/">
+<meta property="og:image" content="https://kappaemme.dev/images/og/grok-bot.png">
+<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og/grok-bot.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cream Grok Bots card with blue Limit Coach and white Crankobot on a black panel.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@Kappaemmedev">
+<meta name="twitter:title" content="Grok Bots — Kappaemme">
+<meta name="twitter:description" content="Meet Limit Coach and Crankobot, small Grok Bots built in public by Francesco Mistero.">
+<meta name="twitter:image" content="https://kappaemme.dev/images/og/grok-bot.png">
+<meta name="twitter:image:alt" content="Cream Grok Bots card with blue Limit Coach and white Crankobot on a black panel.">
 <link rel="icon" type="image/svg+xml" href="assets/limit-coach.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -29,10 +40,10 @@
 <link rel="stylesheet" href="../assets/site.css">
 <script src="bots.data.js"></script>
 <style>
-  /* Intro curtain — six full-bleed layers, .9s apart, then lifts away. */
+  /* Intro curtain — three full-bleed layers, .8s apart, then lifts away. */
   html[data-intro] {
-    --intro-step: .9s;
-    --intro-end: 5.4s;
+    --intro-step: .8s;
+    --intro-end: 2.4s;
     --curtain-out: cubic-bezier(.7, 0, .2, 1);
     --enter: calc(var(--intro-end) + .65s + .2s);
   }
@@ -55,11 +66,8 @@
   html[data-intro="playing"] .gb-intro[data-done] { animation: intro-curtain .45s var(--curtain-out) forwards; }
   @keyframes intro-tint {
     0%      { background-color: #0A0A0A; }
-    16.667% { background-color: #2474F7; }
-    33.333% { background-color: #F2F2EF; }
-    50%     { background-color: #161616; }
-    66.667% { background-color: #2474F7; }
-    83.333%, 100% { background-color: #F2F2EF; }
+    33.333% { background-color: #2474F7; }
+    66.667%, 100% { background-color: #0A0A0A; }
   }
   @keyframes intro-curtain { to { visibility: hidden; pointer-events: none; transform: translateY(-100%); } }
   .gb-intro__layer {
@@ -71,26 +79,18 @@
   }
   @keyframes intro-show { to { visibility: visible; } }
   .gb-intro__stack { display: flex; flex-direction: column; align-items: center; gap: clamp(1rem, 3vw, 2rem); padding: 0 1.25rem; }
-  .gb-intro__bots { display: flex; gap: clamp(.8rem, 3vw, 2rem); }
   .gb-intro__bot {
-    width: clamp(6rem, 22vw, 11rem); height: auto;
+    width: clamp(8rem, 24vw, 13rem); height: auto;
   }
   html[data-intro="playing"] .gb-intro__bot {
     animation: intro-pop-bot .62s var(--spring) calc(var(--i) * var(--intro-step)) both;
   }
-  .gb-intro__bots .gb-intro__bot { width: clamp(5rem, 17vw, 8.5rem); }
-  html[data-intro="playing"] .gb-intro__bots .gb-intro__bot + .gb-intro__bot { animation-delay: calc(var(--i) * var(--intro-step) + 70ms); }
-  .gb-intro__layer[data-light] .gb-intro__bot[data-bot="crankobot"] .gbot__bob > path { stroke: rgba(10,10,10,.35); stroke-width: 1.5; }
   .gb-intro__word {
-    max-width: 11ch; text-align: center; text-wrap: balance;
-    font-size: clamp(2.9rem, 10.5vw, 8.5rem); font-weight: 800; line-height: .92; letter-spacing: -.045em;
+    max-width: min(13ch, calc(100vw - 2.5rem)); text-align: center; text-wrap: balance;
+    font-size: clamp(3.25rem, 8vw, 8.5rem); font-weight: 800; line-height: .92; letter-spacing: -.045em;
   }
   html[data-intro="playing"] .gb-intro__word {
     animation: intro-pop .56s var(--spring) calc(var(--i) * var(--intro-step) + 90ms) both;
-  }
-  .gb-intro__name {
-    position: absolute; left: 0; right: 0; bottom: max(1.6rem, env(safe-area-inset-bottom));
-    text-align: center; font-size: .95rem; font-weight: 700; letter-spacing: -.01em; opacity: .7;
   }
   @keyframes intro-pop { 0% { opacity: 0; transform: translateY(.14em) scale(.8); } 25% { opacity: 1; } 100% { opacity: 1; transform: none; } }
   @keyframes intro-pop-bot { 0% { opacity: 0; transform: translateY(40%) scale(.4); } 30% { opacity: 1; } 100% { opacity: 1; transform: none; } }
@@ -226,6 +226,15 @@
   .gb-close .k-btn, .gb-close .k-btn:hover { background: #FFFFFF; color: var(--ink); }
   .gb-close__fine { font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
   .gb-close__fine a { color: var(--text-2); }
+  @media (max-width: 639px) {
+    .gb-set, .gb-tile, .gb-ex { min-width: 0; }
+    .gb-cast > .k-actor { touch-action: manipulation; }
+    .gb-info h3, .gb-hero h1, .gb-close h2 { overflow-wrap: anywhere; }
+    .gb-handles li, .gb-file, .gb-msg { font-size: 1rem; line-height: 1.4; }
+    .gb-notch__value { font-size: 2rem; }
+    .gb-runs small { font-size: .94rem; overflow-wrap: anywhere; }
+    .gb-links .k-btn { max-width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -372,7 +381,7 @@
   /* ── the stage: the two actors on the dark panel ── */
   $("#gb-cast").innerHTML = BOTS.map(function (b) {
     return '<div class="k-actor" data-bot="' + b.id + '" data-lift="-0.05">' +
-        '<div class="k-actor__body" role="button" tabindex="-1" aria-label="' + esc(b.name) + '"><span data-bot-slot="' + b.id + '"></span></div><span class="k-actor__ring"></span></div>';
+        '<div class="k-actor__body" role="button" tabindex="0" aria-label="' + esc(b.name) + '"><span data-bot-slot="' + b.id + '"></span></div><span class="k-actor__ring"></span></div>';
   }).join("") + '<span class="gb-horizon" aria-hidden="true"></span>';
 
   /* ── one colour tile per bot, in the same order as the stage (data: tile = blue | light | dark) ── */
@@ -433,14 +442,12 @@
   var frames = window.GROK_BOT_INTRO || [];
   var byId = KM.botById;
   function setTheme(c) { if (themeMeta) themeMeta.content = c; }
-  root.style.setProperty("--intro-end", (frames.length * .9) + "s");
+  var introStep = parseFloat(getComputedStyle(root).getPropertyValue("--intro-step"));
+  root.style.setProperty("--intro-end", (frames.length * introStep) + "s");
   intro.innerHTML = frames.map(function (frame, i) {
     var avatars = frame.botIds.map(function (id) { return byId[id] ? KM.avatar(byId[id], "gb-intro__bot") : ""; }).join("");
-    var bots = frame.botIds.length > 1 ? '<div class="gb-intro__bots">' + avatars + '</div>' : avatars;
-    var light = frame.fg.toLowerCase() === "#0a0a0a" ? " data-light" : "";
-    return '<div class="gb-intro__layer"' + light + ' style="--i:' + i + ';--bg:' + frame.bg + ';--fg:' + frame.fg + '">' +
-      '<div class="gb-intro__stack">' + bots + '<span class="gb-intro__word">' + KM.esc(frame.word) + '</span></div>' +
-      '<span class="gb-intro__name">Kappaemme · Grok Bots</span></div>';
+    return '<div class="gb-intro__layer" style="--i:' + i + ';--bg:' + frame.bg + ';--fg:' + frame.fg + '">' +
+      '<div class="gb-intro__stack">' + avatars + (frame.word ? '<span class="gb-intro__word">' + KM.esc(frame.word) + '</span>' : '') + '</div></div>';
   }).join("");
   var layers = Array.prototype.slice.call(intro.querySelectorAll(".gb-intro__layer"));
   function restartEntrance() {
@@ -480,9 +487,16 @@
     intro.style.display = "none";
     setTheme("#F2F2EF");
   });
-  setTheme(frames[0] ? frames[0].bg : "#F2F2EF");
-  root.setAttribute("data-intro", "playing");
-  setTimeout(finishIntro, frames.length * 900 + 1400);
+  if (KM.reduce) {
+    root.setAttribute("data-intro-skipped", "");
+    root.setAttribute("data-intro", "done");
+    intro.style.display = "none";
+    setTheme("#F2F2EF");
+  } else {
+    setTheme(frames[0] ? frames[0].bg : "#F2F2EF");
+    root.setAttribute("data-intro", "playing");
+    setTimeout(finishIntro, frames.length * introStep * 1000 + 1400);
+  }
 })();
 </script>
 </body>

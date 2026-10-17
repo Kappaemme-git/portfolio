@@ -7,11 +7,22 @@
 <meta name="description" content="Open-source Codex skills by Francesco Mistero (Kappaemme): the most starred skills and the recent releases, with live star counts from GitHub.">
 <meta name="author" content="Francesco Mistero">
 <meta name="theme-color" content="#F2F2EF">
-<link rel="canonical" href="https://kappaemme.dev/skills">
+<link rel="canonical" href="https://kappaemme.dev/skills/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Codex skills — Kappaemme">
 <meta property="og:description" content="Codex skills, open source. Recent releases and the open-source skills developers have starred most.">
-<meta property="og:url" content="https://kappaemme.dev/skills">
+<meta property="og:url" content="https://kappaemme.dev/skills/">
+<meta property="og:image" content="https://kappaemme.dev/images/og/skills.png">
+<meta property="og:image:secure_url" content="https://kappaemme.dev/images/og/skills.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Codex skills card with a black terminal and real Kappaemme skill names.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@Kappaemmedev">
+<meta name="twitter:title" content="Codex skills — Kappaemme">
+<meta name="twitter:description" content="Codex skills, open source. Recent releases and the open-source skills developers have starred most.">
+<meta name="twitter:image" content="https://kappaemme.dev/images/og/skills.png">
+<meta name="twitter:image:alt" content="Codex skills card with a black terminal and real Kappaemme skill names.">
 <link rel="icon" type="image/svg+xml" href="../images/kappaemme-favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -169,6 +180,16 @@
   .sk-close .k-reach em { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; text-decoration-color: var(--line-3); transition: text-decoration-color .2s; }
   .sk-close .k-reach a:hover em, .sk-close .k-reach a:focus-visible em { text-decoration-color: var(--text); }
   .k-reach .k-go { grid-column: 2; grid-row: 1 / span 3; }
+
+  @media (max-width: 639px) {
+    .sk-boot__log { font-size: .9rem; }
+    .sk-boot__ls li { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+    .sk-tile, .sk-feature { min-width: 0; }
+    .sk-tile__path { font-size: .94rem; line-height: 1.35; overflow-wrap: anywhere; }
+    .sk-hero h1, .sk-close h2 { overflow-wrap: anywhere; }
+    .sk-feature__cta .k-btn { max-width: 100%; }
+    .k-reach em { font-size: .94rem; }
+  }
 
   @media (prefers-reduced-motion: reduce) { .sk-boot { display: none !important; } .sk-tile:hover { transform: none; } }
 </style>
