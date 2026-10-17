@@ -1,111 +1,66 @@
 # Kappaemme — Portfolio
 
-Sito personale di **Francesco Mistero** (Kappaemme): CS student & indie hacker.
-Estetica **dark / terminale**, allineamento a sinistra per le sezioni, hero centrato.
-
----
+Sito personale di **Francesco Mistero** (Kappaemme), studente di Computer Science e indie hacker. La home usa uno stile editoriale chiaro: fondo carta, testo nero, grandi titoli Geist e card arrotondate. I progetti portano i propri colori; Grok Bots e Contact sono le due sezioni scure.
 
 ## 1. File e tecnologia
 
-- **Pagina principale: `index.html`** — HTML, CSS e JavaScript senza framework né build.
-- **Grok Bots: `grok-bot/index.html`** — route `/grok-bot`, basata sul prototipo in `design/grok-bot/`. I bot e i sei frame dell'intro sono definiti una sola volta in `grok-bot/bots.data.js`.
-- **Asset locali:** la cartella `images/` contiene foto, icone e anteprima social. La pagina `coffee/index.html` è separata.
-- **Dipendenze esterne (solo queste):**
-  - Google Fonts: **Geist** + **Geist Mono** (`fonts.googleapis.com`).
-  - GitHub API (`api.github.com`) per aggiornare le stelle delle skill selezionate; la lista resta visibile anche se l'API non risponde.
-- Stili, animazioni e icone della pagina principale sono **incorporati** nel file.
-- SEO incluso: `<title>`, meta description, Open Graph / Twitter card, favicon (monogramma KM), `theme-color`.
+- `index.html` — home su `/`, con HTML, CSS e JavaScript senza framework né build.
+- `coffee/index.html` — pagina di supporto su `/coffee/`, con lo stesso linguaggio visivo della home.
+- `grok-bot/index.html` — libreria su `/grok-bot/`, con la sua interfaccia scura approvata. Bot e frame dell'intro sono definiti in `grok-bot/bots.data.js`.
+- `images/`, `coffee/km-logo.*` e `grok-bot/assets/` — foto, icone e immagini delle pagine. I percorsi della home partono dalla radice del sito.
+- CSS, icone SVG dell'interfaccia e JavaScript delle pagine sono incorporati nei rispettivi file. Geist e Geist Mono arrivano da Google Fonts.
+- La home aggiorna le stelle delle skill con una richiesta alla GitHub API; i valori di riserva restano visibili quando l'API non risponde. Lo snippet Vercel Web Analytics e i tag SEO, Open Graph, Twitter e favicon sono nella home.
 
-Per l'anteprima locale, avvia `python3 -m http.server` dalla radice del repo e apri `/` o `/grok-bot/`.
+Per l'anteprima locale, dalla radice del repo esegui `python3 -m http.server 8767`, poi apri `/`, `/coffee/` o `/grok-bot/`.
 
----
+## 2. Struttura della home
 
-## 2. Struttura delle sezioni (in ordine)
+La navigazione fissa porta a otto sezioni. Su schermi piccoli diventa un pulsante **Menu** che apre un pannello a tutta pagina.
 
-| # | Sezione | Note |
-|---|---------|------|
-| — | **Header / nav** | Sticky, blur. Voci: Projects, Skills, Grok Bots, On X, Stack, Journey, Coffee, Contact. |
-| — | **Hero** | Nome + scritta ASCII "KAPPAEMME" + tagline + lede + icone social. |
-| 01 | **Projects** | Galleria con Metodo ZAC iPhone app e VibeDesk; sotto Metodo ZAC website, Pocketflow, Glorydraw e link ai repository GitHub. |
-| 02 | **Skill library** | Dieci skill selezionate: successi open source e nuove uscite. |
-| 03 | **Shared on X** | Cinque card con i quote post di Greg Brockman e link ai post originali. |
-| 04 | **Stack** | Griglia di 12 tessere tecnologiche con icone a colori di brand. |
-| 05 | **Journey** | Timeline (CS student @ Federico II, indie hacker). |
-| 06 | **Coffee** | "Support the next build." + bottone Stripe. |
-| 07 | **Contact** | GitHub / Email / X. |
-| — | **Footer** | Copyright + link social. |
+| # | Sezione | Contenuto |
+|---|---------|-----------|
+| — | Hero | Presentazione, ritratto, link a progetti, contatti e social. |
+| 01 | Projects | Metodo ZAC e VibeDesk in evidenza; metodo ZAC · website, pocketflow e glorydraw nella lista. |
+| 02 | Skill library | Dieci skill open source, divise tra le più apprezzate e le uscite recenti. |
+| 03 | Grok Bots | Limit Coach e Crankobot, con link alla libreria. |
+| 04 | Shared on X | Cinque quote post di Greg Brockman, con link ai post originali e cifre datate. |
+| 05 | Stack | Dodici linguaggi, framework e strumenti. |
+| 06 | Journey | Computer Science alla Federico II e progetti costruiti in pubblico. |
+| 07 | Coffee | Link Stripe e motivi per sostenere il lavoro, con rimando a `/coffee/`. |
+| 08 | Contact | Email, X e GitHub su una fascia scura. |
 
----
+Il footer color carta viene rivelato sotto l'ultima sezione e raccoglie il wordmark, i link del sito e i contatti.
 
-## 3. Design tokens (colori e font)
+## 3. Design tokens
 
-- Sfondo: `#000000` · Testo: `#ffffff` (secondario 60%, terziario 40%).
-- Bordi: bianco 10% / 22%.
-- Accento "live": verde `#10a37f` (dot di stato).
-- Font testo: **Geist** · Font mono/accenti: **Geist Mono**.
-- Raggi, spaziature e transizioni gestiti con variabili CSS in `:root`.
+- Fondo `#F2F2EF`, card bianche `#FFFFFF`, testo `#0A0A0A`.
+- Grok Bots e Contact su nero; pannello dei bot `#161616`.
+- Blu Limit Coach `#2474F7` per bot, focus e pochi accenti; verde `#0E9F7A` per gli indicatori Live.
+- Tessere dei progetti nei colori Metodo ZAC `#0B193E` e VibeDesk `#613F6D`.
+- **Geist** per il testo e i titoli, **Geist Mono** per numeri, badge e dettagli.
+- Container fino a 76rem, griglia a 12 colonne per le testate, card arrotondate e barre numerate.
 
----
+## 4. Effetti e accessibilità
 
-## 4. Effetti e animazioni
+Hero e sezioni entrano con lievi movimenti verticali e dissolvenze; le righe si disegnano all'apparire. Il pulsante “Meet the bots” riprende la piccola interazione della libreria Grok Bots. Il footer scorre in vista sotto il contenuto. Le animazioni rispettano `prefers-reduced-motion`: contenuto subito visibile, footer nel flusso normale e navigazione diretta.
 
-### Ingresso (al caricamento)
-- Header in dissolvenza dall'alto.
-- Hero (nome, tagline, lede, icone) in **fade-up scaglionato**.
-- Sezioni che salgono dolcemente allo scroll (IntersectionObserver).
-
-### Scritta "Kappaemme" (ASCII) — effetto CRT retro
-- **Reveal a "stampa"** da sinistra a destra a scatti (`steps`), stile terminale.
-- **Bagliore fosforo** (text-shadow morbido).
-- **Scanline** orizzontali sottili (vecchio monitor).
-- **Flicker** leggero e frequente (ciclo ~2,8s).
-- **Hover:** il bagliore si intensifica.
-
-> Tutte le animazioni si disattivano automaticamente con `prefers-reduced-motion`.
-> Senza JavaScript le sezioni restano comunque visibili.
-
----
+Ogni sezione ha un titolo e un'ancora; è presente un link per saltare al contenuto. Menu e pulsanti hanno etichette e focus visibile. Le card di Shared on X scorrono orizzontalmente su mobile tramite scroll nativo.
 
 ## 5. Stack — tessere e colori
 
-Ordine: **C, Java, JavaScript, Python, React, Electron, GitHub, VS Code, Firebase, PostgreSQL, Railway, Stripe** (12 tessere, così la griglia resta bilanciata).
+Ordine: **C, Java, JavaScript, Python, React, Electron, GitHub, VS Code, Firebase, PostgreSQL, Railway, Stripe**. Le icone mantengono i colori di brand sulle tessere bianche; C usa `#00599C`, React `#149ECA`, GitHub e Railway usano il nero.
 
-Icone SVG incorporate, con colori di brand ufficiali:
-`C #A8B9CC` · `Java #5382A1` · `JavaScript #F7DF1E` · `Python #3776AB/#FFD43B` · `React #61DAFB` · `Electron #47848F` · `VS Code #007ACC` · `Firebase #FFA000` · `PostgreSQL #4169E1` · `Stripe #635BFF`.
-**GitHub** e **Railway** restano **bianchi** (il loro logo è nero → invisibile su sfondo nero).
+## 6. Skill library e Shared on X
 
----
+Le dieci skill sono curate in `index.html`. Una sola chiamata alla GitHub API aggiorna le stelle delle prime cinque righe; se fallisce, rimangono i valori di riserva. Le cinque card di Shared on X conservano URL, testi e cifre dei post; la data di verifica è indicata sotto le card.
 
-## 6. Skill library — logica
+## 7. Coffee
 
-La lista è curata direttamente in `index.html`: le prime righe evidenziano le skill con maggiore riscontro su GitHub; seguono alcune uscite recenti. Un'unica chiamata alla GitHub API aggiorna le stelle delle prime cinque righe. Se la richiesta fallisce, restano visibili le etichette di riserva. Per aggiungere una skill, modifica la lista HTML e il conteggio nella testata.
+Il bottone **Buy me a coffee** della home e **Donate with Stripe** su `/coffee/` aprono lo stesso link Stripe: `https://buy.stripe.com/bJedR96H14WF5xmezS57W03`. La pagina Coffee presenta Build, Learn e Repeat, oltre ai link Email e GitHub.
 
-La sezione **Shared on X** contiene cinque link ai quote post pubblici di Greg Brockman. Le cifre di interazione sono una fotografia verificata il 23 settembre 2026, riportata anche sotto le card. Non dipende dall'API di X.
+## 8. Responsive
 
----
-
-## 7. Coffee — donazioni
-
-- Titolo: **"Support the next build."**
-- Bottone **Buy me a coffee** → link Stripe:
-  `https://buy.stripe.com/bJedR96H14WF5xmezS57W03` (apre in nuova scheda).
-- Bottoni secondari: *My work* (→ Projects) e *Contact me* (→ email).
-
----
-
-## 8. Mobile (≤ 760px)
-
-- Menu **scorrevole in orizzontale** (tutte le voci raggiungibili).
-- Tabelle Projects e Skills compattate a 3 colonne.
-- Stack a 2 colonne · Timeline impilata in verticale.
-- Scritta ASCII rimpicciolita per non sforare. Nessun overflow orizzontale.
-
----
-
-## 9. Pubblicazione (GitHub → Vercel)
-
-1. Metti `index.html` nella **radice** del repo collegato a Vercel, sovrascrivendo la home.
-2. `git add index.html && git commit -m "Update portfolio" && git push`
-3. Vercel ridistribuisce da solo (~1 min) su `kappaemmedev.vercel.app`.
-
-> ⚠️ Verifica prima la struttura del repo: se la home attuale **non** è un `index.html` semplice (es. file con front-matter `meta-...`, oppure cartelle separate `coffee/`, `contact/`), il sito è generato da uno strumento e va integrato diversamente — non sovrascrivere alla cieca.
+- Sotto 1024px la home usa il menu a pannello; la pagina Coffee e Grok Bots mostrano le icone della navigazione sui viewport più stretti.
+- I progetti passano da due colonne a una, le skill restano completamente visibili senza scroll interno e lo stack si dispone su 6, 4 o 3 colonne secondo la larghezza.
+- Le card di Shared on X diventano un carosello a scorrimento nativo. Journey e Coffee si impilano in verticale.
+- Il layout è pensato per viewport mobili da 390px senza overflow orizzontale.
