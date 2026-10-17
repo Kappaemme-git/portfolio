@@ -140,11 +140,21 @@
   };
 
   /* ───────────── Black scan transition on page tabs ───────────── */
-  var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer;
+  var scan = $(".k-scan"), leaving = false, leaveTimer, arrivalTimer, typeTimer;
   function path(url) { return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, ""); }
+  function typeScanCommand(cmd, command) {
+    var typed = 0;
+    cmd.textContent = "";
+    function addChar() {
+      cmd.textContent = command.slice(0, ++typed);
+      if (typed < command.length) typeTimer = setTimeout(addChar, 250 / command.length);
+    }
+    typeTimer = setTimeout(addChar, 300 + 250 / command.length);
+  }
   function clearScan() {
     if (!scan) return;
     clearTimeout(arrivalTimer);
+    clearTimeout(typeTimer);
     scan.classList.remove("is-out"); scan.style.display = "none";
     document.documentElement.removeAttribute("data-scan");
   }
@@ -164,8 +174,7 @@
     var page = path(url).split("/").pop();
     var command = "cd ~" + (page === "grok-bot" ? "/grok-bots" : page === "skills" || page === "coffee" ? "/" + page : "");
     var cmd = $(".k-scan__cmd", scan);
-    cmd.textContent = command;
-    cmd.style.setProperty("--chars", command.length);
+    typeScanCommand(cmd, command);
     clearTimeout(arrivalTimer);
     scan.style.display = "";
     document.documentElement.removeAttribute("data-scan");

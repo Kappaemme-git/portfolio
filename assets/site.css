@@ -335,18 +335,16 @@ a:hover > .k-go svg { transform: translate(1px, -1px); }
 .k-scan { position: fixed; inset: 0; z-index: 3600; pointer-events: none; visibility: hidden; overflow: hidden; color: #F2F2EF; }
 .k-scan__fill { position: absolute; inset: 0; background: #0A0A0A; transform-origin: 50% 0; transform: scaleY(0); }
 .k-scan__line { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #2474F7; box-shadow: 0 0 16px 2px var(--lc-glow), 0 0 2px #2474F7; transform: translateY(-6px); }
-.k-scan__prompt { position: absolute; z-index: 1; top: 50%; left: 50%; display: flex; align-items: center; gap: .45em; max-width: calc(100vw - 2rem); font: 500 clamp(.95rem, 3vw, 1.3rem)/1.2 var(--font-mono); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; }
-.k-scan__sig { color: #2474F7; }
-.k-scan__cmd { display: inline-block; clip-path: inset(0 100% 0 0); }
-.k-scan__cursor { width: .5em; height: 1em; background: #2474F7; opacity: 0; }
+.k-scan__prompt { position: absolute; z-index: 1; top: 50%; left: 50%; display: flex; align-items: center; gap: 0; max-width: calc(100vw - 2rem); font: 500 clamp(.95rem, 3vw, 1.3rem)/1.2 var(--font-mono); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; }
+.k-scan__sig { margin-right: .45em; color: #2474F7; }
+.k-scan__cmd { display: inline-block; }
+.k-scan__cursor { flex: none; width: .5em; height: 1em; background: #2474F7; opacity: 0; }
 .k-scan.is-out { visibility: visible; pointer-events: auto; }
 .k-scan.is-out .k-scan__fill { transition: transform .38s var(--ease-io); transform: scaleY(1); }
 .k-scan.is-out .k-scan__line { transition: transform .38s var(--ease-io); transform: translateY(100vh); }
 .k-scan.is-out .k-scan__prompt { animation: scan-prompt-in .08s linear .27s both; }
-.k-scan.is-out .k-scan__cmd { animation: scan-type .25s steps(var(--chars, 12), end) .3s both; }
 .k-scan.is-out .k-scan__cursor { animation: scan-cursor .45s steps(1) .3s infinite; }
 @keyframes scan-prompt-in { to { opacity: 1; } }
-@keyframes scan-type { to { clip-path: inset(0 0 0 0); } }
 @keyframes scan-cursor { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 html[data-scan="in"] .k-scan { visibility: visible; pointer-events: auto; }
 html[data-scan="in"] .k-scan__fill { transform: none; animation: scan-fill-in .48s var(--ease-io) forwards; }
